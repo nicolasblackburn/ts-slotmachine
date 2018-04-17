@@ -22,7 +22,6 @@ export class SceneManager {
     public add(sceneName: string, scene: Scene) {
         scene.visible = false;
         scene.interactive = false;
-        scene.buttonMode = false;
         this.scenes.set(sceneName, scene);
         this.application.stage.addChild(scene);
         return scene;
@@ -75,13 +74,11 @@ export class SceneManager {
         this.application.stage.setChildIndex(scene, this.application.stage.children.length - 1);
         scene.visible = true;
         scene.interactive = true;
-        scene.buttonMode = true;
         scene.resize();
 
         if (this.currentScene) {
             this.currentScene.visible = false;
             this.currentScene.interactive = false;
-            this.currentScene.buttonMode = false;
         } 
 
         this.currentSceneName = sceneName;

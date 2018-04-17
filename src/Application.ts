@@ -37,11 +37,11 @@ export class Application extends PIXI.Application {
         this.scenes
             .show('preload')
             .events.on(PreloadSceneEvent.Complete, () => {
-                this.scenes
-                    .show('title')
-                    .once('pointerdown', () => {
-                        this.scenes.show('main');
-                    });
+                this.scenes.show('title');
+
+                this.renderer.plugins.interaction.once('pointerdown', () => {
+                    this.scenes.show('main');
+                });
             });
     }
 
