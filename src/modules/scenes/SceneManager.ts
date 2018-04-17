@@ -32,18 +32,18 @@ export class SceneManager {
         if (!scene) {
             throw new Error('Scene `' + sceneName + '` not found');
         } else if (!scene.initialized) {  
-            scene.events.once(SceneEvent.LoadEnd, () => {
+            scene.once(SceneEvent.LoadEnd, () => {
                 scene.init();
-                scene.events.emit(SceneEvent.Init);
+                scene.emit(SceneEvent.Init);
                 this.setCurrentScene(sceneName, scene);
                 scene.show();
-                scene.events.emit(SceneEvent.Show);
+                scene.emit(SceneEvent.Show);
             });
             scene.load();
         } else {
             this.setCurrentScene(sceneName, scene);
             scene.show();
-            scene.events.emit(SceneEvent.Show);
+            scene.emit(SceneEvent.Show);
         }
         return scene;
     }
@@ -59,14 +59,14 @@ export class SceneManager {
     public resize() {
         if (this.currentScene) {
             this.currentScene.resize();
-            this.currentScene.events.emit(SceneEvent.Resize);
+            this.currentScene.emit(SceneEvent.Resize);
         }
     }
 
     public update() {
         if (this.currentScene) {
             this.currentScene.update();
-            this.currentScene.events.emit(SceneEvent.Update);
+            this.currentScene.emit(SceneEvent.Update);
         }
     }
 
@@ -84,6 +84,6 @@ export class SceneManager {
         this.currentSceneName = sceneName;
         this.currentScene = scene;
 
-        scene.events.emit(SceneEvent.Show);
+        scene.emit(SceneEvent.Show);
     }
 }

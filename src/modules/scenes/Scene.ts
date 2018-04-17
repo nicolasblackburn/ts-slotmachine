@@ -8,7 +8,6 @@ export enum SceneEvent {
 }
 
 export class Scene extends PIXI.Container {
-    public events: PIXI.utils.EventEmitter = new PIXI.utils.EventEmitter();
     protected application: PIXI.Application;
     protected resources: {name: string, url: string}[] = [];
     protected propInitialized: boolean = false;
@@ -43,7 +42,7 @@ export class Scene extends PIXI.Container {
             throw new Error('Cannot load an already loaded scene.');
         }
 
-        this.events.emit(SceneEvent.LoadStart);
+        this.emit(SceneEvent.LoadStart);
 
         for (const {name, url} of this.resources) {
             PIXI.loader.add(name, url);
@@ -51,7 +50,7 @@ export class Scene extends PIXI.Container {
         
         PIXI.loader.load((resources: any) => {
             this.propLoaded = true;
-            this.events.emit(SceneEvent.LoadEnd);
+            this.emit(SceneEvent.LoadEnd);
         });
     }
 

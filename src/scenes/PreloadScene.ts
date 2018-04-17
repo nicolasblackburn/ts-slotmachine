@@ -18,7 +18,7 @@ export class PreloadScene extends Scene {
         new TweenLite(this.progressBar, 1, {
             progress: 1,
             onComplete: () => {
-                this.events.emit(PreloadSceneEvent.Complete);
+                this.emit(PreloadSceneEvent.Complete);
             }
         });
     }

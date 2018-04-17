@@ -36,7 +36,7 @@ export class Application extends PIXI.Application {
 
         this.scenes
             .show('preload')
-            .events.on(PreloadSceneEvent.Complete, () => {
+            .on(PreloadSceneEvent.Complete, () => {
                 this.scenes.show('title');
 
                 this.renderer.plugins.interaction.once('pointerdown', () => {
