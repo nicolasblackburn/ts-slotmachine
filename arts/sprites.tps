@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.5.0</string>
         <key>fileName</key>
-        <string>/home/nicolas/Projets/ts_slot2/arts/sprites.tps</string>
+        <string>/home/nicolas/Projets/ts-slotmachine/arts/sprites.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -199,6 +199,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">exports/square.png</key>
             <key type="filename">exports/sym_10.png</key>
             <key type="filename">exports/sym_7.png</key>
             <key type="filename">exports/sym_8.png</key>
@@ -246,6 +247,7 @@
             <filename>exports/sym_q.png</filename>
             <filename>exports/sym_sc.png</filename>
             <filename>exports/sym_w.png</filename>
+            <filename>exports/square.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
