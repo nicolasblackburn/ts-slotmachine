@@ -8,7 +8,6 @@ export enum SceneEvent {
 }
 
 export class Scene extends PIXI.Container {
-    protected application: PIXI.Application;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
     protected pLoaded: boolean = false;
@@ -21,9 +20,8 @@ export class Scene extends PIXI.Container {
         return this.pLoaded;
     }
     
-    constructor(application: PIXI.Application) {
+    constructor() {
         super();
-        this.application = application;
     }
 
     public addResource(name: string, url: string) {

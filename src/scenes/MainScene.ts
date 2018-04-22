@@ -1,12 +1,23 @@
 import {Scene} from '../modules/scenes/Scene';
 import {ReelSet} from '../components/ReelSet';
+import { Ui } from '../ui/Ui';
 
 export class MainScene extends Scene {
     protected reelSet: ReelSet;
+    protected ui: Ui;
+
+    constructor(ui: Ui) {
+        super();
+        this.ui = ui;
+    }
 
     public init() {
         this.reelSet = new ReelSet();
         this.addChild(this.reelSet);
+    }
+
+    public show() {
+        this.ui.setVisible(true);
     }
     
     public resize() {

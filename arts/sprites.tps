@@ -199,6 +199,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">exports/icon_spin.png</key>
             <key type="filename">exports/square.png</key>
             <key type="filename">exports/sym_10.png</key>
             <key type="filename">exports/sym_7.png</key>
@@ -248,6 +249,7 @@
             <filename>exports/sym_sc.png</filename>
             <filename>exports/sym_w.png</filename>
             <filename>exports/square.png</filename>
+            <filename>exports/icon_spin.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

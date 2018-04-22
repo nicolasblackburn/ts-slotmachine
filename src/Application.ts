@@ -2,9 +2,11 @@ import {SceneManager} from './modules/scenes/SceneManager';
 import { PreloadScene, PreloadSceneEvent } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
 import { MainScene } from './scenes/MainScene';
+import { Ui } from './ui/Ui';
 
 export class Application extends PIXI.Application {
     protected scenes: SceneManager;
+    protected ui: Ui;
 
     constructor() {
         super({
@@ -19,12 +21,16 @@ export class Application extends PIXI.Application {
         this.ticker.add(deltaTime => this.scenes.update());
 
         document.body.appendChild(this.view);
+        
+        this.ui = new Ui();
+        document.body.appendChild(this.ui.uiContainer);
+
         window.addEventListener('resize', () => this.resize());
         this.resize();
 
-        this.scenes.add('preload', new PreloadScene(this))
-        this.scenes.add('title', new TitleScene(this))
-        this.scenes.add('main', new MainScene(this));
+        this.scenes.add('preload', new PreloadScene())
+        this.scenes.add('title', new TitleScene())
+        this.scenes.add('main', new MainScene(this.ui));
 
         this.scenes
             .get('preload')
@@ -45,7 +51,7 @@ export class Application extends PIXI.Application {
             });
     }
 
-    public  resize() {
+    public resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight);
         this.scenes.resize();
     }
