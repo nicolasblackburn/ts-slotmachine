@@ -46,8 +46,7 @@ export class Application extends PIXI.Application {
     }
 
     public  resize() {
-        this.view.width = window.innerWidth;
-        this.view.height = window.innerHeight;
+        this.renderer.resize(window.innerWidth, window.innerHeight);
         this.scenes.resize();
     }
 }

@@ -10,15 +10,15 @@ export enum SceneEvent {
 export class Scene extends PIXI.Container {
     protected application: PIXI.Application;
     protected resources: {name: string, url: string}[] = [];
-    protected propInitialized: boolean = false;
-    protected propLoaded: boolean = false;
+    protected pInitialized: boolean = false;
+    protected pLoaded: boolean = false;
 
     get initialized() {
-        return this.propInitialized;
+        return this.pInitialized;
     }
 
     get loaded() {
-        return this.propLoaded;
+        return this.pLoaded;
     }
     
     constructor(application: PIXI.Application) {
@@ -49,7 +49,7 @@ export class Scene extends PIXI.Container {
         }
         
         PIXI.loader.load((resources: any) => {
-            this.propLoaded = true;
+            this.pLoaded = true;
             this.emit(SceneEvent.LoadEnd);
         });
     }
