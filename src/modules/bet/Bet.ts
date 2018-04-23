@@ -14,4 +14,23 @@ export class Bet {
     public getLineBet(lineId: number) {
         return this.betPerLine;
     }
+
+    public serialize() {
+        return {
+            betPerLine: this.betPerLine,
+            lineCount: this.lineCount,
+            totalBet: this.getTotalBet()
+        };
+    }
+
+    public unserialize(data: BetData) {
+        this.betPerLine = data.betPerLine;
+        this.lineCount = data.lineCount;
+    }
+}
+
+export interface BetData {
+    betPerLine: number;
+    lineCount: number;
+    totalBet: number;
 }

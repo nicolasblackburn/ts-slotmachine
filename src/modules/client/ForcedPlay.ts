@@ -1,7 +1,7 @@
 export class ForcedPlay {
-    public position: number[];
+    public positions: number[];
 
-    constructor(position: number[]) {
-        this.position = position;
+    constructor(positions: number[]) {
+        this.positions = positions;
     }
 }

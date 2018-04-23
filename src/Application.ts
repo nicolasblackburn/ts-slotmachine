@@ -22,7 +22,7 @@ export class Application extends PIXI.Application {
         this.renderer.backgroundColor = 0x080010;
         document.body.appendChild(this.view);
 
-        this.client = new LocalClient();
+        this.client = new LocalClient(machineDefinition);
 
         this.ui = new Ui();
         document.body.appendChild(this.ui.uiContainer);
