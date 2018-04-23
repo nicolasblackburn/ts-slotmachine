@@ -1,12 +1,16 @@
-import {SceneManager} from './modules/scenes/SceneManager';
+import { SceneManager } from './modules/scenes/SceneManager';
 import { PreloadScene, PreloadSceneEvent } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
 import { MainScene } from './scenes/MainScene';
-import { Ui } from './ui/Ui';
+import { Ui, UiEvent } from './ui/Ui';
+import { Client } from './modules/client/Client';
+import { LocalClient } from './modules/client/local/LocalClient';
+import { machineDefinition } from './machineDefinition';
 
 export class Application extends PIXI.Application {
     protected scenes: SceneManager;
     protected ui: Ui;
+    protected client: Client;
 
     constructor() {
         super({
@@ -16,21 +20,31 @@ export class Application extends PIXI.Application {
         });
 
         this.renderer.backgroundColor = 0x080010;
+        document.body.appendChild(this.view);
+
+        this.client = new LocalClient();
+
+        this.ui = new Ui();
+        document.body.appendChild(this.ui.uiContainer);
+        this.mountUi();
 
         this.scenes = new SceneManager(this);
         this.ticker.add(deltaTime => this.scenes.update());
-
-        document.body.appendChild(this.view);
-        
-        this.ui = new Ui();
-        document.body.appendChild(this.ui.uiContainer);
+        this.initScenes();
 
         window.addEventListener('resize', () => this.resize());
         this.resize();
+    }
 
+    public resize() {
+        this.renderer.resize(window.innerWidth, window.innerHeight);
+        this.scenes.resize();
+    }
+
+    public initScenes() {
         this.scenes.add('preload', new PreloadScene())
         this.scenes.add('title', new TitleScene())
-        this.scenes.add('main', new MainScene(this.ui));
+        this.scenes.add('main', new MainScene(machineDefinition.features['base'], this.ui));
 
         this.scenes
             .get('preload')
@@ -51,8 +65,9 @@ export class Application extends PIXI.Application {
             });
     }
 
-    public resize() {
-        this.renderer.resize(window.innerWidth, window.innerHeight);
-        this.scenes.resize();
+    public mountUi() {
+        this.ui.events.on(UiEvent.SpinButtonClick, () => {
+            console.log('Spin button clicked');
+        });
     }
 }

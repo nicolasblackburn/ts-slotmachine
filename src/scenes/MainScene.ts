@@ -1,18 +1,21 @@
 import {Scene} from '../modules/scenes/Scene';
 import {ReelSet} from '../components/ReelSet';
 import { Ui } from '../ui/Ui';
+import { MachineDefinition, SlotDefinition } from '../modules/machine/MachineDefinition';
 
 export class MainScene extends Scene {
     protected reelSet: ReelSet;
     protected ui: Ui;
+    protected slotDefinition: SlotDefinition;
 
-    constructor(ui: Ui) {
+    constructor(slotDefinition: SlotDefinition, ui: Ui) {
         super();
         this.ui = ui;
+        this.slotDefinition = slotDefinition;
     }
 
     public init() {
-        this.reelSet = new ReelSet();
+        this.reelSet = new ReelSet(this.slotDefinition);
         this.addChild(this.reelSet);
     }
 
