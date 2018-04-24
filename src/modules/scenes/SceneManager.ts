@@ -9,24 +9,20 @@ export class SceneManager extends StateManager<Scene> {
         this.application = application;
     }
 
-    protected get scenes() {
-        return this.states;
-    }
-
     public add(sceneName: string, scene: Scene) {
         scene.visible = false;
         scene.interactive = false;
-        this.scenes.set(sceneName, scene);
+        this.states.set(sceneName, scene);
         this.application.stage.addChild(scene);
         return scene;
     }
 
     public setCurrent(sceneName: string, ...args: any[]) {
-        const scene = this.scenes.get(sceneName);
-        if (!this.scenes.has(sceneName)) {
+        const scene = this.states.get(sceneName);
+        if (!this.states.has(sceneName)) {
             throw new Error("Scene `" + sceneName + "` does'nt exists");
         } 
-        if (this.pCurrent !== sceneName) {
+        if (this.currentKey() !== sceneName) {
             if (!scene.initialized) {  
                 scene.once(SceneEvent.LoadEnd, () => {
                     scene.init();
@@ -58,7 +54,7 @@ export class SceneManager extends StateManager<Scene> {
         scene.interactive = true;
         scene.resize();
 
-        let previous = this.key();
+        let previous = this.currentKey();
         if (this.current()) {
             this.current().visible = false;
             this.current().interactive = false;

@@ -35,7 +35,7 @@ export class StateManager<T extends StateInterface> {
             throw new Error("State `" + key + "` doesn't exists");
         }
         if (this.pCurrent !== key) {
-            let previous = this.key();
+            let previous = this.currentKey();
             if (this.current()) {
                 this.current().exit.apply(this.current(), [key, ...args]);
                 this.events.emit(StateManagerEvent.Exit, previous, key, ...args);
@@ -64,7 +64,7 @@ export class StateManager<T extends StateInterface> {
         return this.states.get(this.pCurrent);
     }
 
-    public key() {
+    public currentKey() {
         return this.pCurrent;
     }
 

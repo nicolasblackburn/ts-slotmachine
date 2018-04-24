@@ -1,4 +1,4 @@
-import { State } from "../states/State";
+import { StateInterface } from "../states/State";
 
 export enum SceneEvent {
     Enter = 'SceneEvent.Enter',
@@ -10,7 +10,7 @@ export enum SceneEvent {
     Update = 'SceneEvent.Update'
 }
 
-export class Scene extends PIXI.Container implements State {
+export class Scene extends PIXI.Container implements StateInterface {
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
     protected pLoaded: boolean = false;
