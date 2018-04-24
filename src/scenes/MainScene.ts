@@ -29,10 +29,10 @@ export class MainScene extends Scene {
         this.state = new StateManager();
         this.state.add('idle', new IdleState(this, this.reelSet));
         this.state.add('spinning', new SpinningState(this, this.reelSet));
-        this.state.set('idle');
+        this.state.setCurrent('idle');
     }
 
-    public show() {
+    public enter() {
         this.ui.setVisible(true);
 
         const onSpinButtonClick = () => {
@@ -47,10 +47,14 @@ export class MainScene extends Scene {
 
         this.application.renderer.plugins.interaction.on('pointerdown', onStagePointerDown);
 
-        this.once(SceneEvent.Hide, () => {
+        this.once(SceneEvent.Exit, () => {
             this.ui.events.removeListener(UiEvent.SpinButtonClick, onSpinButtonClick);
             this.application.renderer.plugins.interaction.removeListener('pointerdown', onStagePointerDown);
         });
+    }
+
+    public exit() {
+        this.emit(SceneEvent.Exit);
     }
     
     public resize() {
@@ -82,12 +86,12 @@ abstract class MainSceneState extends State {
 
 class IdleState extends MainSceneState {
     public onSpinButtonClick() {
-        this.scene.state.set('spinning');
+        this.scene.state.setCurrent('spinning');
     }
 }
 
 class SpinningState extends MainSceneState {
-    public onEnter() {
+    public enter() {
         const timeline = new gsap.TimelineLite();
         for (const reel of this.reelSet.reels) {
             timeline.to(reel, 0.5, {

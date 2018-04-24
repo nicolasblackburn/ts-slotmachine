@@ -30,19 +30,19 @@ export class StateManager<T extends StateInterface> {
         this.states.forEach.apply(null, [callback, ...args]);
     }
 
-    public set(key: string, ...args: any[]) {
+    public setCurrent(key: string, ...args: any[]) {
         if (!this.states.has(key)) {
             throw new Error("State `" + key + "` doesn't exists");
         }
         if (this.pCurrent !== key) {
             let previous = this.key();
             if (this.current()) {
-                this.current().onExit.apply(this.current(), [key, ...args]);
+                this.current().exit.apply(this.current(), [key, ...args]);
                 this.events.emit(StateManagerEvent.Exit, previous, key, ...args);
             }
             this.pCurrent = key;
             if (this.current()) {
-                this.current().onEnter.apply(this.current(), [previous, ...args]);
+                this.current().enter.apply(this.current(), [previous, ...args]);
                 this.events.emit(StateManagerEvent.Enter, previous, key, ...args);
             }
         }

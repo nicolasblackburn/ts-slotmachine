@@ -1,14 +1,16 @@
+import { State } from "../states/State";
+
 export enum SceneEvent {
+    Enter = 'SceneEvent.Enter',
+    Exit = 'SceneEvent.Exit',
     LoadStart = 'SceneEvent.LoadStart',
     LoadEnd = 'SceneEvent.LoadEnd',
-    Hide = 'SceneEvent.Hide',
     Init = 'SceneEvent.Init',
     Resize = 'SceneEvent.Resize',
-    Show = 'SceneEvent.Show',
     Update = 'SceneEvent.Update'
 }
 
-export class Scene extends PIXI.Container {
+export class Scene extends PIXI.Container implements State {
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
     protected pLoaded: boolean = false;
@@ -53,12 +55,11 @@ export class Scene extends PIXI.Container {
         });
     }
 
-    public resize() {
-    } 
+    public resize() {} 
 
-    public show() {
-    } 
+    public enter() {}
+    
+    public exit() {}
 
-    public update() {
-    } 
+    public update() {} 
 }

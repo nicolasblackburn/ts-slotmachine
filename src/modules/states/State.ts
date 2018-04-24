@@ -1,9 +1,9 @@
 export interface StateInterface {
-    onEnter(previous: string, ...args: any[]);
-    onExit(next: string, ...args: any[]);
+    enter(previous: string, ...args: any[]);
+    exit(next: string, ...args: any[]);
 }
 
 export abstract class State implements StateInterface {
-    public onEnter(previous: string, ...args: any[]) {}
-    public onExit(next: string, ...args: any[]) {}
+    public enter(previous: string, ...args: any[]) {}
+    public exit(next: string, ...args: any[]) {}
 }
