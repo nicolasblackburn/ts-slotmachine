@@ -56,12 +56,12 @@ export class Application extends PIXI.Application {
             .addResource('sprites', 'assets/img/sprites.json');
 
         this.scenes
-            .show('preload')
+            .setCurrent('preload')
             .on(PreloadSceneEvent.Complete, () => {
-                this.scenes.show('title');
+                this.scenes.setCurrent('title');
 
                 this.renderer.plugins.interaction.once('pointerdown', () => {
-                    this.scenes.show('main');
+                    this.scenes.setCurrent('main');
                 });
             });
     }

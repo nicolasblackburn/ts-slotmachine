@@ -1,22 +1,16 @@
 import {Scene, SceneEvent} from './Scene';
+import { StateManager } from '../states/StateManager';
 
-export class SceneManager {
-    protected currentSceneName: string;
-    protected currentScene: Scene;
-    protected scenes: Map<string, Scene> = new Map();
+export class SceneManager extends StateManager<Scene> {
     protected application: PIXI.Application;
 
     constructor(application: PIXI.Application) {
+        super();
         this.application = application;
     }
 
-    public get(sceneName: string) {
-        const scene = this.scenes.get(sceneName);
-        if (!scene) {
-            throw new Error('Scene `' + sceneName + '` not found');
-        } else {
-            return scene;
-        }
+    protected get scenes() {
+        return this.states;
     }
 
     public add(sceneName: string, scene: Scene) {
@@ -27,61 +21,51 @@ export class SceneManager {
         return scene;
     }
 
-    public show(sceneName: string) {
+    public setCurrent(sceneName: string, ...args: any[]) {
         const scene = this.scenes.get(sceneName);
-        if (!scene) {
-            throw new Error('Scene `' + sceneName + '` not found');
-        } else if (!scene.initialized) {  
-            scene.once(SceneEvent.LoadEnd, () => {
-                scene.init();
-                scene.emit(SceneEvent.Init);
-                this.swapCurrentSceneAndShow(sceneName, scene);
-            });
-            scene.load();
-        } else {
-            this.swapCurrentSceneAndShow(sceneName, scene);
+        if (!this.scenes.has(sceneName)) {
+            throw new Error("Scene `" + sceneName + "` does'nt exists");
+        } 
+        if (this.pCurrent !== sceneName) {
+            if (!scene.initialized) {  
+                scene.once(SceneEvent.LoadEnd, () => {
+                    scene.init();
+                    this.swapCurrentSceneAndEnter(sceneName, scene, ...args);
+                });
+                scene.load();
+            } else {
+                this.swapCurrentSceneAndEnter(sceneName, scene, ...args);
+            }
         }
         return scene;
     }
 
-    public getCurrentName() {
-        return this.currentSceneName;
-    }
-
-    public getCurrent() {
-        return this.currentScene;
-    }
-
     public resize() {
-        if (this.currentScene) {
-            this.currentScene.resize();
-            this.currentScene.emit(SceneEvent.Resize);
+        if (this.current()) {
+            this.current().resize();
         }
     }
 
     public update() {
-        if (this.currentScene) {
-            this.currentScene.update();
-            this.currentScene.emit(SceneEvent.Update);
+        if (this.current()) {
+            this.current().update();
         }
     }
 
-    protected swapCurrentSceneAndShow(sceneName: string, scene: Scene) {
+    protected swapCurrentSceneAndEnter(sceneName: string, scene: Scene, ...args: any[]) {
         this.application.stage.setChildIndex(scene, this.application.stage.children.length - 1);
         scene.visible = true;
         scene.interactive = true;
         scene.resize();
 
-        if (this.currentScene) {
-            this.currentScene.visible = false;
-            this.currentScene.interactive = false;
-            this.currentScene.emit(SceneEvent.Hide);
+        let previous = this.key();
+        if (this.current()) {
+            this.current().visible = false;
+            this.current().interactive = false;
+            this.current().exit.apply(this.current(), [sceneName, ...args]);
         } 
 
-        this.currentSceneName = sceneName;
-        this.currentScene = scene;
-
-        scene.show();
-        scene.emit(SceneEvent.Show);
+        this.pCurrent = sceneName;
+        this.current().enter.apply(this.current(), [previous, ...args]);
     }
 }
