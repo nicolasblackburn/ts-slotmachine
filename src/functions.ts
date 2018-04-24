@@ -52,3 +52,13 @@ export function htob(h: number) {
 export function htorgb(h: number) {
     return (htor(h) << 16) + (htog(h) << 8) + htob(h);
 }
+
+export function promiseFold(promise: Promise<any>, ...rest: Promise<any>[]) {
+    if (rest.length === 0) {
+        return promise;
+    } else {
+        return promise.then(() => {
+            return promiseFold.apply(this, rest);
+        });
+    }
+}

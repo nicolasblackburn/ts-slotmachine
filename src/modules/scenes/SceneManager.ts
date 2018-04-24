@@ -35,15 +35,11 @@ export class SceneManager {
             scene.once(SceneEvent.LoadEnd, () => {
                 scene.init();
                 scene.emit(SceneEvent.Init);
-                this.setCurrentScene(sceneName, scene);
-                scene.show();
-                scene.emit(SceneEvent.Show);
+                this.swapCurrentSceneAndShow(sceneName, scene);
             });
             scene.load();
         } else {
-            this.setCurrentScene(sceneName, scene);
-            scene.show();
-            scene.emit(SceneEvent.Show);
+            this.swapCurrentSceneAndShow(sceneName, scene);
         }
         return scene;
     }
@@ -70,7 +66,7 @@ export class SceneManager {
         }
     }
 
-    protected setCurrentScene(sceneName: string, scene: Scene) {
+    protected swapCurrentSceneAndShow(sceneName: string, scene: Scene) {
         this.application.stage.setChildIndex(scene, this.application.stage.children.length - 1);
         scene.visible = true;
         scene.interactive = true;
@@ -79,11 +75,13 @@ export class SceneManager {
         if (this.currentScene) {
             this.currentScene.visible = false;
             this.currentScene.interactive = false;
+            this.currentScene.emit(SceneEvent.Hide);
         } 
 
         this.currentSceneName = sceneName;
         this.currentScene = scene;
 
+        scene.show();
         scene.emit(SceneEvent.Show);
     }
 }

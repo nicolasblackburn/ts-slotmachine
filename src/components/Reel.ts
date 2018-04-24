@@ -60,12 +60,18 @@ export class Reel {
             symbol.visible = false;
         }
         this.visibleSymbols = [];
-        const offset = Math.floor(modulo(this.pPosition, this.getSymbolCount()));
+        const offset = Math.ceil(modulo(this.pPosition, this.getSymbolCount())) - 1;
         for (let i = 0; i < this.rowCount + 1; i++) {
-            const symbol = this.symbols[modulo(offset + i, this.getSymbolCount())];
+            const symbolIndex = modulo(offset + i, this.getSymbolCount());
+            const symbol = this.symbols[symbolIndex];
             symbol.visible = true;
             symbol.x = this.pX;
-            symbol.y = this.pY + (i - 1 - modulo(this.pPosition, 1)) * this.rowHeight;
+            const epsilon = this.pPosition - Math.floor(this.pPosition);
+            if (epsilon === 0) {
+                symbol.y = this.pY + (i - 1) * this.rowHeight;
+            } else {
+                symbol.y = this.pY + (i - epsilon) * this.rowHeight;
+            }
             this.visibleSymbols.push(symbol);
         }
     }

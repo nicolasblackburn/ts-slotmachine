@@ -1,6 +1,7 @@
 export enum SceneEvent {
     LoadStart = 'SceneEvent.LoadStart',
     LoadEnd = 'SceneEvent.LoadEnd',
+    Hide = 'SceneEvent.Hide',
     Init = 'SceneEvent.Init',
     Resize = 'SceneEvent.Resize',
     Show = 'SceneEvent.Show',

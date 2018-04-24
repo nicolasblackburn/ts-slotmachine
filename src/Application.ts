@@ -6,6 +6,8 @@ import { Ui, UiEvent } from './ui/Ui';
 import { Client } from './modules/client/Client';
 import { LocalClient } from './modules/client/local/LocalClient';
 import { machineDefinition } from './machineDefinition';
+import { promiseFold } from './functions';
+import { Bet } from './modules/bet/Bet';
 
 export class Application extends PIXI.Application {
     protected scenes: SceneManager;
@@ -26,7 +28,6 @@ export class Application extends PIXI.Application {
 
         this.ui = new Ui();
         document.body.appendChild(this.ui.uiContainer);
-        this.mountUi();
 
         this.scenes = new SceneManager(this);
         this.ticker.add(deltaTime => this.scenes.update());
@@ -44,7 +45,7 @@ export class Application extends PIXI.Application {
     public initScenes() {
         this.scenes.add('preload', new PreloadScene())
         this.scenes.add('title', new TitleScene())
-        this.scenes.add('main', new MainScene(machineDefinition.features['base'], this.ui));
+        this.scenes.add('main', new MainScene(machineDefinition.features['base'], this.ui, this));
 
         this.scenes
             .get('preload')
@@ -63,11 +64,5 @@ export class Application extends PIXI.Application {
                     this.scenes.show('main');
                 });
             });
-    }
-
-    public mountUi() {
-        this.ui.events.on(UiEvent.SpinButtonClick, () => {
-            console.log('Spin button clicked');
-        });
     }
 }
