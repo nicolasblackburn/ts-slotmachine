@@ -1,11 +1,11 @@
-import { State } from "./State";
+import { StateInterface } from "./State";
 
 export enum StateManagerEvent {
     Enter = 'StateManagerEvent.Enter',
     Exit = 'StateManagerEvent.Exit',
 }
 
-export class StateManager<T extends State> {
+export class StateManager<T extends StateInterface> {
     public events: PIXI.utils.EventEmitter;
     protected states: Map<string, T> = new Map();
     protected pCurrent: string;
@@ -37,12 +37,12 @@ export class StateManager<T extends State> {
         if (this.pCurrent !== key) {
             let previous = this.key();
             if (this.current()) {
-                this.current().exit.apply(this.current(), [key, ...args]);
+                this.current().onExit.apply(this.current(), [key, ...args]);
                 this.events.emit(StateManagerEvent.Exit, previous, key, ...args);
             }
             this.pCurrent = key;
             if (this.current()) {
-                this.current().enter.apply(this.current(), [previous, ...args]);
+                this.current().onEnter.apply(this.current(), [previous, ...args]);
                 this.events.emit(StateManagerEvent.Enter, previous, key, ...args);
             }
         }

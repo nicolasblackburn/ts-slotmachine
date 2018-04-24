@@ -4,8 +4,11 @@ import { Ui, UiEvent } from '../ui/Ui';
 import { MachineDefinition, SlotDefinition } from '../modules/machine/MachineDefinition';
 import * as gsap from 'gsap';
 import { Application } from '../Application';
+import { StateManager } from '../modules/states/StateManager';
+import { State } from '../modules/states/State';
 
 export class MainScene extends Scene {
+    public state: StateManager<MainSceneState>;
     protected application: Application;
     protected reelSet: ReelSet;
     protected ui: Ui;
@@ -22,25 +25,22 @@ export class MainScene extends Scene {
         this.reelSet = new ReelSet(this.slotDefinition);
         this.addChild(this.reelSet);
         (window as any).reelSet = this.reelSet;
+
+        this.state = new StateManager();
+        this.state.add('idle', new IdleState(this, this.reelSet));
+        this.state.add('spinning', new SpinningState(this, this.reelSet));
+        this.state.set('idle');
     }
 
     public show() {
         this.ui.setVisible(true);
 
         const onSpinButtonClick = () => {
-            // this.state.onSpinButtonClick();
-            console.log('onSpinButtonClick');
-            const timeline = new gsap.TimelineLite();
-            for (const reel of this.reelSet.reels) {
-                timeline.to(reel, 0.5, {
-                    position: reel.position - 1
-                }, 0);
-            }
+            this.state.current().onSpinButtonClick();
         };
 
         const onStagePointerDown = () => {
-            // this.state.onStagePointerDown();
-            console.log('onStagePointerDown');
+            this.state.current().onStagePointerDown();
         };
 
         this.ui.events.on(UiEvent.SpinButtonClick, onSpinButtonClick);
@@ -62,5 +62,41 @@ export class MainScene extends Scene {
         this.reelSet.scale.x = this.reelSet.scale.y;
         this.reelSet.x = (window.innerWidth - this.reelSet.width) * 0.5;
         this.reelSet.y = window.innerHeight * 0.1;
+    }
+}
+
+abstract class MainSceneState extends State {
+    protected scene: MainScene;
+    protected reelSet: ReelSet;
+
+    constructor(scene: MainScene, reelSet: ReelSet) {
+        super();
+        this.scene = scene;
+        this.reelSet = reelSet;
+    }
+
+    public onSpinButtonClick() {}
+    public onStagePointerDown() {}
+    public onUpdate() {}
+};
+
+class IdleState extends MainSceneState {
+    public onSpinButtonClick() {
+        this.scene.state.set('spinning');
+    }
+}
+
+class SpinningState extends MainSceneState {
+    public onEnter() {
+        const timeline = new gsap.TimelineLite();
+        for (const reel of this.reelSet.reels) {
+            timeline.to(reel, 0.5, {
+                position: reel.position - 1
+            }, 0);
+        }
+    }
+    
+    public onSpinButtonClick() {
+        console.log("Yo I'm spinning and you clicked on the spin button!");
     }
 }
