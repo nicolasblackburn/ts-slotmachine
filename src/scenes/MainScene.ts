@@ -32,7 +32,7 @@ export class MainScene extends Scene {
         this.state.setCurrent('idle');
     }
 
-    public enter() {
+    public enter(previousScene: string, ...args: any[]) {
         this.ui.setVisible(true);
 
         const onSpinButtonClick = () => {
@@ -53,7 +53,7 @@ export class MainScene extends Scene {
         });
     }
 
-    public exit() {
+    public exit(nextScene: string, ...args: any[]) {
         this.emit(SceneEvent.Exit);
     }
     

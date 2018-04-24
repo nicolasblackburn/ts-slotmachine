@@ -1,6 +1,6 @@
 import { StateInterface } from "./State";
 
-export enum StateManagerEvent {
+export enum StateEvent {
     Enter = 'StateManagerEvent.Enter',
     Exit = 'StateManagerEvent.Exit',
 }
@@ -37,13 +37,13 @@ export class StateManager<T extends StateInterface> {
         if (this.pCurrent !== key) {
             let previous = this.currentKey();
             if (this.current()) {
-                this.current().exit.apply(this.current(), [key, ...args]);
-                this.events.emit(StateManagerEvent.Exit, previous, key, ...args);
+                this.current().exit(key, ...args);
+                this.events.emit(StateEvent.Exit, previous, key, ...args);
             }
             this.pCurrent = key;
             if (this.current()) {
-                this.current().enter.apply(this.current(), [previous, ...args]);
-                this.events.emit(StateManagerEvent.Enter, previous, key, ...args);
+                this.current().enter(previous, ...args);
+                this.events.emit(StateEvent.Enter, previous, key, ...args);
             }
         }
     }

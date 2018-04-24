@@ -57,9 +57,9 @@ export class Scene extends PIXI.Container implements StateInterface {
 
     public resize() {} 
 
-    public enter() {}
+    public enter(previousScene: string, ...args: any[]) {}
     
-    public exit() {}
+    public exit(nextScene: string, ...args: any[]) {}
 
     public update() {} 
 }

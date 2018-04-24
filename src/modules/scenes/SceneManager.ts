@@ -58,10 +58,12 @@ export class SceneManager extends StateManager<Scene> {
         if (this.current()) {
             this.current().visible = false;
             this.current().interactive = false;
-            this.current().exit.apply(this.current(), [sceneName, ...args]);
+            this.current().exit(sceneName, ...args);
+            this.events.emit(SceneEvent.Exit, previous, sceneName, ...args);
         } 
 
         this.pCurrent = sceneName;
-        this.current().enter.apply(this.current(), [previous, ...args]);
+        this.current().enter(previous, ...args);
+        this.events.emit(SceneEvent.Enter, previous, sceneName, ...args);
     }
 }

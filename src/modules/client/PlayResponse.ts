@@ -23,16 +23,20 @@ export class PlayResponse {
         this.bet = Object.assign({}, data.bet);
         this.player = Object.assign({}, data.player);
         this.results = data.results.map(resultData => {
-            if (resultData.className === 'PlayResult') {
-                const result = new PlayResult();
-                result.unserialize(resultData);
-                return result;
-            } else if  (resultData.className === 'SlotResult') {
-                const result = new SlotResult();
-                result.unserialize(resultData as SlotResultData);
-                return result;
-            }
+            return this.unserializePlayResult(resultData);
         });
+    }
+
+    protected unserializePlayResult(resultData: PlayResultData) {
+        if (resultData.className === 'PlayResult') {
+            const result = new PlayResult();
+            result.unserialize(resultData);
+            return result;
+        } else if  (resultData.className === 'SlotResult') {
+            const result = new SlotResult();
+            result.unserialize(resultData as SlotResultData);
+            return result;
+        }
     }
 }
 
@@ -80,16 +84,20 @@ export class SlotResult extends PlayResult {
         this.positions = data.positions.slice();
         this.symbols = data.symbols.map(column => column.slice());
         this.wins = data.wins.map(winData => {
-            if (winData.className === 'Win') {
-                const win = new Win();
-                win.deserialize(winData);
-                return win;
-            } else if  (winData.className === 'PaylineWin') {
-                const win = new PaylineWin();
-                win.deserialize(winData as PaylineWinData);
-                return win;
-            }
+            return this.unserializeWin(winData);
         });
+    }
+
+    protected unserializeWin(winData: WinData) {
+        if (winData.className === 'Win') {
+            const win = new Win();
+            win.deserialize(winData);
+            return win;
+        } else if  (winData.className === 'PaylineWin') {
+            const win = new PaylineWin();
+            win.deserialize(winData as PaylineWinData);
+            return win;
+        }
     }
 }
 
