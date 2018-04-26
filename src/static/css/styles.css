@@ -13,6 +13,10 @@ canvas {
     display: none;
 }
 
+.disabled {
+    opacity: 0.5;
+}
+
 #ui-container {
     position: fixed;
     top: 0;

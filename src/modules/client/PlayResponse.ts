@@ -4,9 +4,9 @@ import { Player, PlayerData } from "../player/Player";
 export class PlayResponse {
     public bet: BetData;
     public player: PlayerData;
-    public totalWin: number;
-    public results: PlayResult[];
-    public features: string[];
+    public totalWin: number = 0;
+    public results: PlayResult[] = [];
+    public features: string[] = [];
 
     constructor(bet: BetData, player: PlayerData, totalWin: number) {
         this.bet = bet;

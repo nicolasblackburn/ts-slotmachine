@@ -27,7 +27,7 @@ export class SceneManager extends StateManager<Scene> {
             if (!scene.initialized) {  
                 scene.once(SceneEvent.EndLoad, () => {
                     scene.init();
-                    this.current().emit(SceneEvent.Init);
+                    scene.emit(SceneEvent.Init);
                     this.swapCurrentSceneAndEnter(sceneName, scene, ...args);
                 });
                 scene.load();
@@ -70,9 +70,9 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public endSpin() {
+    public endSpin(response: PlayResponse) {
         if (this.current()) {
-            this.current().endSpin();
+            this.current().endSpin(response);
         }
     }
 
@@ -94,9 +94,9 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public endShowWins(wins: Win[]) {
+    public endShowWins() {
         if (this.current()) {
-            this.current().endShowWins(wins);
+            this.current().endShowWins();
         }
     }
 
@@ -118,9 +118,9 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public endShowWin(win: Win) {
+    public endShowWin() {
         if (this.current()) {
-            this.current().endShowWin(win);
+            this.current().endShowWin();
         }
     }
 
@@ -130,9 +130,9 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public endFeature(feature: string) {
+    public endFeature() {
         if (this.current()) {
-            this.current().endFeature(feature);
+            this.current().endFeature();
         }
     }
 

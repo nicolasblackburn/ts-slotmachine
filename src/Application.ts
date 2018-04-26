@@ -10,6 +10,8 @@ import { promiseFold } from './functions';
 import { Bet } from './modules/bet/Bet';
 import { ApplicationModel } from './ApplicationModel';
 import { PlayResponse, Win } from './modules/client/PlayResponse';
+import { State } from './modules/states/State';
+import { StateManager } from './modules/states/StateManager';
 
 export enum ApplicationEvent {
     StartRound = 'ApplicationEvent.StartRound',
@@ -18,6 +20,7 @@ export enum ApplicationEvent {
     EndSpin = 'ApplicationEvent.EndSpin',
     PlayRequestSuccess = 'ApplicationEvent.PlayRequestSuccess',
     PlayRequestError = 'ApplicationEvent.PlayRequestError', 
+    MinimumSpinDelayElapsed = 'ApplicationEvent.SpinDelayElapsed',
     StartShowWins = 'ApplicationEvent.StartShowWins',
     EndShowWins = 'ApplicationEvent.EndShowWins',
     StartShowTotalWin = 'ApplicationEvent.StartShowTotalWin',
@@ -29,9 +32,9 @@ export enum ApplicationEvent {
 }
 
 export class Application extends PIXI.Application {
-    protected scenes: SceneManager;
     public events: PIXI.utils.EventEmitter;
-    protected model: ApplicationModel;
+    public model: ApplicationModel;
+    protected scenes: SceneManager;
     protected ui: Ui;
     protected client: Client;
 
@@ -52,7 +55,7 @@ export class Application extends PIXI.Application {
         this.model = new ApplicationModel();
         this.model.bet = new Bet(5, machineDefinition.features.base.paylines.length);
 
-        this.ui = new Ui(this.model);
+        this.ui = new Ui(this);
         document.body.appendChild(this.ui.uiContainer);
 
         this.scenes = new SceneManager(this);
@@ -65,17 +68,32 @@ export class Application extends PIXI.Application {
         this.events.on(ApplicationEvent.StartRound, () => this.scenes.startRound());
         this.events.on(ApplicationEvent.EndRound, () => this.scenes.endRound());
         this.events.on(ApplicationEvent.StartSpin, () => this.scenes.startSpin());
-        this.events.on(ApplicationEvent.EndSpin, () => this.scenes.endSpin());
+        this.events.on(ApplicationEvent.EndSpin, (response) => this.scenes.endSpin(response));
         this.events.on(ApplicationEvent.PlayRequestSuccess, (success) => this.scenes.playRequestSuccess(success));
         this.events.on(ApplicationEvent.PlayRequestError, (error) => this.scenes.playRequestError(error));
         this.events.on(ApplicationEvent.StartShowWins, (wins) => this.scenes.startShowWins(wins));
-        this.events.on(ApplicationEvent.EndShowWins, (wins) => this.scenes.endShowWins(wins));
+        this.events.on(ApplicationEvent.EndShowWins, () => this.scenes.endShowWins());
         this.events.on(ApplicationEvent.StartShowTotalWin, () => this.scenes.startShowTotalWin());
         this.events.on(ApplicationEvent.EndShowTotalWin, () => this.scenes.endShowTotalWin());
         this.events.on(ApplicationEvent.StartShowWin, (win) => this.scenes.startShowWin(win));
-        this.events.on(ApplicationEvent.EndShowWin, (win) => this.scenes.endShowWin(win));
+        this.events.on(ApplicationEvent.EndShowWin, () => this.scenes.endShowWin());
         this.events.on(ApplicationEvent.StartFeature, (feature) => this.scenes.startFeature(feature));
-        this.events.on(ApplicationEvent.EndFeature, (feature) => this.scenes.endFeature(feature));
+        this.events.on(ApplicationEvent.EndFeature, () => this.scenes.endFeature());
+
+        this.events.on(ApplicationEvent.StartRound, () => this.ui.startRound());
+        this.events.on(ApplicationEvent.EndRound, () => this.ui.endRound());
+        this.events.on(ApplicationEvent.StartSpin, () => this.ui.startSpin());
+        this.events.on(ApplicationEvent.EndSpin, (response) => this.ui.endSpin(response));
+        this.events.on(ApplicationEvent.PlayRequestSuccess, (success) => this.ui.playRequestSuccess(success));
+        this.events.on(ApplicationEvent.PlayRequestError, (error) => this.ui.playRequestError(error));
+        this.events.on(ApplicationEvent.StartShowWins, (wins) => this.ui.startShowWins(wins));
+        this.events.on(ApplicationEvent.EndShowWins, () => this.ui.endShowWins());
+        this.events.on(ApplicationEvent.StartShowTotalWin, () => this.ui.startShowTotalWin());
+        this.events.on(ApplicationEvent.EndShowTotalWin, () => this.ui.endShowTotalWin());
+        this.events.on(ApplicationEvent.StartShowWin, (win) => this.ui.startShowWin(win));
+        this.events.on(ApplicationEvent.EndShowWin, () => this.ui.endShowWin());
+        this.events.on(ApplicationEvent.StartFeature, (feature) => this.ui.startFeature(feature));
+        this.events.on(ApplicationEvent.EndFeature, () => this.ui.endFeature());
     }
 
     public resize() {
@@ -85,28 +103,61 @@ export class Application extends PIXI.Application {
 
     public startRound() {
         this.model.playResponse = null;
-        this.model.canSpin = false;
         this.model.wins = [];
-        this.model.notifyObservers();
         this.events.emit(ApplicationEvent.StartRound);
+        this.startSpin();
     }
 
     public endRound() {
-        this.model.canSpin = true;
-        this.model.notifyObservers();
         this.events.emit(ApplicationEvent.EndRound);
     }
 
     public startSpin() {
         this.events.emit(ApplicationEvent.StartSpin);
+
+        let requestCompleted = false;
+        let minimumSpinDelayElapsed = false;
+
+        const tryEndSpin = () => {
+            if (requestCompleted && minimumSpinDelayElapsed) {
+                this.events.removeListener(ApplicationEvent.PlayRequestSuccess, succesHandler);
+                this.events.removeListener(ApplicationEvent.PlayRequestError, errorHandler);
+                this.events.removeListener(ApplicationEvent.EndSpin, minimumSpinDelayHandler);
+                this.endSpin(this.model.playResponse);
+            }
+        }
+
+        const succesHandler = () => {
+            requestCompleted = true;
+            tryEndSpin();
+        }
+
+        const errorHandler = () => {
+            requestCompleted = true;
+            tryEndSpin();
+        }
+
+        const minimumSpinDelayHandler = () => {
+            minimumSpinDelayElapsed = true;
+            tryEndSpin();
+        }
+
+        this.events.once(ApplicationEvent.PlayRequestSuccess, succesHandler);
+        this.events.once(ApplicationEvent.PlayRequestError, errorHandler);
+        this.events.once(ApplicationEvent.MinimumSpinDelayElapsed, minimumSpinDelayHandler);
+
         this.client.play(this.model.bet).then(
             response => this.playRequestSuccess(response),
             error => this.playRequestError(error)
         );
     }
 
-    public endSpin() {
-        this.events.emit(ApplicationEvent.EndSpin);
+    public minimumSpinDelayElapsed() {
+        this.events.emit(ApplicationEvent.MinimumSpinDelayElapsed);
+    }
+
+    public endSpin(response: PlayResponse) {
+        this.events.emit(ApplicationEvent.EndSpin, response);
         // Flatten the wins
         this.model.wins = this.model.playResponse.results.reduce(
             (wins, result) => {
@@ -119,15 +170,10 @@ export class Application extends PIXI.Application {
             },
             []
         );
-        this.model.notifyObservers();
         if (this.model.playResponse.totalWin > 0) {
             this.startShowWins(this.model.wins);
         }
         const hasFeatures = !!this.model.playResponse.features.length;
-        if (!hasFeatures) {
-            this.model.canSpin = true;
-            this.model.notifyObservers();
-        }
         if (!hasFeatures && this.model.playResponse.totalWin === 0) {
             this.endRound();
         }
@@ -135,7 +181,6 @@ export class Application extends PIXI.Application {
 
     public playRequestSuccess(response: PlayResponse) {
         this.model.playResponse = response;
-        this.model.notifyObservers();
         this.events.emit(ApplicationEvent.PlayRequestSuccess, response);
     }
 
@@ -154,7 +199,7 @@ export class Application extends PIXI.Application {
                     });
                     this.startShowWin(win);
                 } else {
-                    this.endShowWins(wins);
+                    this.endShowWins();
                 }
             }
             startShowWin(0);
@@ -162,8 +207,8 @@ export class Application extends PIXI.Application {
         this.startShowTotalWin();
     }
 
-    public endShowWins(wins: Win[]) {
-        this.events.emit(ApplicationEvent.EndShowWins, wins);
+    public endShowWins() {
+        this.events.emit(ApplicationEvent.EndShowWins);
         if (this.model.playResponse.features.length) {
             const startFeature = (featureIndex) => {
                 if (featureIndex < this.model.playResponse.features.length) {
@@ -192,16 +237,16 @@ export class Application extends PIXI.Application {
         this.events.emit(ApplicationEvent.StartShowWin, win);
     }
 
-    public endShowWin(win: Win) {
-        this.events.emit(ApplicationEvent.EndShowWin, win);
+    public endShowWin() {
+        this.events.emit(ApplicationEvent.EndShowWin);
     }
 
     public startFeature(feature: string) {
         this.events.emit(ApplicationEvent.StartFeature, feature);
     }
 
-    public endFeature(feature: string) {
-        this.events.emit(ApplicationEvent.EndFeature, feature);
+    public endFeature() {
+        this.events.emit(ApplicationEvent.EndFeature);
     }
 
     protected initScenes() {

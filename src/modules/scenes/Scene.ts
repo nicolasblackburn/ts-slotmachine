@@ -73,7 +73,7 @@ export class Scene extends PIXI.Container implements StateInterface {
 
     public startSpin() {}
 
-    public endSpin() {}
+    public endSpin(response: PlayResponse) {}
 
     public playRequestSuccess(response: PlayResponse) {}
 
@@ -81,7 +81,7 @@ export class Scene extends PIXI.Container implements StateInterface {
 
     public startShowWins(wins: Win[]) {}
 
-    public endShowWins(wins: Win[]) {}
+    public endShowWins() {}
 
     public startShowTotalWin() {}
 
@@ -89,9 +89,9 @@ export class Scene extends PIXI.Container implements StateInterface {
 
     public startShowWin(win: Win) {}
 
-    public endShowWin(win: Win) {}
+    public endShowWin() {}
 
     public startFeature(feature: string) {}
 
-    public endFeature(feature: string) {}
+    public endFeature() {}
 }
