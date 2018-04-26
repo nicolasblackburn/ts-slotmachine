@@ -34,7 +34,7 @@ export class LocalClient implements Client {
                 const originalSymbols = this.rng.getSymbols(slotDefinition.reels, slotDefinition.rowCount, positions);
                 const response = new PlayResponse(bet.serialize(), this.player.serialize(), 0);
                 resolve(response);
-            }, 400);
+            }, 100);
         });
     }
 }

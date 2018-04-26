@@ -20,7 +20,7 @@ export enum ApplicationEvent {
     EndSpin = 'ApplicationEvent.EndSpin',
     PlayRequestSuccess = 'ApplicationEvent.PlayRequestSuccess',
     PlayRequestError = 'ApplicationEvent.PlayRequestError', 
-    MinimumSpinDelayElapsed = 'ApplicationEvent.SpinDelayElapsed',
+    ReadyToEndSpin = 'ApplicationEvent.ReadyToEndSpin',
     StartShowWins = 'ApplicationEvent.StartShowWins',
     EndShowWins = 'ApplicationEvent.EndShowWins',
     StartShowTotalWin = 'ApplicationEvent.StartShowTotalWin',
@@ -116,13 +116,13 @@ export class Application extends PIXI.Application {
         this.events.emit(ApplicationEvent.StartSpin);
 
         let requestCompleted = false;
-        let minimumSpinDelayElapsed = false;
+        let readyToEndSpin = false;
 
         const tryEndSpin = () => {
-            if (requestCompleted && minimumSpinDelayElapsed) {
+            if (requestCompleted && readyToEndSpin) {
                 this.events.removeListener(ApplicationEvent.PlayRequestSuccess, succesHandler);
                 this.events.removeListener(ApplicationEvent.PlayRequestError, errorHandler);
-                this.events.removeListener(ApplicationEvent.EndSpin, minimumSpinDelayHandler);
+                this.events.removeListener(ApplicationEvent.EndSpin, readyToEndSpinHandler);
                 this.endSpin(this.model.playResponse);
             }
         }
@@ -137,14 +137,14 @@ export class Application extends PIXI.Application {
             tryEndSpin();
         }
 
-        const minimumSpinDelayHandler = () => {
-            minimumSpinDelayElapsed = true;
+        const readyToEndSpinHandler = () => {
+            readyToEndSpin = true;
             tryEndSpin();
         }
 
         this.events.once(ApplicationEvent.PlayRequestSuccess, succesHandler);
         this.events.once(ApplicationEvent.PlayRequestError, errorHandler);
-        this.events.once(ApplicationEvent.MinimumSpinDelayElapsed, minimumSpinDelayHandler);
+        this.events.once(ApplicationEvent.ReadyToEndSpin, readyToEndSpinHandler);
 
         this.client.play(this.model.bet).then(
             response => this.playRequestSuccess(response),
@@ -152,8 +152,8 @@ export class Application extends PIXI.Application {
         );
     }
 
-    public minimumSpinDelayElapsed() {
-        this.events.emit(ApplicationEvent.MinimumSpinDelayElapsed);
+    public readyToEndSpin() {
+        this.events.emit(ApplicationEvent.ReadyToEndSpin);
     }
 
     public endSpin(response: PlayResponse) {

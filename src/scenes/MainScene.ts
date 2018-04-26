@@ -42,7 +42,7 @@ export class MainScene extends Scene {
                 position: reel.position - 20
             }, 0);
         }
-        timeline.eventCallback('onComplete', () => this.application.minimumSpinDelayElapsed());
+        timeline.eventCallback('onComplete', () => this.application.readyToEndSpin());
     }
 
     public resize() {

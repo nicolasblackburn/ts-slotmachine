@@ -47,6 +47,8 @@ export class Ui {
             case SpinButtonState.Slam: 
                 //this.application.slam();
                 console.log('Slam');
+                this.spinButtonState = SpinButtonState.Disabled;
+                this.update();
                 break;
             case SpinButtonState.Disabled: 
                 console.log('Spin disabled');
