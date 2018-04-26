@@ -4,17 +4,22 @@ import { Player, PlayerData } from "../player/Player";
 export class PlayResponse {
     public bet: BetData;
     public player: PlayerData;
+    public totalWin: number;
     public results: PlayResult[];
+    public features: string[];
 
-    constructor(bet: BetData, player: PlayerData) {
+    constructor(bet: BetData, player: PlayerData, totalWin: number) {
         this.bet = bet;
         this.player = player;
+        this.totalWin = totalWin;
     }
 
     public serialize() {
         return {
             bet: Object.assign({}, this.bet),
             player: Object.assign({}, this.player),
+            totalWin: this.totalWin,
+            features: this.features.slice(),
             results: this.results.map(result => result.serialize())
         }
     }
@@ -22,6 +27,8 @@ export class PlayResponse {
     public unserialize(data: PlayResponseData) {
         this.bet = Object.assign({}, data.bet);
         this.player = Object.assign({}, data.player);
+        this.totalWin = data.totalWin;
+        this.features = data.features.slice();
         this.results = data.results.map(resultData => {
             return this.unserializePlayResult(resultData);
         });
@@ -43,46 +50,24 @@ export class PlayResponse {
 export interface PlayResponseData {
     bet: BetData;
     player: PlayerData;
+    totalWin: number;
     results: PlayResultData[];
+    features: string[];
 }
 
 export class PlayResult {
     public totalWin: number;
+    public wins: Win[];
 
     public serialize() {
         return {
-            totalWin: this.totalWin
+            totalWin: this.totalWin,
+            wins: this.wins.map(win => win.serialize())
         }
     }
 
     public unserialize(data: PlayResultData) {
         this.totalWin = data.totalWin;
-    }
-}
-
-export interface PlayResultData {
-    totalWin: number;
-    className: string;
-}
-
-export class SlotResult extends PlayResult {
-    public positions: number[];
-    public symbols: string[][];
-    public wins: Win[];
-
-    public serialize() {
-        const data = super.serialize();
-        Object.assign(data, {
-            positions: this.positions.slice(),
-            symbols: this.symbols.map(column => column.slice()),
-            wins: this.wins.map(win => win.serialize())
-        });
-        return data;
-    }
-
-    public unserialize(data: SlotResultData) {
-        this.positions = data.positions.slice();
-        this.symbols = data.symbols.map(column => column.slice());
         this.wins = data.wins.map(winData => {
             return this.unserializeWin(winData);
         });
@@ -101,10 +86,34 @@ export class SlotResult extends PlayResult {
     }
 }
 
+export interface PlayResultData {
+    totalWin: number;
+    className: string;
+    wins: WinData[];
+}
+
+export class SlotResult extends PlayResult {
+    public positions: number[];
+    public symbols: string[][];
+
+    public serialize() {
+        const data = super.serialize();
+        Object.assign(data, {
+            positions: this.positions.slice(),
+            symbols: this.symbols.map(column => column.slice())
+        });
+        return data;
+    }
+
+    public unserialize(data: SlotResultData) {
+        this.positions = data.positions.slice();
+        this.symbols = data.symbols.map(column => column.slice());
+    }
+}
+
 export interface SlotResultData extends PlayResultData {
     positions: number[];
     symbols: string[][];
-    wins: WinData[];
 }
 
 export class Win {

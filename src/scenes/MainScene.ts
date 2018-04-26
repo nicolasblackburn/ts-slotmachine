@@ -7,16 +7,20 @@ import { Application } from '../Application';
 import { StateManager } from '../modules/states/StateManager';
 import { State } from '../modules/states/State';
 
+interface MainSceneEventCallbacks {
+    onSpinButtonClick();
+    onStagePointerDown();
+}
+
 export class MainScene extends Scene {
     public state: StateManager<MainSceneState>;
-    protected application: Application;
     protected reelSet: ReelSet;
     protected ui: Ui;
     protected slotDefinition: SlotDefinition;
+    protected eventCallbacks: MainSceneEventCallbacks;
 
-    constructor(slotDefinition: SlotDefinition, ui: Ui, application: Application) {
-        super();
-        this.application = application;
+    constructor(application: Application, ui: Ui, slotDefinition: SlotDefinition) {
+        super(application);
         this.ui = ui;
         this.slotDefinition = slotDefinition;
     }
@@ -30,31 +34,27 @@ export class MainScene extends Scene {
         this.state.add('idle', new IdleState(this, this.reelSet));
         this.state.add('spinning', new SpinningState(this, this.reelSet));
         this.state.setCurrent('idle');
+
+        this.eventCallbacks = {
+            onSpinButtonClick: () => {
+                this.state.current().onSpinButtonClick();
+            },
+    
+            onStagePointerDown: () => {
+                this.state.current().onStagePointerDown();
+            }
+        };
     }
 
     public enter(previousScene: string, ...args: any[]) {
         this.ui.setVisible(true);
-
-        const onSpinButtonClick = () => {
-            this.state.current().onSpinButtonClick();
-        };
-
-        const onStagePointerDown = () => {
-            this.state.current().onStagePointerDown();
-        };
-
-        this.ui.events.on(UiEvent.SpinButtonClick, onSpinButtonClick);
-
-        this.application.renderer.plugins.interaction.on('pointerdown', onStagePointerDown);
-
-        this.once(SceneEvent.Exit, () => {
-            this.ui.events.removeListener(UiEvent.SpinButtonClick, onSpinButtonClick);
-            this.application.renderer.plugins.interaction.removeListener('pointerdown', onStagePointerDown);
-        });
+        this.ui.events.on(UiEvent.SpinButtonClick, this.eventCallbacks.onSpinButtonClick);
+        this.application.renderer.plugins.interaction.on('pointerdown', this.eventCallbacks.onStagePointerDown);
     }
 
     public exit(nextScene: string, ...args: any[]) {
-        this.emit(SceneEvent.Exit);
+        this.ui.events.removeListener(UiEvent.SpinButtonClick, this.eventCallbacks.onSpinButtonClick);
+        this.application.renderer.plugins.interaction.removeListener('pointerdown', this.eventCallbacks.onStagePointerDown);
     }
     
     public resize() {

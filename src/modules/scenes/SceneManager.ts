@@ -1,5 +1,6 @@
 import {Scene, SceneEvent} from './Scene';
 import { StateManager } from '../states/StateManager';
+import { PlayResponse, Win } from '../client/PlayResponse';
 
 export class SceneManager extends StateManager<Scene> {
     protected application: PIXI.Application;
@@ -24,8 +25,9 @@ export class SceneManager extends StateManager<Scene> {
         } 
         if (this.currentKey() !== sceneName) {
             if (!scene.initialized) {  
-                scene.once(SceneEvent.LoadEnd, () => {
+                scene.once(SceneEvent.EndLoad, () => {
                     scene.init();
+                    this.current().emit(SceneEvent.Init);
                     this.swapCurrentSceneAndEnter(sceneName, scene, ...args);
                 });
                 scene.load();
@@ -39,12 +41,98 @@ export class SceneManager extends StateManager<Scene> {
     public resize() {
         if (this.current()) {
             this.current().resize();
+            this.current().emit(SceneEvent.Resize);
         }
     }
 
     public update() {
         if (this.current()) {
             this.current().update();
+            this.current().emit(SceneEvent.Update);
+        }
+    }
+
+    public startRound() {
+        if (this.current()) {
+            this.current().startRound();
+        }
+    }
+
+    public endRound() {
+        if (this.current()) {
+            this.current().endRound();
+        }
+    }
+
+    public startSpin() {
+        if (this.current()) {
+            this.current().startSpin();
+        }
+    }
+
+    public endSpin() {
+        if (this.current()) {
+            this.current().endSpin();
+        }
+    }
+
+    public playRequestSuccess(response: PlayResponse) {
+        if (this.current()) {
+            this.current().playRequestSuccess(response);
+        }
+    }
+
+    public playRequestError(error: Error) {
+        if (this.current()) {
+            this.current().playRequestError(error);
+        }
+    }
+
+    public startShowWins(wins: Win[]) {
+        if (this.current()) {
+            this.current().startShowWins(wins);
+        }
+    }
+
+    public endShowWins(wins: Win[]) {
+        if (this.current()) {
+            this.current().endShowWins(wins);
+        }
+    }
+
+    public startShowTotalWin() {
+        if (this.current()) {
+            this.current().startShowTotalWin();
+        }
+    }
+
+    public endShowTotalWin() {
+        if (this.current()) {
+            this.current().endShowTotalWin();
+        }
+    }
+
+    public startShowWin(win: Win) {
+        if (this.current()) {
+            this.current().startShowWin(win);
+        }
+    }
+
+    public endShowWin(win: Win) {
+        if (this.current()) {
+            this.current().endShowWin(win);
+        }
+    }
+
+    public startFeature(feature: string) {
+        if (this.current()) {
+            this.current().startFeature(feature);
+        }
+    }
+
+    public endFeature(feature: string) {
+        if (this.current()) {
+            this.current().endFeature(feature);
         }
     }
 

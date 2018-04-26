@@ -1,32 +1,33 @@
 import { StateInterface } from "../states/State";
+import { PlayResponse, Win } from "../client/PlayResponse";
+import { Application } from "../../Application";
 
 export enum SceneEvent {
     Enter = 'SceneEvent.Enter',
     Exit = 'SceneEvent.Exit',
-    LoadStart = 'SceneEvent.LoadStart',
-    LoadEnd = 'SceneEvent.LoadEnd',
+    StartLoad = 'SceneEvent.StartLoad',
+    LoadProgress = 'SceneEvent.LoadProgress',
+    EndLoad = 'SceneEvent.EndLoad',
     Init = 'SceneEvent.Init',
     Resize = 'SceneEvent.Resize',
     Update = 'SceneEvent.Update'
 }
 
 export class Scene extends PIXI.Container implements StateInterface {
+    protected application: Application;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
-    protected pLoaded: boolean = false;
+    protected loaded: boolean = false;
+
+    constructor(application: Application) {
+        super();
+        this.application = application;
+    }
 
     get initialized() {
         return this.pInitialized;
     }
-
-    get loaded() {
-        return this.pLoaded;
-    }
     
-    constructor() {
-        super();
-    }
-
     public addResource(name: string, url: string) {
         if (this.loaded) {
             throw new Error('Cannot register resources once the scene resources are already loaded.');
@@ -35,25 +36,28 @@ export class Scene extends PIXI.Container implements StateInterface {
         return this;
     }
 
-    public init() { 
-    }
-
     public load() {
         if (this.loaded) {
             throw new Error('Cannot load an already loaded scene.');
         }
 
-        this.emit(SceneEvent.LoadStart);
+        this.emit(SceneEvent.StartLoad);
 
         for (const {name, url} of this.resources) {
             PIXI.loader.add(name, url);
         }
+
+        PIXI.loader.onProgress.add((progress) => {
+            this.emit(SceneEvent.LoadProgress, progress);
+        });
         
         PIXI.loader.load((resources: any) => {
-            this.pLoaded = true;
-            this.emit(SceneEvent.LoadEnd);
+            this.loaded = true;
+            this.emit(SceneEvent.EndLoad);
         });
     }
+
+    public init() {}
 
     public resize() {} 
 
@@ -62,4 +66,32 @@ export class Scene extends PIXI.Container implements StateInterface {
     public exit(nextScene: string, ...args: any[]) {}
 
     public update() {} 
+
+    public startRound() {}
+
+    public endRound() {}
+
+    public startSpin() {}
+
+    public endSpin() {}
+
+    public playRequestSuccess(response: PlayResponse) {}
+
+    public playRequestError(error: Error) {}
+
+    public startShowWins(wins: Win[]) {}
+
+    public endShowWins(wins: Win[]) {}
+
+    public startShowTotalWin() {}
+
+    public endShowTotalWin() {}
+
+    public startShowWin(win: Win) {}
+
+    public endShowWin(win: Win) {}
+
+    public startFeature(feature: string) {}
+
+    public endFeature(feature: string) {}
 }
