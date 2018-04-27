@@ -3,7 +3,7 @@ import { ReelSet } from '../components/ReelSet';
 import { Ui, UiEvent } from '../ui/Ui';
 import { MachineDefinition, SlotDefinition } from '../modules/machine/MachineDefinition';
 import * as gsap from 'gsap';
-import { Application } from '../Application';
+import { Application } from '../modules/Application';
 import { StateManager } from '../modules/states/StateManager';
 import { State } from '../modules/states/State';
 
