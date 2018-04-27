@@ -1,12 +1,12 @@
 import {Scene, SceneEvent} from './Scene';
 import { StateManager } from '../states/StateManager';
 import { PlayResponse, Win } from '../client/PlayResponse';
-import { ApplicationEventListener } from '../../Application';
+import { ApplicationEventListener, Application } from '../Application';
 
 export class SceneManager extends StateManager<Scene> implements ApplicationEventListener {
-    protected application: PIXI.Application;
+    protected application: Application;
 
-    constructor(application: PIXI.Application) {
+    constructor(application: Application) {
         super();
         this.application = application;
     }
@@ -77,6 +77,12 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         }
     }
 
+    public slam() {
+        if (this.current()) {
+            this.current().slam();
+        }
+    }
+
     public spinEndReady() {
         if (this.current()) {
             this.current().spinEndReady();
@@ -92,6 +98,12 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
     public resultsEnd() {
         if (this.current()) {
             this.current().resultsEnd();
+        }
+    }
+
+    public skipResults() {
+        if (this.current()) {
+            this.current().skipResults();
         }
     }
 

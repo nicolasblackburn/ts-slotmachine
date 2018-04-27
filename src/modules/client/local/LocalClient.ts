@@ -29,7 +29,7 @@ export class LocalClient implements Client {
     public play(bet: Bet, forcedPlay: ForcedPlay) {
         return new Promise<PlayResponse>((resolve, reject) => {
             setTimeout(() => {
-                const slotDefinition = (this.machineDefinition.features['base'] as SlotDefinition);
+                const slotDefinition = this.machineDefinition.base;
                 const positions = this.rng.draw(slotDefinition.reels);
                 const originalSymbols = this.rng.getSymbols(slotDefinition.reels, slotDefinition.rowCount, positions);
                 const response = new PlayResponse(bet.serialize(), this.player.serialize(), 0);

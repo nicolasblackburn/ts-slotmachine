@@ -1,6 +1,6 @@
 import { StateInterface } from "../states/State";
 import { PlayResponse, Win } from "../client/PlayResponse";
-import { Application, ApplicationEventListener } from "../../Application";
+import { Application, ApplicationEventListener } from "../Application";
 
 export enum SceneEvent {
     Enter = 'SceneEvent.Enter',
@@ -77,9 +77,13 @@ export class Scene extends PIXI.Container implements StateInterface, Application
 
     public spinEnd() {}
 
+    public slam() {}
+
     public resultsStart(response: PlayResponse) {}
 
     public resultsEnd() {}
+
+    public skipResults() {}
 
     public playRequestSuccess(response: PlayResponse) {}
 

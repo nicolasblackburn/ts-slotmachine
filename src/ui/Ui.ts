@@ -1,4 +1,4 @@
-import { Application, ApplicationEvent, ApplicationEventListener } from "../Application";
+import { Application, ApplicationEvent, ApplicationEventListener } from "../modules/Application";
 import { PlayResponse, Win } from "../modules/client/PlayResponse";
 
 export enum UiEvent {
@@ -8,6 +8,7 @@ export enum UiEvent {
 enum SpinButtonState {
     Spin,
     Slam,
+    SkipResults,
     Disabled
 }
 
@@ -45,8 +46,12 @@ export class Ui implements ApplicationEventListener {
                 this.application.roundStart();
                 break;
             case SpinButtonState.Slam: 
-                //this.application.slam();
-                console.log('Slam');
+                this.application.slam();
+                this.spinButtonState = SpinButtonState.Disabled;
+                this.update();
+                break;
+            case SpinButtonState.SkipResults: 
+                this.application.skipResults();
                 this.spinButtonState = SpinButtonState.Disabled;
                 this.update();
                 break;
@@ -80,20 +85,28 @@ export class Ui implements ApplicationEventListener {
         console.log('spinEnd');
     }
 
+    public slam() {
+        console.log('slam');
+    }
+
     public resultsStart(response: PlayResponse) {
         console.log('resultsStart', response);
+        if (!response.features.length && response.totalWin) {
+            this.spinButtonState = SpinButtonState.SkipResults;
+            this.update();
+        }
     }
 
     public resultsEnd() {
         console.log('resultsEnd');
     }
 
+    public skipResults() {
+        console.log('skipResults');
+    }
+
     public playRequestSuccess(response: PlayResponse) {
         console.log('playRequestSuccess', response);
-        if (!response.features.length) {
-            this.spinButtonState = SpinButtonState.Slam;
-            this.update();
-        }
         this.spinButtonState = SpinButtonState.Slam;
         this.update();
     }

@@ -1,10 +1,11 @@
 export interface MachineDefinition {
-    startFeature: string;
+    base: SlotDefinition;
     features: {[featureName: string]: FeatureDefinition};
 }
 
 export interface FeatureDefinition {
-
+    name: string;
+    type: string;
 }
 
 export interface SlotDefinition extends FeatureDefinition {
