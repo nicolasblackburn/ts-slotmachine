@@ -1,4 +1,4 @@
-import { Application, ApplicationEvent } from "../Application";
+import { Application, ApplicationEvent, ApplicationEventListener } from "../Application";
 import { PlayResponse, Win } from "../modules/client/PlayResponse";
 
 export enum UiEvent {
@@ -11,7 +11,7 @@ enum SpinButtonState {
     Disabled
 }
 
-export class Ui {
+export class Ui implements ApplicationEventListener {
     public spinButton: HTMLDivElement;
     public uiContainer: HTMLDivElement;
     protected application: Application;
@@ -42,7 +42,7 @@ export class Ui {
     public spinButtonClick() {
         switch (this.spinButtonState) {
             case SpinButtonState.Spin: 
-                this.application.startRound();
+                this.application.roundStart();
                 break;
             case SpinButtonState.Slam: 
                 //this.application.slam();
@@ -56,52 +56,83 @@ export class Ui {
         }
     }
 
-    public startRound() {
+    public roundStart() {
+        console.log('roundStart');
         this.spinButtonState = SpinButtonState.Disabled;
         this.update();
     }
 
-    public endRound() {
+    public roundEnd() {
+        console.log('roundEnd');
         this.spinButtonState = SpinButtonState.Spin;
         this.update();
     }
 
-    public startSpin() {}
+    public spinStart() {
+        console.log('spinStart');
+    }
 
-    public endSpin(response: PlayResponse) {
+    public spinEndReady() {
+        console.log('spinEndReady');
+    }
+
+    public spinEnd() {
+        console.log('spinEnd');
+    }
+
+    public resultsStart(response: PlayResponse) {
+        console.log('resultsStart', response);
+    }
+
+    public resultsEnd() {
+        console.log('resultsEnd');
+    }
+
+    public playRequestSuccess(response: PlayResponse) {
+        console.log('playRequestSuccess', response);
         if (!response.features.length) {
             this.spinButtonState = SpinButtonState.Slam;
             this.update();
         }
-    }
-
-    public enableSpin() {
-        this.spinButtonState = SpinButtonState.Spin;
-        this.update();
-    }
-
-    public playRequestSuccess(response: PlayResponse) {
         this.spinButtonState = SpinButtonState.Slam;
         this.update();
     }
 
-    public playRequestError(error: Error) {}
+    public playRequestError(error: Error) {
+        console.log('playRequestError', error);
+    }
 
-    public startShowWins(wins: Win[]) {}
+    public winsStart(response: PlayResponse) {
+        console.log('winsStart', response);
+    }
 
-    public endShowWins() {}
+    public winsEnd() {
+        console.log('winsEnd');
+    }
 
-    public startShowTotalWin() {}
+    public totalWinStart(response: PlayResponse) {
+        console.log('totalWinStart', response);
+    }
 
-    public endShowTotalWin() {}
+    public totalWinEnd() {
+        console.log('totalWinEnd');
+    }
 
-    public startShowWin(win: Win) {}
+    public winStart(win: Win) {
+        console.log('winStart', win);
+    }
 
-    public endShowWin() {}
+    public winEnd() {
+        console.log('winEnd');
+    }
 
-    public startFeature(feature: string) {}
+    public featureStart(feature: string, response: PlayResponse) {
+        console.log('featureStart', feature, response);
+    }
 
-    public endFeature() {}
+    public featureEnd() {
+        console.log('featureEnd');
+    }
 
     public update() {
         this.removeClass(this.spinButton, 'disabled');

@@ -8,35 +8,75 @@ import { LocalClient } from './modules/client/local/LocalClient';
 import { machineDefinition } from './machineDefinition';
 import { promiseFold } from './functions';
 import { Bet } from './modules/bet/Bet';
-import { ApplicationModel } from './ApplicationModel';
 import { PlayResponse, Win } from './modules/client/PlayResponse';
 import { State } from './modules/states/State';
-import { StateManager } from './modules/states/StateManager';
 
+/**
+ * Order of events:
+ * RoundStart
+ *     SpinStart
+ *         PlayRequestSuccess | PlayRequestError
+ *         SpinEndReady
+ *     SpinEnd
+ *     ResultsStart
+ *         TotalWinStart
+ *         TotalWinEnd
+ *         WinsStart
+ *             WinStart
+ *             WinEnd
+ *         WinsEnd
+ *         FeatureStart
+ *         FeatureEnd
+ *     ResultsEnd
+ * RoundEnd
+ */
 export enum ApplicationEvent {
-    StartRound = 'ApplicationEvent.StartRound',
-    EndRound = 'ApplicationEvent.EndRound',
-    StartSpin = 'ApplicationEvent.StartSpin',
-    EndSpin = 'ApplicationEvent.EndSpin',
+    RoundStart = 'ApplicationEvent.RoundStart',
+    RoundEnd = 'ApplicationEvent.RoundEnd',
+    SpinStart = 'ApplicationEvent.SpinStart',
+    SpinEnd = 'ApplicationEvent.SpinEnd',
+    ResultsStart = 'ApplicationEvent.ResultsStart',
+    ResultsEnd = 'ApplicationEvent.ResultsEnd',
     PlayRequestSuccess = 'ApplicationEvent.PlayRequestSuccess',
     PlayRequestError = 'ApplicationEvent.PlayRequestError', 
-    ReadyToEndSpin = 'ApplicationEvent.ReadyToEndSpin',
-    StartShowWins = 'ApplicationEvent.StartShowWins',
-    EndShowWins = 'ApplicationEvent.EndShowWins',
-    StartShowTotalWin = 'ApplicationEvent.StartShowTotalWin',
-    EndShowTotalWin = 'ApplicationEvent.EndShowTotalWin',
-    StartShowWin = 'ApplicationEvent.StartShowWin',
-    EndShowWin = 'ApplicationEvent.EndShowWin',
-    StartFeature = 'ApplicationEvent.StartFeature',
-    EndFeature = 'ApplicationEvent.EndFeature',
+    SpinEndReady = 'ApplicationEvent.SpinEndReady',
+    WinsStart = 'ApplicationEvent.WinsStart',
+    WinsEnd = 'ApplicationEvent.WinsEnd',
+    TotalWinStart = 'ApplicationEvent.TotalWinStart',
+    TotalWinEnd = 'ApplicationEvent.TotalWinEnd',
+    WinStart = 'ApplicationEvent.WinStart',
+    WinEnd = 'ApplicationEvent.WinEnd',
+    FeatureStart = 'ApplicationEvent.FeatureStart',
+    FeatureEnd = 'ApplicationEvent.FeatureEnd',
 }
 
-export class Application extends PIXI.Application {
+export interface ApplicationEventListener {
+    roundStart();
+    roundEnd();
+    spinStart();
+    spinEndReady();
+    spinEnd();
+    resultsStart(response: PlayResponse);
+    resultsEnd();
+    playRequestSuccess(response: PlayResponse);
+    playRequestError(error: Error);
+    winsStart(response: PlayResponse);
+    winsEnd();
+    totalWinStart(response: PlayResponse);
+    totalWinEnd();
+    winStart(win: Win);
+    winEnd();
+    featureStart(feature: string, response: PlayResponse);
+    featureEnd();
+}
+
+export class Application extends PIXI.Application implements ApplicationEventListener {
     public events: PIXI.utils.EventEmitter;
-    public model: ApplicationModel;
+    protected bet: Bet;
+    protected client: Client;
+    protected playResponse: PlayResponse;
     protected scenes: SceneManager;
     protected ui: Ui;
-    protected client: Client;
 
     constructor() {
         super({
@@ -52,8 +92,7 @@ export class Application extends PIXI.Application {
 
         this.client = new LocalClient(machineDefinition);
 
-        this.model = new ApplicationModel();
-        this.model.bet = new Bet(5, machineDefinition.features.base.paylines.length);
+        this.bet = new Bet(5, machineDefinition.features.base.paylines.length);
 
         this.ui = new Ui(this);
         document.body.appendChild(this.ui.uiContainer);
@@ -65,35 +104,41 @@ export class Application extends PIXI.Application {
         window.addEventListener('resize', () => this.resize());
         this.resize();
 
-        this.events.on(ApplicationEvent.StartRound, () => this.scenes.startRound());
-        this.events.on(ApplicationEvent.EndRound, () => this.scenes.endRound());
-        this.events.on(ApplicationEvent.StartSpin, () => this.scenes.startSpin());
-        this.events.on(ApplicationEvent.EndSpin, (response) => this.scenes.endSpin(response));
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (success) => this.scenes.playRequestSuccess(success));
+        this.events.on(ApplicationEvent.RoundStart, () => this.scenes.roundStart());
+        this.events.on(ApplicationEvent.RoundEnd, () => this.scenes.roundEnd());
+        this.events.on(ApplicationEvent.SpinStart, () => this.scenes.spinStart());
+        this.events.on(ApplicationEvent.SpinEndReady, () => this.scenes.spinEndReady());
+        this.events.on(ApplicationEvent.SpinEnd, () => this.scenes.spinEnd());
+        this.events.on(ApplicationEvent.ResultsStart, (response) => this.scenes.resultsStart(response));
+        this.events.on(ApplicationEvent.ResultsEnd, () => this.scenes.resultsEnd());
+        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => this.scenes.playRequestSuccess(response));
         this.events.on(ApplicationEvent.PlayRequestError, (error) => this.scenes.playRequestError(error));
-        this.events.on(ApplicationEvent.StartShowWins, (wins) => this.scenes.startShowWins(wins));
-        this.events.on(ApplicationEvent.EndShowWins, () => this.scenes.endShowWins());
-        this.events.on(ApplicationEvent.StartShowTotalWin, () => this.scenes.startShowTotalWin());
-        this.events.on(ApplicationEvent.EndShowTotalWin, () => this.scenes.endShowTotalWin());
-        this.events.on(ApplicationEvent.StartShowWin, (win) => this.scenes.startShowWin(win));
-        this.events.on(ApplicationEvent.EndShowWin, () => this.scenes.endShowWin());
-        this.events.on(ApplicationEvent.StartFeature, (feature) => this.scenes.startFeature(feature));
-        this.events.on(ApplicationEvent.EndFeature, () => this.scenes.endFeature());
+        this.events.on(ApplicationEvent.WinsStart, (response) => this.scenes.winsStart(response));
+        this.events.on(ApplicationEvent.WinsEnd, () => this.scenes.winsEnd());
+        this.events.on(ApplicationEvent.TotalWinStart, (response) => this.scenes.totalWinStart(response));
+        this.events.on(ApplicationEvent.TotalWinEnd, () => this.scenes.totalWinEnd());
+        this.events.on(ApplicationEvent.WinStart, (win) => this.scenes.winStart(win));
+        this.events.on(ApplicationEvent.WinEnd, () => this.scenes.winEnd());
+        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => this.scenes.featureStart(feature, response));
+        this.events.on(ApplicationEvent.FeatureEnd, () => this.scenes.featureEnd());
 
-        this.events.on(ApplicationEvent.StartRound, () => this.ui.startRound());
-        this.events.on(ApplicationEvent.EndRound, () => this.ui.endRound());
-        this.events.on(ApplicationEvent.StartSpin, () => this.ui.startSpin());
-        this.events.on(ApplicationEvent.EndSpin, (response) => this.ui.endSpin(response));
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (success) => this.ui.playRequestSuccess(success));
+        this.events.on(ApplicationEvent.RoundStart, () => this.ui.roundStart());
+        this.events.on(ApplicationEvent.RoundEnd, () => this.ui.roundEnd());
+        this.events.on(ApplicationEvent.SpinStart, () => this.ui.spinStart());
+        this.events.on(ApplicationEvent.SpinEndReady, () => this.ui.spinEndReady());
+        this.events.on(ApplicationEvent.SpinEnd, () => this.ui.spinEnd());
+        this.events.on(ApplicationEvent.ResultsStart, (response) => this.ui.resultsStart(response));
+        this.events.on(ApplicationEvent.ResultsEnd, () => this.ui.resultsEnd());
+        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => this.ui.playRequestSuccess(response));
         this.events.on(ApplicationEvent.PlayRequestError, (error) => this.ui.playRequestError(error));
-        this.events.on(ApplicationEvent.StartShowWins, (wins) => this.ui.startShowWins(wins));
-        this.events.on(ApplicationEvent.EndShowWins, () => this.ui.endShowWins());
-        this.events.on(ApplicationEvent.StartShowTotalWin, () => this.ui.startShowTotalWin());
-        this.events.on(ApplicationEvent.EndShowTotalWin, () => this.ui.endShowTotalWin());
-        this.events.on(ApplicationEvent.StartShowWin, (win) => this.ui.startShowWin(win));
-        this.events.on(ApplicationEvent.EndShowWin, () => this.ui.endShowWin());
-        this.events.on(ApplicationEvent.StartFeature, (feature) => this.ui.startFeature(feature));
-        this.events.on(ApplicationEvent.EndFeature, () => this.ui.endFeature());
+        this.events.on(ApplicationEvent.WinsStart, (response) => this.ui.winsStart(response));
+        this.events.on(ApplicationEvent.WinsEnd, () => this.ui.winsEnd());
+        this.events.on(ApplicationEvent.TotalWinStart, (response) => this.ui.totalWinStart(response));
+        this.events.on(ApplicationEvent.TotalWinEnd, () => this.ui.totalWinEnd());
+        this.events.on(ApplicationEvent.WinStart, (win) => this.ui.winStart(win));
+        this.events.on(ApplicationEvent.WinEnd, () => this.ui.winEnd());
+        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => this.ui.featureStart(feature, response));
+        this.events.on(ApplicationEvent.FeatureEnd, () => this.ui.featureEnd());
     }
 
     public resize() {
@@ -101,65 +146,95 @@ export class Application extends PIXI.Application {
         this.scenes.resize();
     }
 
-    public startRound() {
-        this.model.playResponse = null;
-        this.model.wins = [];
-        this.events.emit(ApplicationEvent.StartRound);
-        this.startSpin();
+    public roundStart() {
+        this.playResponse = null;
+        this.events.emit(ApplicationEvent.RoundStart);
+        this.spinStart();
     }
 
-    public endRound() {
-        this.events.emit(ApplicationEvent.EndRound);
+    public roundEnd() {
+        this.events.emit(ApplicationEvent.RoundEnd);
     }
 
-    public startSpin() {
-        this.events.emit(ApplicationEvent.StartSpin);
+    public spinStart() {
+        this.events.emit(ApplicationEvent.SpinStart);
 
         let requestCompleted = false;
-        let readyToEndSpin = false;
+        let spinEndReady = false;
 
-        const tryEndSpin = () => {
-            if (requestCompleted && readyToEndSpin) {
-                this.events.removeListener(ApplicationEvent.PlayRequestSuccess, succesHandler);
-                this.events.removeListener(ApplicationEvent.PlayRequestError, errorHandler);
-                this.events.removeListener(ApplicationEvent.EndSpin, readyToEndSpinHandler);
-                this.endSpin(this.model.playResponse);
+        const trySpinEnd = () => {
+            if (requestCompleted && spinEndReady) {
+                this.events.removeListener(ApplicationEvent.PlayRequestSuccess, onSuccess);
+                this.events.removeListener(ApplicationEvent.PlayRequestError, onError);
+                this.events.removeListener(ApplicationEvent.ResultsStart, onSpinEndReady);
+                this.spinEnd();
             }
         }
 
-        const succesHandler = () => {
+        const onSuccess = () => {
             requestCompleted = true;
-            tryEndSpin();
+            trySpinEnd();
         }
 
-        const errorHandler = () => {
+        const onError = () => {
             requestCompleted = true;
-            tryEndSpin();
+            trySpinEnd();
         }
 
-        const readyToEndSpinHandler = () => {
-            readyToEndSpin = true;
-            tryEndSpin();
+        const onSpinEndReady = () => {
+            spinEndReady = true;
+            trySpinEnd();
         }
 
-        this.events.once(ApplicationEvent.PlayRequestSuccess, succesHandler);
-        this.events.once(ApplicationEvent.PlayRequestError, errorHandler);
-        this.events.once(ApplicationEvent.ReadyToEndSpin, readyToEndSpinHandler);
+        this.events.once(ApplicationEvent.PlayRequestSuccess, onSuccess);
+        this.events.once(ApplicationEvent.PlayRequestError, onError);
+        this.events.once(ApplicationEvent.SpinEndReady, onSpinEndReady);
 
-        this.client.play(this.model.bet).then(
+        this.client.play(this.bet).then(
             response => this.playRequestSuccess(response),
             error => this.playRequestError(error)
         );
     }
 
-    public readyToEndSpin() {
-        this.events.emit(ApplicationEvent.ReadyToEndSpin);
+    public spinEndReady() {
+        this.events.emit(ApplicationEvent.SpinEndReady);
     }
 
-    public endSpin(response: PlayResponse) {
-        this.events.emit(ApplicationEvent.EndSpin, response);
+    public spinEnd() {
+        this.events.emit(ApplicationEvent.SpinEnd);
+        this.resultsStart(this.playResponse);
+    }
+
+    public resultsStart(response: PlayResponse) {
+        this.events.emit(ApplicationEvent.ResultsStart, response);
+        if (response.totalWin > 0) {
+            this.totalWinStart(response);
+        }
+        const hasFeatures = !!response.features.length;
+        if (!hasFeatures && response.totalWin === 0) {
+            this.resultsEnd();
+        }
+    }
+
+    public resultsEnd() {
+        this.events.emit(ApplicationEvent.ResultsEnd);
+        this.roundEnd();
+    }
+
+    public playRequestSuccess(response: PlayResponse) {
+        this.playResponse = response;
+        this.events.emit(ApplicationEvent.PlayRequestSuccess, response);
+    }
+
+    public playRequestError(error: Error) {
+        this.events.emit(ApplicationEvent.PlayRequestSuccess, error);
+    }
+
+    public winsStart(response: PlayResponse) {
+        this.events.emit(ApplicationEvent.WinsStart, response);
+
         // Flatten the wins
-        this.model.wins = this.model.playResponse.results.reduce(
+        const wins = response.results.reduce(
             (wins, result) => {
                 return result.wins.reduce(
                     (wins, win) => {
@@ -170,83 +245,62 @@ export class Application extends PIXI.Application {
             },
             []
         );
-        if (this.model.playResponse.totalWin > 0) {
-            this.startShowWins(this.model.wins);
+        
+        const winStart = (winIndex) => {
+            if (winIndex < wins.length) {
+                const win = wins[winIndex];
+                this.events.once(ApplicationEvent.WinEnd, () => {
+                    winStart(winIndex + 1);
+                });
+                this.winStart(win);
+            } else {
+                this.winsEnd();
+            }
         }
-        const hasFeatures = !!this.model.playResponse.features.length;
-        if (!hasFeatures && this.model.playResponse.totalWin === 0) {
-            this.endRound();
-        }
+        winStart(0);
     }
 
-    public playRequestSuccess(response: PlayResponse) {
-        this.model.playResponse = response;
-        this.events.emit(ApplicationEvent.PlayRequestSuccess, response);
-    }
-
-    public playRequestError(error: Error) {
-        this.events.emit(ApplicationEvent.PlayRequestSuccess, error);
-    }
-
-    public startShowWins(wins: Win[]) {
-        this.events.emit(ApplicationEvent.StartShowWins, wins);
-        this.events.once(ApplicationEvent.EndShowTotalWin, () => {
-            const startShowWin = (winIndex) => {
-                if (winIndex < wins.length) {
-                    const win = wins[winIndex];
-                    this.events.once(ApplicationEvent.EndShowWin, () => {
-                        startShowWin(winIndex + 1);
+    public winsEnd() {
+        this.events.emit(ApplicationEvent.WinsEnd);
+        if (this.playResponse.features.length) {
+            const featureStart = (featureIndex) => {
+                if (featureIndex < this.playResponse.features.length) {
+                    const feature = this.playResponse.features[featureIndex];
+                    this.events.once(ApplicationEvent.FeatureEnd, () => {
+                        featureStart(featureIndex + 1);
                     });
-                    this.startShowWin(win);
+                    this.featureStart(feature, this.playResponse);
                 } else {
-                    this.endShowWins();
+                    this.resultsEnd();
                 }
             }
-            startShowWin(0);
-        });
-        this.startShowTotalWin();
-    }
-
-    public endShowWins() {
-        this.events.emit(ApplicationEvent.EndShowWins);
-        if (this.model.playResponse.features.length) {
-            const startFeature = (featureIndex) => {
-                if (featureIndex < this.model.playResponse.features.length) {
-                    const feature = this.model.playResponse.features[featureIndex];
-                    this.events.once(ApplicationEvent.EndFeature, () => {
-                        startFeature(featureIndex + 1);
-                    });
-                    this.startFeature(feature);
-                } else {
-                    this.endRound();
-                }
-            }
-            startFeature(0);
+            featureStart(0);
         }
     }
 
-    public startShowTotalWin() {
-        this.events.emit(ApplicationEvent.StartShowTotalWin);
+    public totalWinStart(response: PlayResponse) {
+        this.events.emit(ApplicationEvent.TotalWinStart, response);
     }
 
-    public endShowTotalWin() {
-        this.events.emit(ApplicationEvent.EndShowTotalWin);
+    public totalWinEnd() {
+        this.events.emit(ApplicationEvent.TotalWinEnd);
+        this.winsStart(this.playResponse);
     }
 
-    public startShowWin(win: Win) {
-        this.events.emit(ApplicationEvent.StartShowWin, win);
+    public winStart(win: Win) {
+        this.events.emit(ApplicationEvent.WinStart, win);
     }
 
-    public endShowWin() {
-        this.events.emit(ApplicationEvent.EndShowWin);
+    public winEnd() {
+        this.events.emit(ApplicationEvent.WinEnd);
     }
 
-    public startFeature(feature: string) {
-        this.events.emit(ApplicationEvent.StartFeature, feature);
+    public featureStart(feature: string, response: PlayResponse) {
+        this.events.emit(ApplicationEvent.FeatureStart, feature, response);
     }
 
-    public endFeature() {
-        this.events.emit(ApplicationEvent.EndFeature);
+    public featureEnd() {
+        this.events.emit(ApplicationEvent.FeatureEnd);
     }
 
     protected initScenes() {

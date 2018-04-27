@@ -1,8 +1,9 @@
 import {Scene, SceneEvent} from './Scene';
 import { StateManager } from '../states/StateManager';
 import { PlayResponse, Win } from '../client/PlayResponse';
+import { ApplicationEventListener } from '../../Application';
 
-export class SceneManager extends StateManager<Scene> {
+export class SceneManager extends StateManager<Scene> implements ApplicationEventListener {
     protected application: PIXI.Application;
 
     constructor(application: PIXI.Application) {
@@ -52,27 +53,45 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public startRound() {
+    public roundStart() {
         if (this.current()) {
-            this.current().startRound();
+            this.current().roundStart();
         }
     }
 
-    public endRound() {
+    public roundEnd() {
         if (this.current()) {
-            this.current().endRound();
+            this.current().roundEnd();
         }
     }
 
-    public startSpin() {
+    public spinStart() {
         if (this.current()) {
-            this.current().startSpin();
+            this.current().spinStart();
         }
     }
 
-    public endSpin(response: PlayResponse) {
+    public spinEnd() {
         if (this.current()) {
-            this.current().endSpin(response);
+            this.current().spinEnd();
+        }
+    }
+
+    public spinEndReady() {
+        if (this.current()) {
+            this.current().spinEndReady();
+        }
+    }
+
+    public resultsStart(response: PlayResponse) {
+        if (this.current()) {
+            this.current().resultsStart(response);
+        }
+    }
+
+    public resultsEnd() {
+        if (this.current()) {
+            this.current().resultsEnd();
         }
     }
 
@@ -88,51 +107,51 @@ export class SceneManager extends StateManager<Scene> {
         }
     }
 
-    public startShowWins(wins: Win[]) {
+    public winsStart(response: PlayResponse) {
         if (this.current()) {
-            this.current().startShowWins(wins);
+            this.current().winsStart(response);
         }
     }
 
-    public endShowWins() {
+    public winsEnd() {
         if (this.current()) {
-            this.current().endShowWins();
+            this.current().winsEnd();
         }
     }
 
-    public startShowTotalWin() {
+    public totalWinStart(response: PlayResponse) {
         if (this.current()) {
-            this.current().startShowTotalWin();
+            this.current().totalWinStart(response);
         }
     }
 
-    public endShowTotalWin() {
+    public totalWinEnd() {
         if (this.current()) {
-            this.current().endShowTotalWin();
+            this.current().totalWinEnd();
         }
     }
 
-    public startShowWin(win: Win) {
+    public winStart(win: Win) {
         if (this.current()) {
-            this.current().startShowWin(win);
+            this.current().winStart(win);
         }
     }
 
-    public endShowWin() {
+    public winEnd() {
         if (this.current()) {
-            this.current().endShowWin();
+            this.current().winEnd();
         }
     }
 
-    public startFeature(feature: string) {
+    public featureStart(feature: string, response: PlayResponse) {
         if (this.current()) {
-            this.current().startFeature(feature);
+            this.current().featureStart(feature, response);
         }
     }
 
-    public endFeature() {
+    public featureEnd() {
         if (this.current()) {
-            this.current().endFeature();
+            this.current().featureEnd();
         }
     }
 

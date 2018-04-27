@@ -35,14 +35,14 @@ export class MainScene extends Scene {
         //this.application.renderer.plugins.interaction.removeListener('pointerdown', this.eventCallbacks.onStagePointerDown);
     }
     
-    public startSpin() {
+    public spinStart() {
         const timeline = new gsap.TimelineLite();
         for (const reel of this.reelSet.reels) {
             timeline.to(reel, 1.5, {
                 position: reel.position - 20
             }, 0);
         }
-        timeline.eventCallback('onComplete', () => this.application.readyToEndSpin());
+        timeline.eventCallback('onComplete', () => this.application.spinEndReady());
     }
 
     public resize() {

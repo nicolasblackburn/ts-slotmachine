@@ -1,6 +1,6 @@
 import { StateInterface } from "../states/State";
 import { PlayResponse, Win } from "../client/PlayResponse";
-import { Application } from "../../Application";
+import { Application, ApplicationEventListener } from "../../Application";
 
 export enum SceneEvent {
     Enter = 'SceneEvent.Enter',
@@ -13,7 +13,7 @@ export enum SceneEvent {
     Update = 'SceneEvent.Update'
 }
 
-export class Scene extends PIXI.Container implements StateInterface {
+export class Scene extends PIXI.Container implements StateInterface, ApplicationEventListener {
     protected application: Application;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
@@ -67,31 +67,37 @@ export class Scene extends PIXI.Container implements StateInterface {
 
     public update() {} 
 
-    public startRound() {}
+    public roundStart() {}
 
-    public endRound() {}
+    public roundEnd() {}
 
-    public startSpin() {}
+    public spinStart() {}
 
-    public endSpin(response: PlayResponse) {}
+    public spinEndReady() {}
+
+    public spinEnd() {}
+
+    public resultsStart(response: PlayResponse) {}
+
+    public resultsEnd() {}
 
     public playRequestSuccess(response: PlayResponse) {}
 
     public playRequestError(error: Error) {}
 
-    public startShowWins(wins: Win[]) {}
+    public winsStart(response: PlayResponse) {}
 
-    public endShowWins() {}
+    public winsEnd() {}
 
-    public startShowTotalWin() {}
+    public totalWinStart(response: PlayResponse) {}
 
-    public endShowTotalWin() {}
+    public totalWinEnd() {}
 
-    public startShowWin(win: Win) {}
+    public winStart(win: Win) {}
 
-    public endShowWin() {}
+    public winEnd() {}
 
-    public startFeature(feature: string) {}
+    public featureStart(feature: string, response: PlayResponse) {}
 
-    public endFeature() {}
+    public featureEnd() {}
 }
