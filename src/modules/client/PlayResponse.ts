@@ -21,8 +21,8 @@ export class PlayResponse {
 
     public serialize() {
         return {
-            bet: Object.assign({}, this.bet),
-            player: Object.assign({}, this.player),
+            bet: this.bet.serialize(),
+            player: this.player.serialize(),
             totalWin: this.totalWin,
             features: this.features.slice(),
             results: this.results.map(result => result.serialize())
@@ -30,8 +30,10 @@ export class PlayResponse {
     }
 
     public unserialize(data: PlayResponseData) {
-        this.bet = Object.assign({}, data.bet);
-        this.player = Object.assign({}, data.player);
+        this.bet = new Bet(0, 0);
+        this.bet.unserialize(data.bet);
+        this.player = new Player(0, '', '');
+        this.player.unserialize(data.player);
         this.totalWin = data.totalWin;
         this.features = data.features.slice();
         this.results = data.results.map(resultData => {

@@ -1,5 +1,5 @@
-import { BetData } from "../bet/Bet";
-import { PlayerData } from "../player/Player";
+import { BetData } from "../bet/BetData";
+import { PlayerData } from "../player/PlayerData";
 import { PlayResultData } from "./PlayResultData";
 
 export interface PlayResponseData {
