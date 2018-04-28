@@ -27,20 +27,16 @@ export class AbstractApplication extends PIXI.Application implements Application
         });
 
         this.machineDefinition = machineDefinition;
-
         this.events = new PIXI.utils.EventEmitter();
-
         this.renderer.backgroundColor = 0x080010;
-        document.body.appendChild(this.view);
-
         this.client = new LocalClient(machineDefinition);
-
-        this.bet = new Bet(5, machineDefinition.base.paylines.length);
-
+        this.bet = new Bet(5, 1);
         this.ui = new Ui(this);
+        this.scenes = new SceneManager(this.stage);
+
+        document.body.appendChild(this.view);
         document.body.appendChild(this.ui.uiContainer);
 
-        this.scenes = new SceneManager(this.stage);
         this.ticker.add(deltaTime => this.scenes.update());
 
         this.events.on(ApplicationEvent.RoundStart, () => this.scenes.roundStart());
@@ -84,14 +80,14 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.FeatureEnd, () => this.ui.featureEnd());
 
         window.addEventListener('resize', () => this.resize());
-
-        this.init();
-
+        
         this.resize();
     }
 
     public resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight);
+        this.renderer.view.style.width = window.innerWidth + 'px';
+        this.renderer.view.style.height = window.innerHeight + 'px';
         this.scenes.resize();
     }
 
@@ -259,6 +255,4 @@ export class AbstractApplication extends PIXI.Application implements Application
     public featureEnd() {
         this.events.emit(ApplicationEvent.FeatureEnd);
     }
-
-    protected init() {}
 }

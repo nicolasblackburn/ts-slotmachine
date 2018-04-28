@@ -3,6 +3,7 @@ import { modulo } from '../functions'
 
 export class Reel {
     public rowHeight: number = 0;
+    public velocity: number = 0;
     protected pPosition: number = 0;
     protected symbols: PIXI.DisplayObject[] = [];
     protected visibleSymbols: PIXI.DisplayObject[] = [];
@@ -60,6 +61,7 @@ export class Reel {
             symbol.visible = false;
         }
         this.visibleSymbols = [];
+        this.pPosition += this.velocity;
         const offset = Math.ceil(modulo(this.pPosition, this.getSymbolCount())) - 1;
         for (let i = 0; i < this.rowCount + 1; i++) {
             const symbolIndex = modulo(offset + i, this.getSymbolCount());

@@ -57,8 +57,8 @@ module.exports = {
         ]),
 		new ExtractTextPlugin('styles.css.[contentHash].css')
 	],
-	devtool: 'cheap-module-eval-source-map',
 	devServer: {
+        host: '192.168.1.107',
 		contentBase: path.resolve(__dirname, 'dist')
 	}
 };

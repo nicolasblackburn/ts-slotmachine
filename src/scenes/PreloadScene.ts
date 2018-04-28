@@ -28,6 +28,7 @@ export class PreloadScene extends Scene {
         const height = window.innerHeight;
         
         this.progressBar.width = width * 0.75;
+        this.progressBar.height = height * 0.04;
 
         this.progressBar.position.set(
             (width - this.progressBar.width) * 0.5,

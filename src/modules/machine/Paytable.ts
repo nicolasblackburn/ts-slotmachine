@@ -1,0 +1,1 @@
+export type Paytable = {[symbol: string]: {[count: number]: number}};

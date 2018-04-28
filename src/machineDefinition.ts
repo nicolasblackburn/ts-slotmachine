@@ -1,4 +1,6 @@
 import { MachineDefinition } from "./modules/machine/MachineDefinition";
+import { SlotDefinition } from "./modules/machine/SlotDefinition";
+import { PickerDefinition } from "./modules/machine/PickerDefinition";
 
 const basicSymbols = [
     'lv1', 
@@ -25,9 +27,9 @@ for (let reelIndex = 0; reelIndex < reelCount; reelIndex++) {
 }
 
 export const machineDefinition: MachineDefinition = {
-    base: {
+    base: <SlotDefinition>{
         name: 'base',
-        type: 'slot',
+        type: 'Slot',
         rowCount: 3,
         reels: reels,
         paytable: {
@@ -92,7 +94,16 @@ export const machineDefinition: MachineDefinition = {
             [1, 0, 1, 0, 1],
             [1, 2, 1, 2, 1],
             [2, 1, 2, 1, 2]
-        ]
+        ],
+        wilds: ['wi']
     },
-    features: {}
+    features: {
+        'picker': <PickerDefinition>{
+            name: 'picker',
+            type: 'Picker',
+            picks: [['pi1', 'pi2', 'pi3', 'pi4', 'pi5']],
+            weights: [[1, 1, 1, 1, 1]],
+            payouts: [[2, 3, 4, 5, 6]]
+        }
+    }
 };

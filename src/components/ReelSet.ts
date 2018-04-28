@@ -1,6 +1,6 @@
 import { Reel } from './Reel';
 import { htorgb } from '../functions';
-import { SlotDefinition } from '../modules/machine/MachineDefinition';
+import { SlotDefinition } from '../modules/machine/SlotDefinition';
 
 const BASIC_SYMBOLS = {
     'lv1': 'sym_10', 
@@ -58,5 +58,11 @@ export class ReelSet extends PIXI.Container {
 
         this.addChild(mask);
         this.symbols.mask = mask;
+    }
+
+    public update() {
+        for (const reel of this.reels) {
+            reel.update();
+        }
     }
 }

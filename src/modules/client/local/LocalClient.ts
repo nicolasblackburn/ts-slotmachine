@@ -4,8 +4,11 @@ import { Bet } from "../../bet/Bet";
 import { InitResponse } from "../InitResponse";
 import { PlayResponse } from "../PlayResponse";
 import { Rng } from "../../rng/Rng";
-import { MachineDefinition, SlotDefinition } from "../../machine/MachineDefinition";
+import { MachineDefinition } from "../../machine/MachineDefinition";
 import { Player } from "../../player/Player";
+import { PlayResult } from "../PlayResult";
+import { SlotResult } from "../SlotResult";
+import { SlotDefinition } from "../../machine/SlotDefinition";
 
 export class LocalClient implements Client {
     public events: PIXI.utils.EventEmitter;
@@ -29,10 +32,15 @@ export class LocalClient implements Client {
     public play(bet: Bet, forcedPlay: ForcedPlay) {
         return new Promise<PlayResponse>((resolve, reject) => {
             setTimeout(() => {
-                const slotDefinition = this.machineDefinition.base;
+                const slotDefinition = <SlotDefinition>this.machineDefinition.base;
                 const positions = this.rng.draw(slotDefinition.reels);
-                const originalSymbols = this.rng.getSymbols(slotDefinition.reels, slotDefinition.rowCount, positions);
+                const symbols = this.rng.getSymbols(slotDefinition.reels, slotDefinition.rowCount, positions);
                 const response = new PlayResponse(bet, this.player, 0);
+                const result = new SlotResult();
+                result.totalWin = 0;
+                result.positions = positions;
+                result.symbols = symbols;
+                response.results.push(result);
                 resolve(response);
             }, 100);
         });
