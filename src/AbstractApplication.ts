@@ -3,11 +3,12 @@ import { Ui } from './ui/Ui';
 import { Client } from './modules/client/Client';
 import { LocalClient } from './modules/client/local/LocalClient';
 import { Bet } from './modules/bet/Bet';
-import { PlayResponse, Win } from './modules/client/PlayResponse';
+import { PlayResponse } from './modules/client/PlayResponse';
 import { State } from './modules/states/State';
 import { MachineDefinition } from './modules/machine/MachineDefinition';
 import { ApplicationInterface } from './ApplicationInterface';
 import { ApplicationEvent } from './ApplicationEvent';
+import { Win } from './modules/client/Win';
 
 export class AbstractApplication extends PIXI.Application implements ApplicationInterface {
     public events: PIXI.utils.EventEmitter;

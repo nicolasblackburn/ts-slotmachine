@@ -1,10 +1,12 @@
 import {Scene} from './Scene';
 import { StateManager } from '../states/StateManager';
-import { PlayResponse, Win } from '../client/PlayResponse';
+import { PlayResponse } from '../client/PlayResponse';
 import { ApplicationInterface } from '../../ApplicationInterface';
 import { SceneEvent } from './SceneEvent';
+import { ApplicationEventListener } from '../../ApplicationEventListener';
+import { Win } from '../client/Win';
 
-export class SceneManager extends StateManager<Scene> implements ApplicationInterface {
+export class SceneManager extends StateManager<Scene> implements ApplicationEventListener {
     protected stage: PIXI.Container;
 
     constructor(stage: PIXI.Container) {

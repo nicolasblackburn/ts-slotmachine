@@ -1,5 +1,7 @@
-import { PlayResponse, Win } from "../modules/client/PlayResponse";
+import { PlayResponse } from "../modules/client/PlayResponse";
 import { ApplicationInterface } from "../ApplicationInterface";
+import { ApplicationEventListener } from "../ApplicationEventListener";
+import { Win } from "../modules/client/Win";
 
 export enum UiEvent {
     SpinButtonClick = 'UiEvent.SpinButtonClick'
@@ -12,7 +14,7 @@ enum SpinButtonState {
     Disabled
 }
 
-export class Ui implements ApplicationInterface {
+export class Ui implements ApplicationEventListener {
     public spinButton: HTMLDivElement;
     public uiContainer: HTMLDivElement;
     protected application: ApplicationInterface;

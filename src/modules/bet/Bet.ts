@@ -1,3 +1,5 @@
+import { BetData } from "./BetData";
+
 export class Bet {
     public betPerLine: number;
     public lineCount: number;
@@ -29,8 +31,3 @@ export class Bet {
     }
 }
 
-export interface BetData {
-    betPerLine: number;
-    lineCount: number;
-    totalBet: number;
-}

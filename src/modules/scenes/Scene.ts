@@ -1,9 +1,11 @@
 import { StateInterface } from "../states/State";
-import { PlayResponse, Win } from "../client/PlayResponse";
+import { PlayResponse } from "../client/PlayResponse";
 import { ApplicationInterface } from "../../ApplicationInterface";
 import { SceneEvent } from "./SceneEvent";
+import { ApplicationEventListener } from "../../ApplicationEventListener";
+import { Win } from "../client/Win";
 
-export class Scene extends PIXI.Container implements StateInterface, ApplicationInterface {
+export class Scene extends PIXI.Container implements StateInterface, ApplicationEventListener {
     protected application: ApplicationInterface;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;

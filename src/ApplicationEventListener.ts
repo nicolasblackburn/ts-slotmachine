@@ -1,7 +1,7 @@
 import { PlayResponse } from "./modules/client/PlayResponse";
 import { Win } from "./modules/client/Win";
 
-export interface ApplicationInterface {
+export interface ApplicationEventListener {
     roundStart();
     roundEnd();
     spinStart();

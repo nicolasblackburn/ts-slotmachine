@@ -1,3 +1,5 @@
+import { PlayerData } from "./PlayerData";
+
 export class Player {
     public balance: number;
     public currency: string;
@@ -24,8 +26,3 @@ export class Player {
     }
 }
 
-export interface PlayerData {
-    balance: number;
-    currency: string;
-    locale: string;
-}
