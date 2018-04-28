@@ -1,25 +1,15 @@
 import { StateInterface } from "../states/State";
 import { PlayResponse, Win } from "../client/PlayResponse";
-import { Application, ApplicationEventListener } from "../Application";
+import { ApplicationInterface } from "../../ApplicationInterface";
+import { SceneEvent } from "./SceneEvent";
 
-export enum SceneEvent {
-    Enter = 'SceneEvent.Enter',
-    Exit = 'SceneEvent.Exit',
-    StartLoad = 'SceneEvent.StartLoad',
-    LoadProgress = 'SceneEvent.LoadProgress',
-    EndLoad = 'SceneEvent.EndLoad',
-    Init = 'SceneEvent.Init',
-    Resize = 'SceneEvent.Resize',
-    Update = 'SceneEvent.Update'
-}
-
-export class Scene extends PIXI.Container implements StateInterface, ApplicationEventListener {
-    protected application: Application;
+export class Scene extends PIXI.Container implements StateInterface, ApplicationInterface {
+    protected application: ApplicationInterface;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
     protected loaded: boolean = false;
 
-    constructor(application: Application) {
+    constructor(application: ApplicationInterface) {
         super();
         this.application = application;
     }
@@ -41,7 +31,7 @@ export class Scene extends PIXI.Container implements StateInterface, Application
             throw new Error('Cannot load an already loaded scene.');
         }
 
-        this.emit(SceneEvent.StartLoad);
+        this.emit(SceneEvent.LoadStart);
 
         for (const {name, url} of this.resources) {
             PIXI.loader.add(name, url);
@@ -53,7 +43,7 @@ export class Scene extends PIXI.Container implements StateInterface, Application
         
         PIXI.loader.load((resources: any) => {
             this.loaded = true;
-            this.emit(SceneEvent.EndLoad);
+            this.emit(SceneEvent.LoadEnd);
         });
     }
 

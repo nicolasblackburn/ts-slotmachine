@@ -1,20 +1,17 @@
-import { Scene, SceneEvent } from '../modules/scenes/Scene';
+import { Scene } from '../modules/scenes/Scene';
 import { ReelSet } from '../components/ReelSet';
-import { Ui, UiEvent } from '../ui/Ui';
 import { MachineDefinition, SlotDefinition } from '../modules/machine/MachineDefinition';
 import * as gsap from 'gsap';
-import { Application } from '../modules/Application';
+import { Application } from '../Application';
 import { StateManager } from '../modules/states/StateManager';
 import { State } from '../modules/states/State';
 
 export class MainScene extends Scene {
     protected reelSet: ReelSet;
-    protected ui: Ui;
     protected slotDefinition: SlotDefinition;
 
-    constructor(application: Application, ui: Ui, slotDefinition: SlotDefinition) {
+    constructor(application: Application, slotDefinition: SlotDefinition) {
         super(application);
-        this.ui = ui;
         this.slotDefinition = slotDefinition;
     }
 
@@ -25,14 +22,9 @@ export class MainScene extends Scene {
     }
 
     public enter(previousScene: string, ...args: any[]) {
-        this.ui.setVisible(true);
-        //this.ui.events.on(UiEvent.SpinButtonClick, this.eventCallbacks.onSpinButtonClick);
-        //this.application.renderer.plugins.interaction.on('pointerdown', this.eventCallbacks.onStagePointerDown);
     }
 
     public exit(nextScene: string, ...args: any[]) {
-        //this.ui.events.removeListener(UiEvent.SpinButtonClick, this.eventCallbacks.onSpinButtonClick);
-        //this.application.renderer.plugins.interaction.removeListener('pointerdown', this.eventCallbacks.onStagePointerDown);
     }
     
     public spinStart() {

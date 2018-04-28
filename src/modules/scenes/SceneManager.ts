@@ -1,21 +1,22 @@
-import {Scene, SceneEvent} from './Scene';
+import {Scene} from './Scene';
 import { StateManager } from '../states/StateManager';
 import { PlayResponse, Win } from '../client/PlayResponse';
-import { ApplicationEventListener, Application } from '../Application';
+import { ApplicationInterface } from '../../ApplicationInterface';
+import { SceneEvent } from './SceneEvent';
 
-export class SceneManager extends StateManager<Scene> implements ApplicationEventListener {
-    protected application: Application;
+export class SceneManager extends StateManager<Scene> implements ApplicationInterface {
+    protected stage: PIXI.Container;
 
-    constructor(application: Application) {
+    constructor(stage: PIXI.Container) {
         super();
-        this.application = application;
+        this.stage = stage;
     }
 
     public add(sceneName: string, scene: Scene) {
         scene.visible = false;
         scene.interactive = false;
         this.states.set(sceneName, scene);
-        this.application.stage.addChild(scene);
+        this.stage.addChild(scene);
         return scene;
     }
 
@@ -26,7 +27,7 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         } 
         if (this.currentKey() !== sceneName) {
             if (!scene.initialized) {  
-                scene.once(SceneEvent.EndLoad, () => {
+                scene.once(SceneEvent.LoadEnd, () => {
                     scene.init();
                     scene.emit(SceneEvent.Init);
                     this.swapCurrentSceneAndEnter(sceneName, scene, ...args);
@@ -168,7 +169,7 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
     }
 
     protected swapCurrentSceneAndEnter(sceneName: string, scene: Scene, ...args: any[]) {
-        this.application.stage.setChildIndex(scene, this.application.stage.children.length - 1);
+        this.stage.setChildIndex(scene, this.stage.children.length - 1);
         scene.visible = true;
         scene.interactive = true;
         scene.resize();
@@ -177,11 +178,13 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         if (this.current()) {
             this.current().visible = false;
             this.current().interactive = false;
+            this.current().emit(SceneEvent.Exit, sceneName, ...args);
             this.current().exit(sceneName, ...args);
             this.events.emit(SceneEvent.Exit, previous, sceneName, ...args);
         } 
 
         this.pCurrent = sceneName;
+        this.current().emit(SceneEvent.Enter, previous, ...args);
         this.current().enter(previous, ...args);
         this.events.emit(SceneEvent.Enter, previous, sceneName, ...args);
     }

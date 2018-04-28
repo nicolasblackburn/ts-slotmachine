@@ -1,13 +1,13 @@
-import {Application as ParentApplication} from './modules/Application';
+import {AbstractApplication} from './AbstractApplication';
 import { PreloadScene, PreloadSceneEvent } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
 import { MainScene } from './scenes/MainScene';
 
-export class Application extends ParentApplication {
+export class Application extends AbstractApplication {
     protected init() {
         this.scenes.add('preload', new PreloadScene(this))
         this.scenes.add('title', new TitleScene(this))
-        this.scenes.add('main', new MainScene(this, this.ui, this.machineDefinition.base));
+        this.scenes.add('main', new MainScene(this, this.machineDefinition.base));
     
         this.scenes
             .get('preload')
@@ -24,6 +24,7 @@ export class Application extends ParentApplication {
     
                 this.renderer.plugins.interaction.once('pointerdown', () => {
                     this.scenes.setCurrent('main');
+                    this.ui.setVisible(true);
                 });
             });
     }

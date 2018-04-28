@@ -1,82 +1,21 @@
-import { SceneManager } from './scenes/SceneManager';
-import { Ui } from '../ui/Ui';
-import { Client } from './client/Client';
-import { LocalClient } from './client/local/LocalClient';
-import { Bet } from './bet/Bet';
-import { PlayResponse, Win } from './client/PlayResponse';
-import { State } from './states/State';
-import { MachineDefinition } from './machine/MachineDefinition';
+import { SceneManager } from './modules/scenes/SceneManager';
+import { Ui } from './ui/Ui';
+import { Client } from './modules/client/Client';
+import { LocalClient } from './modules/client/local/LocalClient';
+import { Bet } from './modules/bet/Bet';
+import { PlayResponse, Win } from './modules/client/PlayResponse';
+import { State } from './modules/states/State';
+import { MachineDefinition } from './modules/machine/MachineDefinition';
+import { ApplicationInterface } from './ApplicationInterface';
+import { ApplicationEvent } from './ApplicationEvent';
 
-/**
- * Order of events:
- * RoundStart
- *     SpinStart
- *         PlayRequestSuccess | PlayRequestError
- *         SpinEndReady
- *     SpinEnd
- *     ResultsStart
- *         TotalWinStart
- *         TotalWinEnd
- *         WinsStart
- *             WinStart
- *             WinEnd
- *         WinsEnd
- *         FeatureStart
- *         FeatureEnd
- *     ResultsEnd
- * RoundEnd
- */
-export enum ApplicationEvent {
-    RoundStart = 'ApplicationEvent.RoundStart',
-    RoundEnd = 'ApplicationEvent.RoundEnd',
-    SpinStart = 'ApplicationEvent.SpinStart',
-    SpinEnd = 'ApplicationEvent.SpinEnd',
-    Slam = 'ApplicationEvent.Slam',
-    ResultsStart = 'ApplicationEvent.ResultsStart',
-    ResultsEnd = 'ApplicationEvent.ResultsEnd',
-    SkipResults = 'ApplicationEvent.SkipResults',
-    PlayRequestSuccess = 'ApplicationEvent.PlayRequestSuccess',
-    PlayRequestError = 'ApplicationEvent.PlayRequestError', 
-    SpinEndReady = 'ApplicationEvent.SpinEndReady',
-    WinsStart = 'ApplicationEvent.WinsStart',
-    WinsEnd = 'ApplicationEvent.WinsEnd',
-    TotalWinStart = 'ApplicationEvent.TotalWinStart',
-    TotalWinEnd = 'ApplicationEvent.TotalWinEnd',
-    WinStart = 'ApplicationEvent.WinStart',
-    WinEnd = 'ApplicationEvent.WinEnd',
-    FeatureStart = 'ApplicationEvent.FeatureStart',
-    FeatureEnd = 'ApplicationEvent.FeatureEnd',
-}
-
-export interface ApplicationEventListener {
-    roundStart();
-    roundEnd();
-    spinStart();
-    spinEndReady();
-    spinEnd();
-    slam();
-    resultsStart(response: PlayResponse);
-    resultsEnd();
-    skipResults();
-    playRequestSuccess(response: PlayResponse);
-    playRequestError(error: Error);
-    winsStart(response: PlayResponse);
-    winsEnd();
-    totalWinStart(response: PlayResponse);
-    totalWinEnd();
-    winStart(win: Win);
-    winEnd();
-    featureStart(feature: string, response: PlayResponse);
-    featureEnd();
-}
-
-export class Application extends PIXI.Application implements ApplicationEventListener {
+export class AbstractApplication extends PIXI.Application implements ApplicationInterface {
     public events: PIXI.utils.EventEmitter;
+    public scenes: SceneManager;
     protected bet: Bet;
     protected client: Client;
     protected machineDefinition: MachineDefinition;
     protected playResponse: PlayResponse;
-    protected scenes: SceneManager;
     protected ui: Ui;
 
     constructor(machineDefinition: MachineDefinition) {
@@ -100,7 +39,7 @@ export class Application extends PIXI.Application implements ApplicationEventLis
         this.ui = new Ui(this);
         document.body.appendChild(this.ui.uiContainer);
 
-        this.scenes = new SceneManager(this);
+        this.scenes = new SceneManager(this.stage);
         this.ticker.add(deltaTime => this.scenes.update());
 
         this.events.on(ApplicationEvent.RoundStart, () => this.scenes.roundStart());
