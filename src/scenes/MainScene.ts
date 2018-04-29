@@ -6,8 +6,12 @@ import { Application } from '../Application';
 import { StateManager } from '../modules/states/StateManager';
 import { State } from '../modules/states/State';
 import { SlotDefinition } from '../modules/machine/SlotDefinition';
+import { PlayResponse } from '../modules/client/PlayResponse';
+import { SlotResult } from '../modules/client/SlotResult';
+import { modulo } from '../functions';
 
 export class MainScene extends Scene {
+    protected reelMaxVelocity: number = 0.3;
     protected reelSet: ReelSet;
     protected slotDefinition: SlotDefinition;
 
@@ -38,26 +42,47 @@ export class MainScene extends Scene {
                 }, 0)
                 .to(reel, 0.2, {
                     ease: gsap.Quad.easeIn,
-                    velocity: -0.3
+                    velocity: -this.reelMaxVelocity
                 }, 0.12);
         }
         timeline.to({}, .86, {});
         timeline.eventCallback('onComplete', () => this.application.spinEndReady());
     }
 
-    public spinEnd() {
+    public spinEnd(response: PlayResponse) {
         const timeline = new gsap.TimelineLite();
-        for (const reel of this.reelSet.reels) {
-            timeline
-                .to(reel, 0.05, {
-                    ease: gsap.Quad.easeOut,
-                    velocity: 0.2
-                }, 0)
-                .to(reel, 0.05, {
-                    ease: gsap.Quad.easeIn,
+        const result = response.results[0] as SlotResult;
+        this.reelSet.reels.forEach((reel, reelIndex) => {
+            const reelTimeline = new gsap.TimelineLite()
+            const currentPosition = Math.floor(reel.position);
+            const length = result.symbols[reelIndex].length;
+            const symbolCount = reel.getSymbolCount();
+            const untilPosition = modulo(currentPosition - length, symbolCount);
+            for (let i = 0; i < length; i++) {
+                reel.substitutions[modulo(currentPosition - length + i, symbolCount)] = modulo(result.positions[reelIndex] + i, symbolCount);
+            }
+            const t = (currentPosition - length - reel.position) / -this.reelMaxVelocity / PIXI.ticker.shared.FPS;
+            reelTimeline
+                .to({}, t, {}, 0)
+                .set(reel, {
+                    position: untilPosition,
                     velocity: 0
-                }, 0.05);
-        }
+                })
+                .to(reel, 0.07, {
+                    ease: gsap.Quad.easeOut,
+                    position: untilPosition - 0.4
+                })
+                .to(reel, 0.07, {
+                    ease: gsap.Quad.easeIn,
+                    position: modulo(untilPosition - 0.4, symbolCount) + 0.4
+                })
+                .set(reel, {
+                    substitutions: {}, 
+                    position: result.positions[reelIndex]
+                });
+
+            timeline.add(reelTimeline, 0);
+        });
     }
 
     public resize() {

@@ -1,7 +1,7 @@
-import { PlayResponse } from "../modules/client/PlayResponse";
-import { ApplicationInterface } from "../ApplicationInterface";
-import { ApplicationEventListener } from "../ApplicationEventListener";
-import { Win } from "../modules/client/Win";
+import { PlayResponse } from "../client/PlayResponse";
+import { ApplicationInterface } from "../../ApplicationInterface";
+import { ApplicationEventListener } from "../../ApplicationEventListener";
+import { Win } from "../client/Win";
 
 export enum UiEvent {
     SpinButtonClick = 'UiEvent.SpinButtonClick'
@@ -64,35 +64,28 @@ export class Ui implements ApplicationEventListener {
     }
 
     public roundStart() {
-        console.log('roundStart');
         this.spinButtonState = SpinButtonState.Disabled;
         this.update();
     }
 
     public roundEnd() {
-        console.log('roundEnd');
         this.spinButtonState = SpinButtonState.Spin;
         this.update();
     }
 
     public spinStart() {
-        console.log('spinStart');
     }
 
     public spinEndReady() {
-        console.log('spinEndReady');
     }
 
-    public spinEnd() {
-        console.log('spinEnd');
+    public spinEnd(response: PlayResponse) {
     }
 
     public slam() {
-        console.log('slam');
     }
 
     public resultsStart(response: PlayResponse) {
-        console.log('resultsStart', response);
         if (!response.features.length && response.totalWin) {
             this.spinButtonState = SpinButtonState.SkipResults;
             this.update();
@@ -100,53 +93,41 @@ export class Ui implements ApplicationEventListener {
     }
 
     public resultsEnd() {
-        console.log('resultsEnd');
     }
 
     public skipResults() {
-        console.log('skipResults');
     }
 
     public playRequestSuccess(response: PlayResponse) {
-        console.log('playRequestSuccess', response);
         this.spinButtonState = SpinButtonState.Slam;
         this.update();
     }
 
     public playRequestError(error: Error) {
-        console.log('playRequestError', error);
     }
 
     public winsStart(response: PlayResponse) {
-        console.log('winsStart', response);
     }
 
     public winsEnd() {
-        console.log('winsEnd');
     }
 
     public totalWinStart(response: PlayResponse) {
-        console.log('totalWinStart', response);
     }
 
     public totalWinEnd() {
-        console.log('totalWinEnd');
     }
 
     public winStart(win: Win) {
-        console.log('winStart', win);
     }
 
     public winEnd() {
-        console.log('winEnd');
     }
 
     public featureStart(feature: string, response: PlayResponse) {
-        console.log('featureStart', feature, response);
     }
 
     public featureEnd() {
-        console.log('featureEnd');
     }
 
     public update() {

@@ -1,5 +1,5 @@
 import { SceneManager } from './modules/scenes/SceneManager';
-import { Ui } from './ui/Ui';
+import { Ui } from './modules/ui/Ui';
 import { Client } from './modules/client/Client';
 import { LocalClient } from './modules/client/local/LocalClient';
 import { Bet } from './modules/bet/Bet';
@@ -43,7 +43,7 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.RoundEnd, () => this.scenes.roundEnd());
         this.events.on(ApplicationEvent.SpinStart, () => this.scenes.spinStart());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.scenes.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, () => this.scenes.spinEnd());
+        this.events.on(ApplicationEvent.SpinEnd, (response) => this.scenes.spinEnd(response));
         this.events.on(ApplicationEvent.Slam, () => this.scenes.slam());
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.scenes.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.scenes.resultsEnd());
@@ -63,7 +63,7 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.RoundEnd, () => this.ui.roundEnd());
         this.events.on(ApplicationEvent.SpinStart, () => this.ui.spinStart());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.ui.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, () => this.ui.spinEnd());
+        this.events.on(ApplicationEvent.SpinEnd, (response) => this.ui.spinEnd(response));
         this.events.on(ApplicationEvent.Slam, () => this.ui.slam());
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.ui.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.ui.resultsEnd());
@@ -104,6 +104,7 @@ export class AbstractApplication extends PIXI.Application implements Application
     public spinStart() {
         this.events.emit(ApplicationEvent.SpinStart);
 
+        let response;
         let requestCompleted = false;
         let spinEndReady = false;
 
@@ -112,11 +113,12 @@ export class AbstractApplication extends PIXI.Application implements Application
                 this.events.removeListener(ApplicationEvent.PlayRequestSuccess, onSuccess);
                 this.events.removeListener(ApplicationEvent.PlayRequestError, onError);
                 this.events.removeListener(ApplicationEvent.ResultsStart, onSpinEndReady);
-                this.spinEnd();
+                this.spinEnd(response);
             }
         }
 
-        const onSuccess = () => {
+        const onSuccess = (responseReceived) => {
+            response = responseReceived;
             requestCompleted = true;
             trySpinEnd();
         }
@@ -145,8 +147,8 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.emit(ApplicationEvent.SpinEndReady);
     }
 
-    public spinEnd() {
-        this.events.emit(ApplicationEvent.SpinEnd);
+    public spinEnd(response: PlayResponse) {
+        this.events.emit(ApplicationEvent.SpinEnd, response);
         this.resultsStart(this.playResponse);
     }
 

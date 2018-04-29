@@ -58,7 +58,6 @@ module.exports = {
 		new ExtractTextPlugin('styles.css.[contentHash].css')
 	],
 	devServer: {
-        host: '192.168.1.107',
 		contentBase: path.resolve(__dirname, 'dist')
 	}
 };

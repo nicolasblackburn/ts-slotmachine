@@ -4,15 +4,18 @@ import { modulo } from '../functions'
 export class Reel {
     public rowHeight: number = 0;
     public velocity: number = 0;
+    public substitutions: {[position: number]: number} = {};
     protected pPosition: number = 0;
     protected symbols: PIXI.DisplayObject[] = [];
+    protected substitutionSymbols: PIXI.DisplayObject[] = [];
     protected visibleSymbols: PIXI.DisplayObject[] = [];
     protected pX: number = 0; 
     protected pY: number = 0; 
     protected rowCount: number = 0;
 
-    constructor(rowCount: number, symbols: PIXI.DisplayObject[] = []) {
+    constructor(rowCount: number, symbols: PIXI.DisplayObject[] = [], substitutionSymbols: PIXI.DisplayObject[] = []) {
         this.symbols = symbols;
+        this.substitutionSymbols = substitutionSymbols;
         this.rowCount = rowCount;
         this.position = 0;
     }
@@ -61,11 +64,11 @@ export class Reel {
             symbol.visible = false;
         }
         this.visibleSymbols = [];
-        this.pPosition += this.velocity;
+        this.pPosition = modulo(this.pPosition + this.velocity, this.getSymbolCount());
         const offset = Math.ceil(modulo(this.pPosition, this.getSymbolCount())) - 1;
         for (let i = 0; i < this.rowCount + 1; i++) {
             const symbolIndex = modulo(offset + i, this.getSymbolCount());
-            const symbol = this.symbols[symbolIndex];
+            const symbol = this.getSymbolAt(symbolIndex);
             symbol.visible = true;
             symbol.x = this.pX;
             const epsilon = this.pPosition - Math.floor(this.pPosition);
@@ -78,30 +81,45 @@ export class Reel {
         }
     }
 
+    public getSymbolAt(position) {
+        position = modulo(position, this.getSymbolCount());
+        const substitution = this.substitutions[position];
+        if (typeof substitution !== 'undefined') {
+            return this.substitutionSymbols[substitution];
+        } else {
+            return this.symbols[position];
+        }
+    }
+
     public getSymbolCount() {
         return this.symbols.length;
     }
 
-    public addSymbol(symbol: DisplayObject) {
+    public addSymbol(symbol: DisplayObject, substitution: DisplayObject) {
         this.symbols.push(symbol);
+        this.substitutionSymbols.push(substitution);
     }
 
-    public insertSymbolAt(symbol: DisplayObject, index: number) {
+    public insertSymbolAt(symbol: DisplayObject, index: number, substitution: DisplayObject) {
         this.symbols.splice(index, 0, symbol);
+        this.substitutionSymbols.splice(index, 0, substitution);
     }
 
     public removeSymbolAt(index: number) {
         this.symbols.splice(index, 1);
+        this.substitutionSymbols.splice(index, 1);
     }
 
     public removeSymbol(symbolA: DisplayObject) {
         const index = this.symbols.findIndex(symbolB => symbolB === symbolA);
         if (index >= 0) {
             this.symbols.splice(index, 1);
+            this.substitutionSymbols.splice(index, 1);
         }
     }
 
     public removeAllSymbols() {
         this.symbols = [];
+        this.substitutionSymbols = [];
     }
 }

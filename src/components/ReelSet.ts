@@ -37,11 +37,17 @@ export class ReelSet extends PIXI.Container {
             for (const [symbolIndex, symbolName] of Object.entries(reelData)) {
                 const textureIndex = parseInt(symbolIndex) % basicSymbolCount;
                 const texture = PIXI.Texture.fromFrame(BASIC_SYMBOLS[symbolName]);
+
                 const symbol = new PIXI.Sprite(texture);
                 symbol.visible = false;
                 symbol.tint = htorgb(330 - 360 * textureIndex / basicSymbolCount);
-                this.symbols.addChild(symbol);
-                reel.addSymbol(symbol);
+
+                const substitution = new PIXI.Sprite(texture);
+                substitution.visible = false;
+                substitution.tint = htorgb(330 - 360 * textureIndex / basicSymbolCount);
+
+                this.symbols.addChild(symbol, substitution);
+                reel.addSymbol(symbol, substitution);
                 if (parseInt(symbolIndex) === 0) {
                     reel.rowHeight = symbolHeight;
                     reel.x = parseInt(reelIndex) * symbolWidth;

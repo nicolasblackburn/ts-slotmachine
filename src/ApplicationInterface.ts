@@ -6,7 +6,7 @@ export interface ApplicationInterface {
     roundEnd();
     spinStart();
     spinEndReady();
-    spinEnd();
+    spinEnd(response: PlayResponse);
     slam();
     resultsStart(response: PlayResponse);
     resultsEnd();
