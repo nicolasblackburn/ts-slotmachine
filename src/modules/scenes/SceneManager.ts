@@ -74,15 +74,21 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         }
     }
 
+    public spinStartComplete() {
+        if (this.current()) {
+            this.current().spinStartComplete();
+        }
+    }
+
     public spinEnd(response: PlayResponse) {
         if (this.current()) {
             this.current().spinEnd(response);
         }
     }
 
-    public slam() {
+    public slam(response: PlayResponse) {
         if (this.current()) {
-            this.current().slam();
+            this.current().slam(response);
         }
     }
 

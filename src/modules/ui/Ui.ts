@@ -19,6 +19,8 @@ export class Ui implements ApplicationEventListener {
     public uiContainer: HTMLDivElement;
     protected application: ApplicationInterface;
     protected spinButtonState: SpinButtonState = SpinButtonState.Spin;
+    protected isSpinStartComplete: boolean = false;
+    protected isPlayResquestComplete: boolean = false;
 
     constructor(application: ApplicationInterface) {
         this.application = application;
@@ -64,6 +66,8 @@ export class Ui implements ApplicationEventListener {
     }
 
     public roundStart() {
+        this.isPlayResquestComplete = false;
+        this.isSpinStartComplete = false;
         this.spinButtonState = SpinButtonState.Disabled;
         this.update();
     }
@@ -76,13 +80,18 @@ export class Ui implements ApplicationEventListener {
     public spinStart() {
     }
 
+    public spinStartComplete() {
+        this.isSpinStartComplete = true;
+        this.updateSlamStateIfReady();
+    }
+
     public spinEndReady() {
     }
 
     public spinEnd(response: PlayResponse) {
     }
 
-    public slam() {
+    public slam(response: PlayResponse) {
     }
 
     public resultsStart(response: PlayResponse) {
@@ -99,8 +108,8 @@ export class Ui implements ApplicationEventListener {
     }
 
     public playRequestSuccess(response: PlayResponse) {
-        this.spinButtonState = SpinButtonState.Slam;
-        this.update();
+        this.isPlayResquestComplete = true;
+        this.updateSlamStateIfReady();
     }
 
     public playRequestError(error: Error) {
@@ -144,6 +153,13 @@ export class Ui implements ApplicationEventListener {
             case SpinButtonState.Disabled: 
                 this.addClass(this.spinButton, 'disabled');
                 break;
+        }
+    }
+
+    protected updateSlamStateIfReady() {
+        if (this.isPlayResquestComplete && this.isSpinStartComplete) {   
+            this.spinButtonState = SpinButtonState.Slam;
+            this.update();
         }
     }
 

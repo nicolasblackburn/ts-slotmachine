@@ -10,10 +10,16 @@ import { PlayResponse } from '../modules/client/PlayResponse';
 import { SlotResult } from '../modules/client/SlotResult';
 import { modulo } from '../functions';
 
+interface MainSceneAnimations {
+    spinStart: gsap.Animation,
+    spinEnd: gsap.Animation
+}
+
 export class MainScene extends Scene {
     protected reelMaxVelocity: number = 0.3;
     protected reelSet: ReelSet;
     protected slotDefinition: SlotDefinition;
+    protected currentTween: gsap.Animation;
 
     constructor(application: Application, slotDefinition: SlotDefinition) {
         super(application);
@@ -33,7 +39,11 @@ export class MainScene extends Scene {
     }
     
     public spinStart() {
+        if (this.currentTween) {
+            this.currentTween.kill();
+        }
         const timeline = new gsap.TimelineLite();
+        this.currentTween = timeline;
         for (const reel of this.reelSet.reels) {
             timeline
                 .to(reel, 0.12, {
@@ -43,14 +53,27 @@ export class MainScene extends Scene {
                 .to(reel, 0.2, {
                     ease: gsap.Quad.easeIn,
                     velocity: -this.reelMaxVelocity
-                }, 0.12);
+                }, 0.12)
+                .call(() => this.application.spinStartComplete());
         }
         timeline.to({}, .86, {});
         timeline.eventCallback('onComplete', () => this.application.spinEndReady());
     }
 
+    public playRequestSuccess(response: PlayResponse) {
+        console.log(response);
+    }
+
+    public slam(response: PlayResponse) {
+        this.spinEnd(response);
+    }
+
     public spinEnd(response: PlayResponse) {
+        if (this.currentTween) {
+            this.currentTween.kill();
+        }
         const timeline = new gsap.TimelineLite();
+        this.currentTween = timeline;
         const result = response.results[0] as SlotResult;
         this.reelSet.reels.forEach((reel, reelIndex) => {
             const reelTimeline = new gsap.TimelineLite()
@@ -79,7 +102,8 @@ export class MainScene extends Scene {
                 .set(reel, {
                     substitutions: {}, 
                     position: result.positions[reelIndex]
-                });
+                })
+                .call(() => this.application.resultsStart());
 
             timeline.add(reelTimeline, 0);
         });

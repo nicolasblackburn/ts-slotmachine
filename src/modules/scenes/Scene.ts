@@ -65,11 +65,13 @@ export class Scene extends PIXI.Container implements StateInterface, Application
 
     public spinStart() {}
 
+    public spinStartComplete() {}
+
     public spinEndReady() {}
 
     public spinEnd(response: PlayResponse) {}
 
-    public slam() {}
+    public slam(response: PlayResponse) {}
 
     public resultsStart(response: PlayResponse) {}
 

@@ -42,9 +42,10 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.RoundStart, () => this.scenes.roundStart());
         this.events.on(ApplicationEvent.RoundEnd, () => this.scenes.roundEnd());
         this.events.on(ApplicationEvent.SpinStart, () => this.scenes.spinStart());
+        this.events.on(ApplicationEvent.SpinStartComplete, () => this.scenes.spinStartComplete());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.scenes.spinEndReady());
         this.events.on(ApplicationEvent.SpinEnd, (response) => this.scenes.spinEnd(response));
-        this.events.on(ApplicationEvent.Slam, () => this.scenes.slam());
+        this.events.on(ApplicationEvent.Slam, (response) => this.scenes.slam(response));
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.scenes.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.scenes.resultsEnd());
         this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
@@ -62,9 +63,10 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.RoundStart, () => this.ui.roundStart());
         this.events.on(ApplicationEvent.RoundEnd, () => this.ui.roundEnd());
         this.events.on(ApplicationEvent.SpinStart, () => this.ui.spinStart());
+        this.events.on(ApplicationEvent.SpinStartComplete, () => this.ui.spinStartComplete());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.ui.spinEndReady());
         this.events.on(ApplicationEvent.SpinEnd, (response) => this.ui.spinEnd(response));
-        this.events.on(ApplicationEvent.Slam, () => this.ui.slam());
+        this.events.on(ApplicationEvent.Slam, (response) => this.ui.slam(response));
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.ui.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.ui.resultsEnd());
         this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
@@ -113,7 +115,7 @@ export class AbstractApplication extends PIXI.Application implements Application
                 this.events.removeListener(ApplicationEvent.PlayRequestSuccess, onSuccess);
                 this.events.removeListener(ApplicationEvent.PlayRequestError, onError);
                 this.events.removeListener(ApplicationEvent.ResultsStart, onSpinEndReady);
-                this.spinEnd(response);
+                this.spinEnd();
             }
         }
 
@@ -143,23 +145,29 @@ export class AbstractApplication extends PIXI.Application implements Application
         );
     }
 
+    public spinStartComplete() {
+        this.events.emit(ApplicationEvent.SpinStartComplete);
+    }
+
     public spinEndReady() {
         this.events.emit(ApplicationEvent.SpinEndReady);
     }
 
-    public spinEnd(response: PlayResponse) {
+    public spinEnd() {
+        const response = this.playResponse;
         this.events.emit(ApplicationEvent.SpinEnd, response);
-        this.resultsStart(this.playResponse);
     }
 
     public slam() {
-        this.events.emit(ApplicationEvent.Slam);
+        const response = this.playResponse;
+        this.events.emit(ApplicationEvent.Slam, response);
     }
 
-    public resultsStart(response: PlayResponse) {
+    public resultsStart() {
+        const response = this.playResponse;
         this.events.emit(ApplicationEvent.ResultsStart, response);
         if (response.totalWin > 0) {
-            this.totalWinStart(response);
+            this.totalWinStart();
         }
         const hasFeatures = !!response.features.length;
         if (!hasFeatures && response.totalWin === 0) {
@@ -185,7 +193,8 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.emit(ApplicationEvent.PlayRequestSuccess, error);
     }
 
-    public winsStart(response: PlayResponse) {
+    public winsStart() {
+        const response = this.playResponse;
         this.events.emit(ApplicationEvent.WinsStart, response);
 
         // Flatten the wins
@@ -233,13 +242,14 @@ export class AbstractApplication extends PIXI.Application implements Application
         }
     }
 
-    public totalWinStart(response: PlayResponse) {
+    public totalWinStart() {
+        const response = this.playResponse;
         this.events.emit(ApplicationEvent.TotalWinStart, response);
     }
 
     public totalWinEnd() {
         this.events.emit(ApplicationEvent.TotalWinEnd);
-        this.winsStart(this.playResponse);
+        this.winsStart();
     }
 
     public winStart(win: Win) {

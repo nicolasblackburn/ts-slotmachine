@@ -7,7 +7,7 @@ export interface ApplicationEventListener {
     spinStart();
     spinEndReady();
     spinEnd(response: PlayResponse);
-    slam();
+    slam(response: PlayResponse);
     resultsStart(response: PlayResponse);
     resultsEnd();
     skipResults();
