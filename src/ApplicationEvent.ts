@@ -24,6 +24,7 @@ export enum ApplicationEvent {
     SpinStart = 'ApplicationEvent.SpinStart',
     SpinStartComplete = 'ApplicationEvent.SpinStartComplete',
     SpinEnd = 'ApplicationEvent.SpinEnd',
+    SpinEndComplete = 'ApplicationEvent.SpinEndComplete',
     Slam = 'ApplicationEvent.Slam',
     ResultsStart = 'ApplicationEvent.ResultsStart',
     ResultsEnd = 'ApplicationEvent.ResultsEnd',

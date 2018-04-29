@@ -8,6 +8,7 @@ export interface ApplicationInterface {
     spinStartComplete();
     spinEndReady();
     spinEnd();
+    spinEndComplete();
     slam();
     resultsStart();
     resultsEnd();

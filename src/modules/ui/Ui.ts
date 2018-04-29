@@ -91,6 +91,8 @@ export class Ui implements ApplicationEventListener {
     public spinEnd(response: PlayResponse) {
     }
 
+    public spinEndComplete() {}
+
     public slam(response: PlayResponse) {
     }
 

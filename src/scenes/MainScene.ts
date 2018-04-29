@@ -103,7 +103,7 @@ export class MainScene extends Scene {
                     substitutions: {}, 
                     position: result.positions[reelIndex]
                 })
-                .call(() => this.application.resultsStart());
+                .call(() => this.application.spinEndComplete());
 
             timeline.add(reelTimeline, 0);
         });
