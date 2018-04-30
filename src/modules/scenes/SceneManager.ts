@@ -80,9 +80,9 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         }
     }
 
-    public spinEnd(response: PlayResponse) {
+    public spinEnd(positions: number[]) {
         if (this.current()) {
-            this.current().spinEnd(response);
+            this.current().spinEnd(positions);
         }
     }
 
@@ -92,9 +92,9 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         }
     }
 
-    public slam(response: PlayResponse) {
+    public slam(positions: number[]) {
         if (this.current()) {
-            this.current().slam(response);
+            this.current().slam(positions);
         }
     }
 

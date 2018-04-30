@@ -1,5 +1,5 @@
 import { DisplayObject } from 'pixi.js';
-import { modulo } from '../functions'
+import { modulo } from '../../functions'
 
 export class Reel {
     public rowHeight: number = 0;

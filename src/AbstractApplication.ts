@@ -9,6 +9,7 @@ import { MachineDefinition } from './modules/machine/MachineDefinition';
 import { ApplicationInterface } from './ApplicationInterface';
 import { ApplicationEvent } from './ApplicationEvent';
 import { Win } from './modules/client/Win';
+import { SlotResult } from './modules/client/SlotResult';
 
 export class AbstractApplication extends PIXI.Application implements ApplicationInterface {
     public events: PIXI.utils.EventEmitter;
@@ -44,9 +45,9 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.SpinStart, () => this.scenes.spinStart());
         this.events.on(ApplicationEvent.SpinStartComplete, () => this.scenes.spinStartComplete());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.scenes.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, (response) => this.scenes.spinEnd(response));
+        this.events.on(ApplicationEvent.SpinEnd, (positions) => this.scenes.spinEnd(positions));
         this.events.on(ApplicationEvent.SpinEndComplete, () => this.scenes.spinEndComplete());
-        this.events.on(ApplicationEvent.Slam, (response) => this.scenes.slam(response));
+        this.events.on(ApplicationEvent.Slam, (positions) => this.scenes.slam(positions));
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.scenes.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.scenes.resultsEnd());
         this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
@@ -66,9 +67,9 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.events.on(ApplicationEvent.SpinStart, () => this.ui.spinStart());
         this.events.on(ApplicationEvent.SpinStartComplete, () => this.ui.spinStartComplete());
         this.events.on(ApplicationEvent.SpinEndReady, () => this.ui.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, (response) => this.ui.spinEnd(response));
+        this.events.on(ApplicationEvent.SpinEnd, (positions) => this.ui.spinEnd(positions));
         this.events.on(ApplicationEvent.SpinEndComplete, () => this.ui.spinEndComplete());
-        this.events.on(ApplicationEvent.Slam, (response) => this.ui.slam(response));
+        this.events.on(ApplicationEvent.Slam, (positions) => this.ui.slam(positions));
         this.events.on(ApplicationEvent.ResultsStart, (response) => this.ui.resultsStart(response));
         this.events.on(ApplicationEvent.ResultsEnd, () => this.ui.resultsEnd());
         this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
@@ -157,7 +158,8 @@ export class AbstractApplication extends PIXI.Application implements Application
 
     public spinEnd() {
         const response = this.playResponse;
-        this.events.emit(ApplicationEvent.SpinEnd, response);
+        const positions = (<SlotResult>response.results[0]).positions;
+        this.events.emit(ApplicationEvent.SpinEnd, positions);
     }
 
     public spinEndComplete() {
@@ -167,18 +169,23 @@ export class AbstractApplication extends PIXI.Application implements Application
 
     public slam() {
         const response = this.playResponse;
-        this.events.emit(ApplicationEvent.Slam, response);
+        const positions = (<SlotResult>response.results[0]).positions;
+        this.events.emit(ApplicationEvent.Slam, positions);
     }
 
     public resultsStart() {
         const response = this.playResponse;
         this.events.emit(ApplicationEvent.ResultsStart, response);
-        if (response.totalWin > 0) {
-            this.totalWinStart();
-        }
-        const hasFeatures = !!response.features.length;
-        if (!hasFeatures && response.totalWin === 0) {
+        if (!response) {
             this.resultsEnd();
+        } else {
+            if (response.totalWin > 0) {
+                this.totalWinStart();
+            }
+            const hasFeatures = !!response.features.length;
+            if (!hasFeatures && response.totalWin === 0) {
+                this.resultsEnd();
+            }
         }
     }
 

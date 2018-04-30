@@ -1,6 +1,6 @@
 import { Reel } from './Reel';
-import { htorgb } from '../functions';
-import { SlotDefinition } from '../modules/machine/SlotDefinition';
+import { htorgb } from '../../functions';
+import { SlotDefinition } from '../../modules/machine/SlotDefinition';
 
 const BASIC_SYMBOLS = {
     'lv1': 'sym_10', 

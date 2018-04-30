@@ -1,9 +1,18 @@
+
+/**
+ * Formula: sprite rectangle = [x, y, w, h]
+ *          image rectangle  = [W, H]
+ *          background-position-x  <- (x / (W - w) * 100%)  
+ *          background-position-y  <- (y / (H - h) * 100%)  
+ *          background-size-width  <- W / w
+ *          background-size-height <- H / h
+ */
 .icon_spin {
     display: block;
     width:256px; 
     height:256px; 
-    background-position: 0.19379845% 0.077700078%;
-    background-size: 301.5625% 602.734375%;
+    background-position: 99.80620155% 48.975545274%;
+    background-size: 301.5625% 691.015625%;
     background-image: url(../assets/img/sprites.png);
     padding: 0; 
 }

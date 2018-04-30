@@ -1,5 +1,5 @@
 import { Scene } from '../modules/scenes/Scene';
-import { ReelSet } from '../components/ReelSet';
+import { ReelSet } from '../components/reels/ReelSet';
 import { MachineDefinition } from '../modules/machine/MachineDefinition';
 import * as gsap from 'gsap';
 import { Application } from '../Application';
@@ -9,11 +9,6 @@ import { SlotDefinition } from '../modules/machine/SlotDefinition';
 import { PlayResponse } from '../modules/client/PlayResponse';
 import { SlotResult } from '../modules/client/SlotResult';
 import { modulo } from '../functions';
-
-interface MainSceneAnimations {
-    spinStart: gsap.Animation,
-    spinEnd: gsap.Animation
-}
 
 export class MainScene extends Scene {
     protected reelMaxVelocity: number = 0.3;
@@ -30,12 +25,6 @@ export class MainScene extends Scene {
         this.reelSet = new ReelSet(this.slotDefinition);
         this.addChild(this.reelSet);
         (window as any).reelSet = this.reelSet;
-    }
-
-    public enter(previousScene: string, ...args: any[]) {
-    }
-
-    public exit(nextScene: string, ...args: any[]) {
     }
     
     public spinStart() {
@@ -64,27 +53,26 @@ export class MainScene extends Scene {
         console.log(response);
     }
 
-    public slam(response: PlayResponse) {
-        this.spinEnd(response);
+    public slam(positions: number[]) {
+        this.spinEnd(positions);
     }
 
-    public spinEnd(response: PlayResponse) {
+    public spinEnd(positions: number[]) {
         if (this.currentTween) {
             this.currentTween.kill();
         }
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
-        const result = response.results[0] as SlotResult;
         this.reelSet.reels.forEach((reel, reelIndex) => {
             const reelTimeline = new gsap.TimelineLite()
             const currentPosition = Math.floor(reel.position);
-            const length = result.symbols[reelIndex].length;
+            const rowCount = this.slotDefinition.rowCount;
             const symbolCount = reel.getSymbolCount();
-            const untilPosition = modulo(currentPosition - length, symbolCount);
-            for (let i = 0; i < length; i++) {
-                reel.substitutions[modulo(currentPosition - length + i, symbolCount)] = modulo(result.positions[reelIndex] + i, symbolCount);
+            const untilPosition = modulo(currentPosition - rowCount, symbolCount);
+            for (let i = 0; i < rowCount; i++) {
+                reel.substitutions[modulo(currentPosition - rowCount + i, symbolCount)] = modulo(positions[reelIndex] + i, symbolCount);
             }
-            const t = (currentPosition - length - reel.position) / -this.reelMaxVelocity / PIXI.ticker.shared.FPS;
+            const t = (currentPosition - rowCount - reel.position) / -this.reelMaxVelocity / PIXI.ticker.shared.FPS;
             reelTimeline
                 .to({}, t, {}, 0)
                 .set(reel, {
@@ -101,7 +89,7 @@ export class MainScene extends Scene {
                 })
                 .set(reel, {
                     substitutions: {}, 
-                    position: result.positions[reelIndex]
+                    position: positions[reelIndex]
                 })
                 .call(() => this.application.spinEndComplete());
 
@@ -113,7 +101,11 @@ export class MainScene extends Scene {
         this.resizeReelSet();
     }
 
-    public resizeReelSet() {
+    public update() {
+        this.reelSet.update();
+    }
+
+    protected resizeReelSet() {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -121,9 +113,5 @@ export class MainScene extends Scene {
         this.reelSet.scale.x = this.reelSet.scale.y;
         this.reelSet.x = (width - this.reelSet.width) * 0.5;
         this.reelSet.y = height * 0.1;
-    }
-
-    public update() {
-        this.reelSet.update();
     }
 }

@@ -77,27 +77,23 @@ export class Ui implements ApplicationEventListener {
         this.update();
     }
 
-    public spinStart() {
-    }
+    public spinStart() {}
 
     public spinStartComplete() {
         this.isSpinStartComplete = true;
         this.updateSlamStateIfReady();
     }
 
-    public spinEndReady() {
-    }
+    public spinEndReady() {}
 
-    public spinEnd(response: PlayResponse) {
-    }
+    public spinEnd(positions: number[]) {}
 
     public spinEndComplete() {}
 
-    public slam(response: PlayResponse) {
-    }
+    public slam(positions: number[]) {}
 
     public resultsStart(response: PlayResponse) {
-        if (!response.features.length && response.totalWin) {
+        if (response && !response.features.length && response.totalWin) {
             this.spinButtonState = SpinButtonState.SkipResults;
             this.update();
         }
