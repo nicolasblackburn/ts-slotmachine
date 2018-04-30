@@ -10,6 +10,7 @@ import { ApplicationInterface } from './ApplicationInterface';
 import { ApplicationEvent } from './ApplicationEvent';
 import { Win } from './modules/client/Win';
 import { SlotResult } from './modules/client/SlotResult';
+import { ApplicationEventListener } from './ApplicationEventListener';
 
 export class AbstractApplication extends PIXI.Application implements ApplicationInterface {
     public events: PIXI.utils.EventEmitter;
@@ -40,49 +41,7 @@ export class AbstractApplication extends PIXI.Application implements Application
 
         this.ticker.add(deltaTime => this.scenes.update());
 
-        this.events.on(ApplicationEvent.RoundStart, () => this.scenes.roundStart());
-        this.events.on(ApplicationEvent.RoundEnd, () => this.scenes.roundEnd());
-        this.events.on(ApplicationEvent.SpinStart, () => this.scenes.spinStart());
-        this.events.on(ApplicationEvent.SpinStartComplete, () => this.scenes.spinStartComplete());
-        this.events.on(ApplicationEvent.SpinEndReady, () => this.scenes.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, (positions) => this.scenes.spinEnd(positions));
-        this.events.on(ApplicationEvent.SpinEndComplete, () => this.scenes.spinEndComplete());
-        this.events.on(ApplicationEvent.Slam, (positions) => this.scenes.slam(positions));
-        this.events.on(ApplicationEvent.ResultsStart, (response) => this.scenes.resultsStart(response));
-        this.events.on(ApplicationEvent.ResultsEnd, () => this.scenes.resultsEnd());
-        this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => this.scenes.playRequestSuccess(response));
-        this.events.on(ApplicationEvent.PlayRequestError, (error) => this.scenes.playRequestError(error));
-        this.events.on(ApplicationEvent.WinsStart, (response) => this.scenes.winsStart(response));
-        this.events.on(ApplicationEvent.WinsEnd, () => this.scenes.winsEnd());
-        this.events.on(ApplicationEvent.TotalWinStart, (response) => this.scenes.totalWinStart(response));
-        this.events.on(ApplicationEvent.TotalWinEnd, () => this.scenes.totalWinEnd());
-        this.events.on(ApplicationEvent.WinStart, (win) => this.scenes.winStart(win));
-        this.events.on(ApplicationEvent.WinEnd, () => this.scenes.winEnd());
-        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => this.scenes.featureStart(feature, response));
-        this.events.on(ApplicationEvent.FeatureEnd, () => this.scenes.featureEnd());
-
-        this.events.on(ApplicationEvent.RoundStart, () => this.ui.roundStart());
-        this.events.on(ApplicationEvent.RoundEnd, () => this.ui.roundEnd());
-        this.events.on(ApplicationEvent.SpinStart, () => this.ui.spinStart());
-        this.events.on(ApplicationEvent.SpinStartComplete, () => this.ui.spinStartComplete());
-        this.events.on(ApplicationEvent.SpinEndReady, () => this.ui.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, (positions) => this.ui.spinEnd(positions));
-        this.events.on(ApplicationEvent.SpinEndComplete, () => this.ui.spinEndComplete());
-        this.events.on(ApplicationEvent.Slam, (positions) => this.ui.slam(positions));
-        this.events.on(ApplicationEvent.ResultsStart, (response) => this.ui.resultsStart(response));
-        this.events.on(ApplicationEvent.ResultsEnd, () => this.ui.resultsEnd());
-        this.events.on(ApplicationEvent.SkipResults, () => this.scenes.skipResults());
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => this.ui.playRequestSuccess(response));
-        this.events.on(ApplicationEvent.PlayRequestError, (error) => this.ui.playRequestError(error));
-        this.events.on(ApplicationEvent.WinsStart, (response) => this.ui.winsStart(response));
-        this.events.on(ApplicationEvent.WinsEnd, () => this.ui.winsEnd());
-        this.events.on(ApplicationEvent.TotalWinStart, (response) => this.ui.totalWinStart(response));
-        this.events.on(ApplicationEvent.TotalWinEnd, () => this.ui.totalWinEnd());
-        this.events.on(ApplicationEvent.WinStart, (win) => this.ui.winStart(win));
-        this.events.on(ApplicationEvent.WinEnd, () => this.ui.winEnd());
-        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => this.ui.featureStart(feature, response));
-        this.events.on(ApplicationEvent.FeatureEnd, () => this.ui.featureEnd());
+        this.addApplicationEventListener(this.ui);
 
         window.addEventListener('resize', () => this.resize());
         
@@ -94,6 +53,30 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.renderer.view.style.width = window.innerWidth + 'px';
         this.renderer.view.style.height = window.innerHeight + 'px';
         this.scenes.resize();
+    }
+
+    public addApplicationEventListener(listener: ApplicationEventListener) {
+        this.events.on(ApplicationEvent.RoundStart, () => listener.roundStart());
+        this.events.on(ApplicationEvent.RoundEnd, () => listener.roundEnd());
+        this.events.on(ApplicationEvent.SpinStart, () => listener.spinStart());
+        this.events.on(ApplicationEvent.SpinStartComplete, () => listener.spinStartComplete());
+        this.events.on(ApplicationEvent.SpinEndReady, () => listener.spinEndReady());
+        this.events.on(ApplicationEvent.SpinEnd, (positions) => listener.spinEnd(positions));
+        this.events.on(ApplicationEvent.SpinEndComplete, () => listener.spinEndComplete());
+        this.events.on(ApplicationEvent.Slam, (positions) => listener.slam(positions));
+        this.events.on(ApplicationEvent.ResultsStart, (response) => listener.resultsStart(response));
+        this.events.on(ApplicationEvent.ResultsEnd, () => listener.resultsEnd());
+        this.events.on(ApplicationEvent.SkipResults, () => listener.skipResults());
+        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => listener.playRequestSuccess(response));
+        this.events.on(ApplicationEvent.PlayRequestError, (error) => listener.playRequestError(error));
+        this.events.on(ApplicationEvent.WinsStart, (response) => listener.winsStart(response));
+        this.events.on(ApplicationEvent.WinsEnd, () => listener.winsEnd());
+        this.events.on(ApplicationEvent.TotalWinStart, (response) => listener.totalWinStart(response));
+        this.events.on(ApplicationEvent.TotalWinEnd, () => listener.totalWinEnd());
+        this.events.on(ApplicationEvent.WinStart, (win) => listener.winStart(win));
+        this.events.on(ApplicationEvent.WinEnd, () => listener.winEnd());
+        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => listener.featureStart(feature, response));
+        this.events.on(ApplicationEvent.FeatureEnd, () => listener.featureEnd());
     }
 
     public roundStart() {

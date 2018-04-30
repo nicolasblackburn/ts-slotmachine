@@ -1,12 +1,9 @@
 import {Scene} from './Scene';
 import { StateManager } from '../states/StateManager';
-import { PlayResponse } from '../client/PlayResponse';
 import { ApplicationInterface } from '../../ApplicationInterface';
 import { SceneEvent } from './SceneEvent';
-import { ApplicationEventListener } from '../../ApplicationEventListener';
-import { Win } from '../client/Win';
 
-export class SceneManager extends StateManager<Scene> implements ApplicationEventListener {
+export class SceneManager extends StateManager<Scene> {
     protected stage: PIXI.Container;
 
     constructor(stage: PIXI.Container) {
@@ -53,132 +50,6 @@ export class SceneManager extends StateManager<Scene> implements ApplicationEven
         if (this.current()) {
             this.current().update();
             this.current().emit(SceneEvent.Update);
-        }
-    }
-
-    public roundStart() {
-        if (this.current()) {
-            this.current().roundStart();
-        }
-    }
-
-    public roundEnd() {
-        if (this.current()) {
-            this.current().roundEnd();
-        }
-    }
-
-    public spinStart() {
-        if (this.current()) {
-            this.current().spinStart();
-        }
-    }
-
-    public spinStartComplete() {
-        if (this.current()) {
-            this.current().spinStartComplete();
-        }
-    }
-
-    public spinEnd(positions: number[]) {
-        if (this.current()) {
-            this.current().spinEnd(positions);
-        }
-    }
-
-    public spinEndComplete() {
-        if (this.current()) {
-            this.current().spinEndComplete();
-        }
-    }
-
-    public slam(positions: number[]) {
-        if (this.current()) {
-            this.current().slam(positions);
-        }
-    }
-
-    public spinEndReady() {
-        if (this.current()) {
-            this.current().spinEndReady();
-        }
-    }
-
-    public resultsStart(response: PlayResponse) {
-        if (this.current()) {
-            this.current().resultsStart(response);
-        }
-    }
-
-    public resultsEnd() {
-        if (this.current()) {
-            this.current().resultsEnd();
-        }
-    }
-
-    public skipResults() {
-        if (this.current()) {
-            this.current().skipResults();
-        }
-    }
-
-    public playRequestSuccess(response: PlayResponse) {
-        if (this.current()) {
-            this.current().playRequestSuccess(response);
-        }
-    }
-
-    public playRequestError(error: Error) {
-        if (this.current()) {
-            this.current().playRequestError(error);
-        }
-    }
-
-    public winsStart(response: PlayResponse) {
-        if (this.current()) {
-            this.current().winsStart(response);
-        }
-    }
-
-    public winsEnd() {
-        if (this.current()) {
-            this.current().winsEnd();
-        }
-    }
-
-    public totalWinStart(response: PlayResponse) {
-        if (this.current()) {
-            this.current().totalWinStart(response);
-        }
-    }
-
-    public totalWinEnd() {
-        if (this.current()) {
-            this.current().totalWinEnd();
-        }
-    }
-
-    public winStart(win: Win) {
-        if (this.current()) {
-            this.current().winStart(win);
-        }
-    }
-
-    public winEnd() {
-        if (this.current()) {
-            this.current().winEnd();
-        }
-    }
-
-    public featureStart(feature: string, response: PlayResponse) {
-        if (this.current()) {
-            this.current().featureStart(feature, response);
-        }
-    }
-
-    public featureEnd() {
-        if (this.current()) {
-            this.current().featureEnd();
         }
     }
 

@@ -1,6 +1,7 @@
 import { Reel } from './Reel';
-import { htorgb } from '../../functions';
+import { htorgb, modulo } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
+import * as gsap from 'gsap';
 
 const BASIC_SYMBOLS = {
     'lv1': 'sym_10', 
@@ -17,6 +18,8 @@ const BASIC_SYMBOLS = {
 
 export class ReelSet extends PIXI.Container {
     public reels: Reel[] = [];
+    public maxVelocity: number = 0.3;
+    protected currentTween: gsap.Animation;
     protected symbols: PIXI.Container;
     protected slotDefinition: SlotDefinition;
 
@@ -70,5 +73,68 @@ export class ReelSet extends PIXI.Container {
         for (const reel of this.reels) {
             reel.update();
         }
+    }
+
+    public spinStart() {
+        if (this.currentTween) {
+            this.currentTween.kill();
+        }
+        const timeline = new gsap.TimelineLite();
+        this.currentTween = timeline;
+        for (const reel of this.reels) {
+            timeline
+                .to(reel, 0.12, {
+                    ease: gsap.Quad.easeInOut,
+                    velocity: 0.2
+                }, 0)
+                .to(reel, 0.2, {
+                    ease: gsap.Quad.easeIn,
+                    velocity: -this.maxVelocity
+                }, 0.12)
+                .addLabel('SpinStartComplete', '+=0');
+        }
+        timeline.to({}, .86, {});
+        return timeline;
+    }
+
+    public spinEnd(positions: number[]) {
+        if (this.currentTween) {
+            this.currentTween.kill();
+        }
+        const timeline = new gsap.TimelineLite();
+        this.currentTween = timeline;
+        this.reels.forEach((reel, reelIndex) => {
+            const reelTimeline = new gsap.TimelineLite()
+            const currentPosition = Math.floor(reel.position);
+            const rowCount = this.slotDefinition.rowCount;
+            const symbolCount = reel.getSymbolCount();
+            const untilPosition = modulo(currentPosition - rowCount, symbolCount);
+            for (let i = 0; i < rowCount; i++) {
+                reel.substitutions[modulo(currentPosition - rowCount + i, symbolCount)] = modulo(positions[reelIndex] + i, symbolCount);
+            }
+            const t = (currentPosition - rowCount - reel.position) / -this.maxVelocity / PIXI.ticker.shared.FPS;
+            reelTimeline
+                .to({}, t, {}, 0)
+                .set(reel, {
+                    position: untilPosition,
+                    velocity: 0
+                })
+                .to(reel, 0.07, {
+                    ease: gsap.Quad.easeOut,
+                    position: untilPosition - 0.4
+                })
+                .to(reel, 0.07, {
+                    ease: gsap.Quad.easeIn,
+                    position: modulo(untilPosition - 0.4, symbolCount) + 0.4
+                })
+                .set(reel, {
+                    substitutions: {}, 
+                    position: positions[reelIndex]
+                });
+
+            timeline.add(reelTimeline, 0);
+        });
+
+        return timeline;
     }
 }

@@ -9,12 +9,14 @@ import { SlotDefinition } from '../modules/machine/SlotDefinition';
 import { PlayResponse } from '../modules/client/PlayResponse';
 import { SlotResult } from '../modules/client/SlotResult';
 import { modulo } from '../functions';
+import { ApplicationEventListener } from '../ApplicationEventListener';
+import { ApplicationEventAction } from '../ApplicationEventAction';
+import { MainSceneApplicationEventAction } from './MainSceneApplicationEventAction';
 
 export class MainScene extends Scene {
-    protected reelMaxVelocity: number = 0.3;
     protected reelSet: ReelSet;
     protected slotDefinition: SlotDefinition;
-    protected currentTween: gsap.Animation;
+    protected applicationEventListener: ApplicationEventListener;
 
     constructor(application: Application, slotDefinition: SlotDefinition) {
         super(application);
@@ -25,76 +27,9 @@ export class MainScene extends Scene {
         this.reelSet = new ReelSet(this.slotDefinition);
         this.addChild(this.reelSet);
         (window as any).reelSet = this.reelSet;
-    }
-    
-    public spinStart() {
-        if (this.currentTween) {
-            this.currentTween.kill();
-        }
-        const timeline = new gsap.TimelineLite();
-        this.currentTween = timeline;
-        for (const reel of this.reelSet.reels) {
-            timeline
-                .to(reel, 0.12, {
-                    ease: gsap.Quad.easeInOut,
-                    velocity: 0.2
-                }, 0)
-                .to(reel, 0.2, {
-                    ease: gsap.Quad.easeIn,
-                    velocity: -this.reelMaxVelocity
-                }, 0.12)
-                .call(() => this.application.spinStartComplete());
-        }
-        timeline.to({}, .86, {});
-        timeline.eventCallback('onComplete', () => this.application.spinEndReady());
-    }
 
-    public playRequestSuccess(response: PlayResponse) {
-        console.log(response);
-    }
-
-    public slam(positions: number[]) {
-        this.spinEnd(positions);
-    }
-
-    public spinEnd(positions: number[]) {
-        if (this.currentTween) {
-            this.currentTween.kill();
-        }
-        const timeline = new gsap.TimelineLite();
-        this.currentTween = timeline;
-        this.reelSet.reels.forEach((reel, reelIndex) => {
-            const reelTimeline = new gsap.TimelineLite()
-            const currentPosition = Math.floor(reel.position);
-            const rowCount = this.slotDefinition.rowCount;
-            const symbolCount = reel.getSymbolCount();
-            const untilPosition = modulo(currentPosition - rowCount, symbolCount);
-            for (let i = 0; i < rowCount; i++) {
-                reel.substitutions[modulo(currentPosition - rowCount + i, symbolCount)] = modulo(positions[reelIndex] + i, symbolCount);
-            }
-            const t = (currentPosition - rowCount - reel.position) / -this.reelMaxVelocity / PIXI.ticker.shared.FPS;
-            reelTimeline
-                .to({}, t, {}, 0)
-                .set(reel, {
-                    position: untilPosition,
-                    velocity: 0
-                })
-                .to(reel, 0.07, {
-                    ease: gsap.Quad.easeOut,
-                    position: untilPosition - 0.4
-                })
-                .to(reel, 0.07, {
-                    ease: gsap.Quad.easeIn,
-                    position: modulo(untilPosition - 0.4, symbolCount) + 0.4
-                })
-                .set(reel, {
-                    substitutions: {}, 
-                    position: positions[reelIndex]
-                })
-                .call(() => this.application.spinEndComplete());
-
-            timeline.add(reelTimeline, 0);
-        });
+        this.applicationEventListener = new MainSceneApplicationEventAction(this.application, this.reelSet);
+        this.application.addApplicationEventListener(this.applicationEventListener);
     }
 
     public resize() {

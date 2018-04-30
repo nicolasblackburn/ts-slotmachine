@@ -1,7 +1,9 @@
 import { PlayResponse } from "./modules/client/PlayResponse";
 import { Win } from "./modules/client/Win";
+import { ApplicationEventAction } from "./ApplicationEventAction";
 
 export interface ApplicationInterface {
+    addApplicationEventListener(listener: ApplicationEventAction);
     roundStart();
     roundEnd();
     spinStart();

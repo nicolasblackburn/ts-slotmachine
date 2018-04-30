@@ -1,11 +1,8 @@
 import { StateInterface } from "../states/State";
-import { PlayResponse } from "../client/PlayResponse";
 import { ApplicationInterface } from "../../ApplicationInterface";
 import { SceneEvent } from "./SceneEvent";
-import { ApplicationEventListener } from "../../ApplicationEventListener";
-import { Win } from "../client/Win";
 
-export class Scene extends PIXI.Container implements StateInterface, ApplicationEventListener {
+export class Scene extends PIXI.Container implements StateInterface {
     protected application: ApplicationInterface;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
@@ -58,46 +55,4 @@ export class Scene extends PIXI.Container implements StateInterface, Application
     public exit(nextScene: string, ...args: any[]) {}
 
     public update() {} 
-
-    public roundStart() {}
-
-    public roundEnd() {}
-
-    public spinStart() {}
-
-    public spinStartComplete() {}
-
-    public spinEndReady() {}
-
-    public spinEnd(positions: number[]) {}
-
-    public spinEndComplete() {}
-
-    public slam(positions: number[]) {}
-
-    public resultsStart(response: PlayResponse) {}
-
-    public resultsEnd() {}
-
-    public skipResults() {}
-
-    public playRequestSuccess(response: PlayResponse) {}
-
-    public playRequestError(error: Error) {}
-
-    public winsStart(response: PlayResponse) {}
-
-    public winsEnd() {}
-
-    public totalWinStart(response: PlayResponse) {}
-
-    public totalWinEnd() {}
-
-    public winStart(win: Win) {}
-
-    public winEnd() {}
-
-    public featureStart(feature: string, response: PlayResponse) {}
-
-    public featureEnd() {}
 }
