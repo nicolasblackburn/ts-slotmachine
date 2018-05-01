@@ -16,7 +16,7 @@ import { MainSceneApplicationEventAction } from './MainSceneApplicationEventActi
 export class MainScene extends Scene {
     protected reelSet: ReelSet;
     protected slotDefinition: SlotDefinition;
-    protected applicationEventListener: ApplicationEventListener;
+    protected applicationEventAction: MainSceneApplicationEventAction;
 
     constructor(application: Application, slotDefinition: SlotDefinition) {
         super(application);
@@ -28,8 +28,16 @@ export class MainScene extends Scene {
         this.addChild(this.reelSet);
         (window as any).reelSet = this.reelSet;
 
-        this.applicationEventListener = new MainSceneApplicationEventAction(this.application, this.reelSet);
-        this.application.addApplicationEventListener(this.applicationEventListener);
+        this.applicationEventAction = new MainSceneApplicationEventAction(this.application, this.reelSet);
+        this.application.addApplicationEventListener(this.applicationEventAction);
+    }
+
+    public enter() {
+        this.applicationEventAction.active = true;
+    }
+
+    public exit() {
+        this.applicationEventAction.active = false;
     }
 
     public resize() {

@@ -1,6 +1,8 @@
 import { Reel } from './Reel';
 import { htorgb, modulo } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
+import { ReelSetLabel } from './ReelSetLabel';
+import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';
 
 const BASIC_SYMBOLS = {
@@ -34,18 +36,17 @@ export class ReelSet extends PIXI.Container {
         const symbolHeight = texture.height;
         const symbolWidth = texture.width;
         const basicSymbolCount = Object.keys(BASIC_SYMBOLS).length;
-
         for (const [reelIndex, reelData] of Object.entries(this.slotDefinition.reels)) {
             const reel = new Reel(this.slotDefinition.rowCount);
             for (const [symbolIndex, symbolName] of Object.entries(reelData)) {
                 const textureIndex = parseInt(symbolIndex) % basicSymbolCount;
                 const texture = PIXI.Texture.fromFrame(BASIC_SYMBOLS[symbolName]);
 
-                const symbol = new PIXI.Sprite(texture);
+                const symbol = new ReelSymbol(texture);
                 symbol.visible = false;
                 symbol.tint = htorgb(330 - 360 * textureIndex / basicSymbolCount);
 
-                const substitution = new PIXI.Sprite(texture);
+                const substitution = new ReelSymbol(texture);
                 substitution.visible = false;
                 substitution.tint = htorgb(330 - 360 * textureIndex / basicSymbolCount);
 
@@ -82,18 +83,12 @@ export class ReelSet extends PIXI.Container {
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
         for (const reel of this.reels) {
-            timeline
-                .to(reel, 0.12, {
-                    ease: gsap.Quad.easeInOut,
-                    velocity: 0.2
-                }, 0)
-                .to(reel, 0.2, {
-                    ease: gsap.Quad.easeIn,
-                    velocity: -this.maxVelocity
-                }, 0.12)
-                .addLabel('SpinStartComplete', '+=0');
+            timeline.add(reel.spinStart(this.maxVelocity), 0);
         }
-        timeline.to({}, .86, {});
+
+        timeline
+            .addLabel(ReelSetLabel.SpinStartComplete, '+=0')
+            .to({}, .86, {});
         return timeline;
     }
 
@@ -104,35 +99,20 @@ export class ReelSet extends PIXI.Container {
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
         this.reels.forEach((reel, reelIndex) => {
-            const reelTimeline = new gsap.TimelineLite()
-            const currentPosition = Math.floor(reel.position);
-            const rowCount = this.slotDefinition.rowCount;
-            const symbolCount = reel.getSymbolCount();
-            const untilPosition = modulo(currentPosition - rowCount, symbolCount);
-            for (let i = 0; i < rowCount; i++) {
-                reel.substitutions[modulo(currentPosition - rowCount + i, symbolCount)] = modulo(positions[reelIndex] + i, symbolCount);
-            }
-            const t = (currentPosition - rowCount - reel.position) / -this.maxVelocity / PIXI.ticker.shared.FPS;
-            reelTimeline
-                .to({}, t, {}, 0)
-                .set(reel, {
-                    position: untilPosition,
-                    velocity: 0
-                })
-                .to(reel, 0.07, {
-                    ease: gsap.Quad.easeOut,
-                    position: untilPosition - 0.4
-                })
-                .to(reel, 0.07, {
-                    ease: gsap.Quad.easeIn,
-                    position: modulo(untilPosition - 0.4, symbolCount) + 0.4
-                })
-                .set(reel, {
-                    substitutions: {}, 
-                    position: positions[reelIndex]
-                });
+            timeline.add(reel.spinEnd(positions[reelIndex], this.maxVelocity));
+        });
 
-            timeline.add(reelTimeline, 0);
+        return timeline;
+    }
+    
+    public slam(positions: number[]) {
+        if (this.currentTween) {
+            this.currentTween.kill();
+        }
+        const timeline = new gsap.TimelineLite();
+        this.currentTween = timeline;
+        this.reels.forEach((reel, reelIndex) => {
+            timeline.add(reel.spinEnd(positions[reelIndex], this.maxVelocity), 0);
         });
 
         return timeline;
