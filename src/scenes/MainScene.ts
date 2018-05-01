@@ -12,6 +12,7 @@ import { modulo } from '../functions';
 import { ApplicationEventListener } from '../ApplicationEventListener';
 import { ApplicationEventAction } from '../ApplicationEventAction';
 import { MainSceneApplicationEventAction } from './MainSceneApplicationEventAction';
+import { NumberSprite } from '../components/NumberSprite';
 
 export class MainScene extends Scene {
     protected reelSet: ReelSet;
@@ -30,6 +31,12 @@ export class MainScene extends Scene {
 
         this.applicationEventAction = new MainSceneApplicationEventAction(this.application, this.reelSet);
         this.application.addApplicationEventListener(this.applicationEventAction);
+
+        this.number = new NumberSprite();
+        this.number.x = 400;
+        this.number.y = 400;
+
+        this.addChild(this.number);
     }
 
     public enter() {

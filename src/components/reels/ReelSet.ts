@@ -117,4 +117,8 @@ export class ReelSet extends PIXI.Container {
 
         return timeline;
     }
+
+    public getSymbolAt(reelIndex: number, position: number) {
+        return this.reels[reelIndex].getSymbolAt(position);
+    }
 }
