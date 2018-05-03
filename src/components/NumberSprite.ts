@@ -48,12 +48,15 @@ const GLYPHS_MAP = {
     },
     '-': {
         frame: 'glyph_minus'
+    },
+    'x': {
+        frame: 'glyph_times'
     }
 }
 
 export class NumberSprite extends PIXI.Container {
     protected glyphs: PIXI.Sprite[] = [];
-    protected pNumber: string = '0.00';
+    protected pValue: string = '0.00';
 
     constructor() {
         super();
@@ -66,17 +69,17 @@ export class NumberSprite extends PIXI.Container {
         }
     }
 
-    get number() {
-        return this.pNumber;
+    get value() {
+        return this.pValue;
     }
 
-    set number(number: string) {
-        this.pNumber = number;
+    set value(value: string) {
+        this.pValue = value;
         this.update();
     }
 
     public update() {
-        const glyphs = this.pNumber.split('');
+        const glyphs = this.pValue.split('');
         let lastX = 0;
         for (let i = 0; i < glyphs.length; i++) {
             if (i === this.glyphs.length) {

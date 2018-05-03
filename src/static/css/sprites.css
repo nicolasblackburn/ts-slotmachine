@@ -1,18 +1,180 @@
-
-/**
- * Formula: sprite rectangle = [x, y, w, h]
- *          image rectangle  = [W, H]
- *          background-position-x  <- (x / (W - w) * 100%)  
- *          background-position-y  <- (y / (H - h) * 100%)  
- *          background-size-width  <- W / w
- *          background-size-height <- H / h
- */
 .icon_spin {
-    display: block;
-    width:256px; 
-    height:256px; 
-    background-position: 99.80620155% 48.975545274%;
-    background-size: 301.5625% 691.015625%;
-    background-image: url(../assets/img/sprites.png);
-    padding: 0; 
+	display: block;
+	width: 256px;
+	height: 256px;
+	background-position: 0.1773049645390071% 0.07230657989877079%;
+	background-size:  320.3125% 640.234375%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
 }
+
+.square {
+	display: block;
+	width: 256px;
+	height: 256px;
+	background-position: 45.744680851063826% 0.07230657989877079%;
+	background-size:  320.3125% 640.234375%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_7 {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 93.97810218978103% 0.0731528895391368%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_8 {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 0.18248175182481752% 20.04389173372348%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_9 {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 50% 20.04389173372348%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_10 {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 99.81751824817519% 20.04389173372348%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_a {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 0.18248175182481752% 40.01463057790783%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_apple {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 50% 40.01463057790783%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_banana {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 99.81751824817519% 40.01463057790783%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_cherry {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 0.18248175182481752% 59.98536942209217%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_fs {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 50% 59.98536942209217%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_grape {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 99.81751824817519% 59.98536942209217%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_j {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 0.18248175182481752% 79.95610826627652%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_k {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 50% 79.95610826627652%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_lemon {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 99.81751824817519% 79.95610826627652%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_q {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 0.18248175182481752% 99.92684711046086%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_sc {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 50% 99.92684711046086%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.sym_w {
+	display: block;
+	width: 272px;
+	height: 272px;
+	background-position: 99.81751824817519% 99.92684711046086%;
+	background-size:  301.4705882352941% 602.5735294117646%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+

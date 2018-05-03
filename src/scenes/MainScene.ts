@@ -31,12 +31,6 @@ export class MainScene extends Scene {
 
         this.applicationEventAction = new MainSceneApplicationEventAction(this.application, this.reelSet);
         this.application.addApplicationEventListener(this.applicationEventAction);
-
-        this.number = new NumberSprite();
-        this.number.x = 400;
-        this.number.y = 400;
-
-        this.addChild(this.number);
     }
 
     public enter() {
