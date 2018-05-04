@@ -33,12 +33,10 @@ const GLYPHS_MAP = {
         frame: 'glyph_space'
     },
     ',': {
-        frame: 'glyph_comma',
-        y: 0.5
+        frame: 'glyph_comma'
     },
     '\'': {
-        frame: 'glyph_quote',
-        y: -1.71
+        frame: 'glyph_quote'
     },
     '.': {
         frame: 'glyph_period'
@@ -57,6 +55,7 @@ const GLYPHS_MAP = {
 export class NumberSprite extends PIXI.Container {
     protected glyphs: PIXI.Sprite[] = [];
     protected pValue: string = '0.00';
+    protected count: number = 0;
 
     constructor() {
         super();
@@ -67,6 +66,7 @@ export class NumberSprite extends PIXI.Container {
             this.glyphs.push(glyph);
             this.addChild(glyph);
         }
+        this.value = '0.00';
     }
 
     get value() {
@@ -81,7 +81,8 @@ export class NumberSprite extends PIXI.Container {
     public update() {
         const glyphs = this.pValue.split('');
         let lastX = 0;
-        for (let i = 0; i < glyphs.length; i++) {
+        let i = 0;
+        for (; i < glyphs.length; i++) {
             if (i === this.glyphs.length) {
                 const glyph = new PIXI.Sprite(PIXI.Texture.fromFrame('glyph_0'));
                 this.glyphs.push(glyph);
@@ -89,12 +90,16 @@ export class NumberSprite extends PIXI.Container {
             }
             const glyph = this.glyphs[i];
             const data = GLYPHS_MAP[glyphs[i]];
-            console.log(glyphs[i], data);
             glyph.visible = true;
             glyph.texture = PIXI.Texture.fromFrame(data.frame);
             glyph.x = lastX + (data.x ? glyph.width * data.x : 0);
             glyph.y = 0 + (data.y ? glyph.height * data.y : 0);
             lastX += glyph.width + 10;
+        }
+        const lastCount = this.count;
+        this.count = i;
+        for (; i < lastCount; i++) {
+            this.glyphs[i].visible = false;
         }
     } 
 }

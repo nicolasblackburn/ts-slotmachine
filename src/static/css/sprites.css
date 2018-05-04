@@ -1,9 +1,239 @@
+.glyph_0 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 0.13297872340425532% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_1 {
+	display: block;
+	width: 48px;
+	height: 130px;
+	background-position: 9.067357512953368% 0.05649717514124294%;
+	background-size:  1708.3333333333333% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_2 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 15.824468085106384% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_3 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 25% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_4 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 34.17553191489361% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_5 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 43.351063829787236% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_6 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 52.52659574468085% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_7 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 61.702127659574465% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_8 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 70.87765957446808% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_9 {
+	display: block;
+	width: 68px;
+	height: 130px;
+	background-position: 80.0531914893617% 0.05649717514124294%;
+	background-size:  1205.8823529411764% 1461.5384615384614%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_amp {
+	display: block;
+	width: 68px;
+	height: 129px;
+	background-position: 89.22872340425532% 0.0564652738565782%;
+	background-size:  1205.8823529411764% 1472.8682170542636%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_colon {
+	display: block;
+	width: 39px;
+	height: 81px;
+	background-position: 94.75032010243278% 0.054975261132490384%;
+	background-size:  2102.5641025641025% 2345.679012345679%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_comma {
+	display: block;
+	width: 45px;
+	height: 54px;
+	background-position: 0.12903225806451613% 7.150595882990249%;
+	background-size:  1822.2222222222222% 3518.5185185185182%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_dollar {
+	display: block;
+	width: 68px;
+	height: 128px;
+	background-position: 6.25% 7.44920993227991%;
+	background-size:  1205.8823529411764% 1484.375%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_equals {
+	display: block;
+	width: 54px;
+	height: 60px;
+	background-position: 15.143603133159269% 7.173913043478261%;
+	background-size:  1518.5185185185185% 3166.666666666667%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_exclamation_mark {
+	display: block;
+	width: 40px;
+	height: 129px;
+	background-position: 21.923076923076923% 7.453416149068323%;
+	background-size:  2050% 1472.8682170542636%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_minus {
+	display: block;
+	width: 62px;
+	height: 40px;
+	background-position: 27.96833773087071% 7.096774193548387%;
+	background-size:  1322.5806451612905% 4750%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_period {
+	display: block;
+	width: 40px;
+	height: 42px;
+	background-position: 35.256410256410255% 7.104413347685684%;
+	background-size:  2050% 4523.809523809524%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_plus {
+	display: block;
+	width: 61px;
+	height: 63px;
+	background-position: 41.63372859025033% 7.18562874251497%;
+	background-size:  1344.2622950819673% 3015.873015873016%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_question_mark {
+	display: block;
+	width: 68px;
+	height: 129px;
+	background-position: 50.26595744680851% 7.453416149068323%;
+	background-size:  1205.8823529411764% 1472.8682170542636%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_quote {
+	display: block;
+	width: 46px;
+	height: 53px;
+	background-position: 57.751937984496124% 7.146724417975095%;
+	background-size:  1782.6086956521738% 3584.9056603773583%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_times {
+	display: block;
+	width: 68px;
+	height: 108px;
+	background-position: 65.69148936170212% 7.366071428571429%;
+	background-size:  1205.8823529411764% 1759.2592592592591%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
+.glyph_underscore {
+	display: block;
+	width: 68px;
+	height: 33px;
+	background-position: 74.86702127659575% 7.070166041778254%;
+	background-size:  1205.8823529411764% 5757.575757575758%;
+	background-image: url(../assets/img/sprites.png);
+	padding: 0;
+}
+
 .icon_spin {
 	display: block;
 	width: 256px;
 	height: 256px;
-	background-position: 0.1773049645390071% 0.07230657989877079%;
-	background-size:  320.3125% 640.234375%;
+	background-position: 0.1773049645390071% 15.936739659367397%;
+	background-size:  320.3125% 742.1875%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -12,8 +242,8 @@
 	display: block;
 	width: 256px;
 	height: 256px;
-	background-position: 45.744680851063826% 0.07230657989877079%;
-	background-size:  320.3125% 640.234375%;
+	background-position: 45.744680851063826% 15.936739659367397%;
+	background-size:  320.3125% 742.1875%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -22,8 +252,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 93.97810218978103% 0.0731528895391368%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 93.97810218978103% 16.093366093366093%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -32,8 +262,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 0.18248175182481752% 20.04389173372348%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 0.18248175182481752% 32.86240786240786%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -42,8 +272,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 50% 20.04389173372348%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 50% 32.86240786240786%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -52,8 +282,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 99.81751824817519% 20.04389173372348%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 99.81751824817519% 32.86240786240786%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -62,8 +292,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 0.18248175182481752% 40.01463057790783%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 0.18248175182481752% 49.631449631449634%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -72,8 +302,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 50% 40.01463057790783%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 50% 49.631449631449634%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -82,8 +312,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 99.81751824817519% 40.01463057790783%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 99.81751824817519% 49.631449631449634%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -92,8 +322,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 0.18248175182481752% 59.98536942209217%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 0.18248175182481752% 66.4004914004914%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -102,8 +332,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 50% 59.98536942209217%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 50% 66.4004914004914%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -112,8 +342,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 99.81751824817519% 59.98536942209217%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 99.81751824817519% 66.4004914004914%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -122,8 +352,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 0.18248175182481752% 79.95610826627652%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 0.18248175182481752% 83.16953316953317%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -132,8 +362,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 50% 79.95610826627652%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 50% 83.16953316953317%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -142,8 +372,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 99.81751824817519% 79.95610826627652%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 99.81751824817519% 83.16953316953317%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -152,8 +382,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 0.18248175182481752% 99.92684711046086%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 0.18248175182481752% 99.93857493857494%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -162,8 +392,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 50% 99.92684711046086%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 50% 99.93857493857494%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -172,8 +402,8 @@
 	display: block;
 	width: 272px;
 	height: 272px;
-	background-position: 99.81751824817519% 99.92684711046086%;
-	background-size:  301.4705882352941% 602.5735294117646%;
+	background-position: 99.81751824817519% 99.93857493857494%;
+	background-size:  301.4705882352941% 698.5294117647059%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }

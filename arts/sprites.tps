@@ -199,6 +199,197 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">exports/glyph_0.png</key>
+            <key type="filename">exports/glyph_2.png</key>
+            <key type="filename">exports/glyph_3.png</key>
+            <key type="filename">exports/glyph_4.png</key>
+            <key type="filename">exports/glyph_5.png</key>
+            <key type="filename">exports/glyph_6.png</key>
+            <key type="filename">exports/glyph_7.png</key>
+            <key type="filename">exports/glyph_8.png</key>
+            <key type="filename">exports/glyph_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>17,33,34,65</rect>
+                <key>scale9Paddings</key>
+                <rect>17,33,34,65</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,33,24,65</rect>
+                <key>scale9Paddings</key>
+                <rect>12,33,24,65</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_amp.png</key>
+            <key type="filename">exports/glyph_question_mark.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>17,32,34,65</rect>
+                <key>scale9Paddings</key>
+                <rect>17,32,34,65</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_colon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,20,20,41</rect>
+                <key>scale9Paddings</key>
+                <rect>10,20,20,41</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_comma.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>11,14,23,27</rect>
+                <key>scale9Paddings</key>
+                <rect>11,14,23,27</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_dollar.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>17,32,34,64</rect>
+                <key>scale9Paddings</key>
+                <rect>17,32,34,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_equals.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>14,15,27,30</rect>
+                <key>scale9Paddings</key>
+                <rect>14,15,27,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_exclamation_mark.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,32,20,65</rect>
+                <key>scale9Paddings</key>
+                <rect>10,32,20,65</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_minus.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,10,31,20</rect>
+                <key>scale9Paddings</key>
+                <rect>16,10,31,20</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_period.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,11,20,21</rect>
+                <key>scale9Paddings</key>
+                <rect>10,11,20,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_plus.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>15,16,31,32</rect>
+                <key>scale9Paddings</key>
+                <rect>15,16,31,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_quote.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,13,23,27</rect>
+                <key>scale9Paddings</key>
+                <rect>12,13,23,27</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_times.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>17,27,34,54</rect>
+                <key>scale9Paddings</key>
+                <rect>17,27,34,54</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">exports/glyph_underscore.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>17,8,34,17</rect>
+                <key>scale9Paddings</key>
+                <rect>17,8,34,17</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">exports/icon_spin.png</key>
             <key type="filename">exports/square.png</key>
             <key type="filename">exports/sym_10.png</key>
@@ -250,6 +441,29 @@
             <filename>exports/sym_w.png</filename>
             <filename>exports/square.png</filename>
             <filename>exports/icon_spin.png</filename>
+            <filename>exports/glyph_0.png</filename>
+            <filename>exports/glyph_1.png</filename>
+            <filename>exports/glyph_2.png</filename>
+            <filename>exports/glyph_3.png</filename>
+            <filename>exports/glyph_4.png</filename>
+            <filename>exports/glyph_5.png</filename>
+            <filename>exports/glyph_6.png</filename>
+            <filename>exports/glyph_7.png</filename>
+            <filename>exports/glyph_8.png</filename>
+            <filename>exports/glyph_9.png</filename>
+            <filename>exports/glyph_amp.png</filename>
+            <filename>exports/glyph_colon.png</filename>
+            <filename>exports/glyph_comma.png</filename>
+            <filename>exports/glyph_dollar.png</filename>
+            <filename>exports/glyph_equals.png</filename>
+            <filename>exports/glyph_exclamation_mark.png</filename>
+            <filename>exports/glyph_minus.png</filename>
+            <filename>exports/glyph_period.png</filename>
+            <filename>exports/glyph_plus.png</filename>
+            <filename>exports/glyph_question_mark.png</filename>
+            <filename>exports/glyph_quote.png</filename>
+            <filename>exports/glyph_times.png</filename>
+            <filename>exports/glyph_underscore.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
