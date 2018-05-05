@@ -71,7 +71,7 @@ export class MainSceneApplicationEventAction extends ApplicationEventAction {
         const tween = {value: 0};
         timeline
             .to(tween, 0.5, {value: 100, onUpdate: () => {
-                this.numberSprite.value = tween.value.toFixed(2);
+                this.numberSprite.value = tween.value.toFixed(2).replace('.', ' ');
                 this.numberSprite.x = (width - this.numberSprite.width) / 2;
                 this.numberSprite.y = (height + this.numberSprite.height) / 2;
             }});
