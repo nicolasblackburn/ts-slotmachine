@@ -82,95 +82,95 @@
 },
 "glyph_colon":
 {
-	"frame": {"x":671,"y":1,"w":39,"h":81},
+	"frame": {"x":671,"y":1,"w":39,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":81},
-	"sourceSize": {"w":39,"h":81}
+	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":130},
+	"sourceSize": {"w":39,"h":130}
 },
 "glyph_comma":
 {
-	"frame": {"x":711,"y":1,"w":45,"h":54},
+	"frame": {"x":711,"y":1,"w":45,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":45,"h":54},
-	"sourceSize": {"w":45,"h":54}
+	"spriteSourceSize": {"x":0,"y":0,"w":45,"h":130},
+	"sourceSize": {"w":45,"h":130}
 },
 "glyph_dollar":
 {
-	"frame": {"x":1,"y":132,"w":68,"h":128},
+	"frame": {"x":1,"y":132,"w":68,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":68,"h":128},
-	"sourceSize": {"w":68,"h":128}
+	"spriteSourceSize": {"x":0,"y":0,"w":68,"h":130},
+	"sourceSize": {"w":68,"h":130}
 },
 "glyph_equals":
 {
-	"frame": {"x":70,"y":132,"w":54,"h":60},
+	"frame": {"x":70,"y":132,"w":54,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":60},
-	"sourceSize": {"w":54,"h":60}
+	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":130},
+	"sourceSize": {"w":54,"h":130}
 },
 "glyph_exclamation_mark":
 {
-	"frame": {"x":125,"y":132,"w":40,"h":129},
+	"frame": {"x":125,"y":132,"w":40,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":129},
-	"sourceSize": {"w":40,"h":129}
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":130},
+	"sourceSize": {"w":40,"h":130}
 },
 "glyph_minus":
 {
-	"frame": {"x":166,"y":132,"w":61,"h":40},
+	"frame": {"x":166,"y":132,"w":61,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":40},
-	"sourceSize": {"w":61,"h":40}
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":130},
+	"sourceSize": {"w":61,"h":130}
 },
 "glyph_period":
 {
-	"frame": {"x":228,"y":132,"w":40,"h":42},
+	"frame": {"x":228,"y":132,"w":40,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":42},
-	"sourceSize": {"w":40,"h":42}
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":130},
+	"sourceSize": {"w":40,"h":130}
 },
 "glyph_plus":
 {
-	"frame": {"x":269,"y":132,"w":61,"h":63},
+	"frame": {"x":269,"y":132,"w":61,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":63},
-	"sourceSize": {"w":61,"h":63}
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":130},
+	"sourceSize": {"w":61,"h":130}
 },
 "glyph_question_mark":
 {
-	"frame": {"x":331,"y":132,"w":68,"h":129},
+	"frame": {"x":331,"y":132,"w":68,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":68,"h":129},
-	"sourceSize": {"w":68,"h":129}
+	"spriteSourceSize": {"x":0,"y":0,"w":68,"h":130},
+	"sourceSize": {"w":68,"h":130}
 },
 "glyph_quote":
 {
-	"frame": {"x":400,"y":132,"w":46,"h":53},
+	"frame": {"x":400,"y":132,"w":46,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":53},
-	"sourceSize": {"w":46,"h":53}
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":130},
+	"sourceSize": {"w":46,"h":130}
 },
 "glyph_space":
 {
-	"frame": {"x":447,"y":132,"w":48,"h":130},
+	"frame": {"x":447,"y":132,"w":32,"h":130},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":130},
-	"sourceSize": {"w":48,"h":130}
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":130},
+	"sourceSize": {"w":32,"h":130}
 },
 "icon_spin":
 {
-	"frame": {"x":496,"y":132,"w":256,"h":256},
+	"frame": {"x":480,"y":132,"w":256,"h":256},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -319,6 +319,6 @@
 	"format": "RGBA8888",
 	"size": {"w":820,"h":2027},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0bd6234578da7c4c9e09c058cbe8d085:7752b8e1ea20bb4075d4d63897f07e23:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:4b8dc9453a453e2f4d439007f6c79a1a:451939bd4584f1b3a1e83c09bc2e3f31:1eabdf11f75e3a4fe3147baf7b5be24b$"
 }
 }

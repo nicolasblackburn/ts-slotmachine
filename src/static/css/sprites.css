@@ -101,9 +101,9 @@
 .glyph_colon {
 	display: block;
 	width: 39px;
-	height: 81px;
-	background-position: 85.91549295774648% 0.051387461459403906%;
-	background-size:  2102.5641025641025% 2502.469135802469%;
+	height: 130px;
+	background-position: 85.91549295774648% 0.05271481286241434%;
+	background-size:  2102.5641025641025% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -111,9 +111,9 @@
 .glyph_comma {
 	display: block;
 	width: 45px;
-	height: 54px;
-	background-position: 91.74193548387096% 0.05068423720223011%;
-	background-size:  1822.2222222222222% 3753.703703703704%;
+	height: 130px;
+	background-position: 91.74193548387096% 0.05271481286241434%;
+	background-size:  1822.2222222222222% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -121,9 +121,9 @@
 .glyph_dollar {
 	display: block;
 	width: 68px;
-	height: 128px;
-	background-position: 0.13297872340425532% 6.9510268562401265%;
-	background-size:  1205.8823529411764% 1583.59375%;
+	height: 130px;
+	background-position: 0.13297872340425532% 6.9583552978386916%;
+	background-size:  1205.8823529411764% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -131,9 +131,9 @@
 .glyph_equals {
 	display: block;
 	width: 54px;
-	height: 60px;
-	background-position: 9.138381201044385% 6.710726995424504%;
-	background-size:  1518.5185185185185% 3378.333333333333%;
+	height: 130px;
+	background-position: 9.138381201044385% 6.9583552978386916%;
+	background-size:  1518.5185185185185% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -141,9 +141,9 @@
 .glyph_exclamation_mark {
 	display: block;
 	width: 40px;
-	height: 129px;
-	background-position: 16.025641025641026% 6.954689146469968%;
-	background-size:  2050% 1571.3178294573643%;
+	height: 130px;
+	background-position: 16.025641025641026% 6.9583552978386916%;
+	background-size:  2050% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -151,9 +151,9 @@
 .glyph_minus {
 	display: block;
 	width: 61px;
-	height: 40px;
-	background-position: 21.870882740447957% 6.643180674383492%;
-	background-size:  1344.2622950819673% 5067.5%;
+	height: 130px;
+	background-position: 21.870882740447957% 6.9583552978386916%;
+	background-size:  1344.2622950819673% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -161,9 +161,9 @@
 .glyph_period {
 	display: block;
 	width: 40px;
-	height: 42px;
-	background-position: 29.230769230769234% 6.649874055415617%;
-	background-size:  2050% 4826.190476190476%;
+	height: 130px;
+	background-position: 29.230769230769234% 6.9583552978386916%;
+	background-size:  2050% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -171,9 +171,9 @@
 .glyph_plus {
 	display: block;
 	width: 61px;
-	height: 63px;
-	background-position: 35.44137022397892% 6.720977596741344%;
-	background-size:  1344.2622950819673% 3217.4603174603176%;
+	height: 130px;
+	background-position: 35.44137022397892% 6.9583552978386916%;
+	background-size:  1344.2622950819673% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -181,9 +181,9 @@
 .glyph_question_mark {
 	display: block;
 	width: 68px;
-	height: 129px;
-	background-position: 44.015957446808514% 6.954689146469968%;
-	background-size:  1205.8823529411764% 1571.3178294573643%;
+	height: 130px;
+	background-position: 44.015957446808514% 6.9583552978386916%;
+	background-size:  1205.8823529411764% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -191,19 +191,19 @@
 .glyph_quote {
 	display: block;
 	width: 46px;
-	height: 53px;
-	background-position: 51.67958656330749% 6.68693009118541%;
-	background-size:  1782.6086956521738% 3824.528301886792%;
+	height: 130px;
+	background-position: 51.67958656330749% 6.9583552978386916%;
+	background-size:  1782.6086956521738% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
 
 .glyph_space {
 	display: block;
-	width: 48px;
+	width: 32px;
 	height: 130px;
-	background-position: 57.901554404145074% 6.9583552978386916%;
-	background-size:  1708.3333333333333% 1559.2307692307693%;
+	background-position: 56.7258883248731% 6.9583552978386916%;
+	background-size:  2562.5% 1559.2307692307693%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;
 }
@@ -212,7 +212,7 @@
 	display: block;
 	width: 256px;
 	height: 256px;
-	background-position: 87.94326241134752% 7.453416149068323%;
+	background-position: 85.1063829787234% 7.453416149068323%;
 	background-size:  320.3125% 791.796875%;
 	background-image: url(../assets/img/sprites.png);
 	padding: 0;

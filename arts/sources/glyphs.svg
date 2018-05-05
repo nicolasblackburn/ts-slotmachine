@@ -30,9 +30,9 @@
      inkscape:window-height="744"
      id="namedview3419"
      showgrid="false"
-     inkscape:zoom="0.5"
-     inkscape:cx="1205.2"
-     inkscape:cy="701.36923"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="656.00404"
+     inkscape:cy="449.09506"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -1379,25 +1379,43 @@
     </filter>
   </defs>
   <text
+     sodipodi:linespacing="125%"
+     id="text8150"
+     y="105.73357"
+     x="50.119236"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.33333206px;line-height:125%;font-family:Almonte;-inkscape-font-specification:Almonte;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:#c8c8c8;stroke-width:4.51555558;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;"
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.33333206px;line-height:125%;font-family:Almonte;-inkscape-font-specification:Almonte;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="50.235546"
-     y="74.608894"
+     inkscape:export-filename="/home/nicolas/Projets/ts-slotmachine/arts/exports/fonts"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte;fill:#808080;fill-opacity:1;stroke:#c8c8c8;stroke-opacity:1;stroke-width:4.51555558;stroke-miterlimit:4;stroke-dasharray:none;"
+       id="tspan8152"
+       y="105.73357"
+       x="50.119236"
+       sodipodi:role="line">0 1 2 3 4 5 6 7 8 9 </tspan><tspan
+       id="tspan8154"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte;fill:#808080;fill-opacity:1;stroke:#c8c8c8;stroke-opacity:1;stroke-width:4.51555558;stroke-miterlimit:4;stroke-dasharray:none;"
+       y="158.65024"
+       x="50.119236"
+       sodipodi:role="line">+ - = ! ? &amp; x $ _ . , ' :</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.33333206px;line-height:125%;font-family:Almonte;-inkscape-font-specification:Almonte;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:#202020;stroke-width:2.25777779;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;"
+     x="50.119236"
+     y="105.73357"
      id="text8130"
-     sodipodi:linespacing="125%"><tspan
+     sodipodi:linespacing="125%"
+     inkscape:export-filename="/home/nicolas/Projets/ts-slotmachine/arts/exports/fonts"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"><tspan
        sodipodi:role="line"
-       x="50.235546"
-       y="74.608894"
-       id="tspan8134"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte">0123456789</tspan><tspan
-       sodipodi:role="line"
-       x="50.235546"
-       y="127.52556"
-       id="tspan8138"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte">+-=!?&amp;x/</tspan><tspan
-       sodipodi:role="line"
-       x="50.235546"
-       y="180.44223"
+       x="50.119236"
+       y="105.73357"
        id="tspan8140"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte">$*_.,':</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte;fill:#808080;fill-opacity:1;stroke:#202020;stroke-opacity:1;stroke-width:2.25777779;stroke-miterlimit:4;stroke-dasharray:none;">0 1 2 3 4 5 6 7 8 9 </tspan><tspan
+       sodipodi:role="line"
+       x="50.119236"
+       y="158.65024"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Almonte;-inkscape-font-specification:Almonte;fill:#808080;fill-opacity:1;stroke:#202020;stroke-opacity:1;stroke-width:2.25777779;stroke-miterlimit:4;stroke-dasharray:none;"
+       id="tspan8148">+ - = ! ? &amp; x $ _ . , ' :</tspan></text>
 </svg>
