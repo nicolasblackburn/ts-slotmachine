@@ -236,6 +236,8 @@ export class AbstractApplication extends PIXI.Application implements Application
                 }
             }
             featureStart(0);
+        } else {
+            this.resultsEnd();
         }
     }
 
@@ -250,6 +252,7 @@ export class AbstractApplication extends PIXI.Application implements Application
     }
 
     public winStart(win: Win) {
+        console.log(win);
         this.events.emit(ApplicationEvent.WinStart, win);
     }
 

@@ -5,6 +5,7 @@ import { PlayResponse } from "../modules/client/PlayResponse";
 import { ReelSetLabel } from "../components/reels/ReelSetLabel";
 import { NumberSprite } from "../components/NumberSprite";
 import * as gsap from 'gsap';
+import { Win } from "../modules/client/Win";
 
 export class MainSceneApplicationEventAction extends ApplicationEventAction {
     public active: boolean = false;
@@ -58,25 +59,41 @@ export class MainSceneApplicationEventAction extends ApplicationEventAction {
             .call(() => this.application.spinEndComplete());
     }
 
-    public resultsStart() {
+    public totalWinStart(response: PlayResponse) {
         const width = window.innerWidth;
         const height = window.innerHeight;
-        this.numberSprite.visible = true;
-        this.numberSprite.value = (0).toFixed(2);
-        this.numberSprite.x = (width - this.numberSprite.width) / 2;
-        this.numberSprite.y = (height + this.numberSprite.height) / 2;
 
-        const timeline = new gsap.TimelineLite();
-
-        const tween = {value: 0};
-        timeline
-            .to(tween, 0.5, {value: 100, onUpdate: () => {
-                this.numberSprite.value = tween.value.toFixed(2).replace('.', ' ');
-                this.numberSprite.x = (width - this.numberSprite.width) / 2;
-                this.numberSprite.y = (height + this.numberSprite.height) / 2;
-            }});
+        if (response.totalWin) {
+            const timeline = new gsap.TimelineLite();
+    
+            const tween = {value: 0};
+            timeline
+                .call(() => {
+                    this.numberSprite.visible = true;
+                    this.numberSprite.value = (0).toFixed(2);
+                    this.numberSprite.x = (width - this.numberSprite.width) / 2;
+                    this.numberSprite.y = (height + this.numberSprite.height) / 2;
+                    this.numberSprite.scale.set(0);
+                })
+                .to(this.numberSprite.scale, 0.2, {x: 1, y: 1})
+                .to(tween, 0.5, {value: response.totalWin, onUpdate: () => {
+                    this.numberSprite.value = tween.value.toFixed(2);
+                    this.numberSprite.x = (width - this.numberSprite.width) / 2;
+                    this.numberSprite.y = (height + this.numberSprite.height) / 2;
+                }}, 0)
+                .to({}, 0.5, {})
+                .to(this.numberSprite.scale, 0.2, {x: 0, y: 0})
+                .call(() => {
+                    this.application.totalWinEnd();
+                });
+        }
     }
 
-    public resultsEnd() {
+    public winStart(win: Win) {
+        this.application.winEnd();
+    }
+
+    public winEnd() {
+
     }
 }
