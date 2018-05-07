@@ -1,4 +1,4 @@
 export interface WinData {
-    winAmount: number;
+    amount: number;
     className: string;
 }

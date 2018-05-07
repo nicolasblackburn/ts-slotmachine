@@ -6,6 +6,13 @@ export class PaylineWin extends Win {
     public symbol: string;
     public count: number;
 
+    constructor(amount: number = 0, symbol: string = null, count: number = 0, payline: number[] = []) {
+        super(amount);
+        this.symbol = symbol;
+        this.count = count;
+        this.payline = payline;
+    }
+
     public serialize() {
         const data = super.serialize();
         Object.assign(data, {

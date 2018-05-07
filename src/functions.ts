@@ -1,3 +1,4 @@
+import { Paytable } from "./modules/machine/Paytable";
 
 
 export function modulo(x: number, n: number) {

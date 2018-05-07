@@ -118,12 +118,11 @@ export class Reel {
         }
         const t = (currentPosition - rowCount - this.position) / -maxVelocity / PIXI.ticker.shared.FPS;
         timeline
-            .to({}, t, {}, 0)
+            .to({}, t - 0.2, {}, 0)
             .set(this, {
                 position: untilPosition,
                 velocity: 0
             })
-
             .to(this, 0.07, {
                 ease: gsap.Quad.easeOut,
                 position: untilPosition - 0.4

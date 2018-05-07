@@ -7,5 +7,6 @@ export interface SlotDefinition extends FeatureDefinition {
     paytable: Paytable;
     paylines: number[][];
     wilds: string[];
+    wildInPaytable: string;
 }
 

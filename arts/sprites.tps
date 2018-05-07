@@ -382,6 +382,7 @@
             <key type="filename">exports/sym_q.png</key>
             <key type="filename">exports/sym_sc.png</key>
             <key type="filename">exports/sym_w.png</key>
+            <key type="filename">exports/sym_wild.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -401,7 +402,6 @@
             <filename>exports/sym_8.png</filename>
             <filename>exports/sym_9.png</filename>
             <filename>exports/sym_10.png</filename>
-            <filename>exports/sym_a.png</filename>
             <filename>exports/sym_apple.png</filename>
             <filename>exports/sym_banana.png</filename>
             <filename>exports/sym_cherry.png</filename>
@@ -436,6 +436,8 @@
             <filename>exports/glyph_question_mark.png</filename>
             <filename>exports/glyph_quote.png</filename>
             <filename>exports/glyph_space.png</filename>
+            <filename>exports/sym_wild.png</filename>
+            <filename>exports/sym_a.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
