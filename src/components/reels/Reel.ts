@@ -1,10 +1,8 @@
 import { modulo } from '../../functions'
 import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';
-import { ReelEvent } from './ReelEvent';
 
 export class Reel {
-    public events: PIXI.utils.EventEmitter;
     public rowHeight: number = 0;
     public velocity: number = 0;
     public substitutions: {[position: number]: number} = {};
@@ -18,7 +16,6 @@ export class Reel {
     protected currentTween: gsap.Animation;
 
     constructor(rowCount: number, symbols: ReelSymbol[] = [], substitutionSymbols: ReelSymbol[] = []) {
-        this.events = new PIXI.utils.EventEmitter();
         this.symbols = symbols;
         this.substitutionSymbols = substitutionSymbols;
         this.rowCount = rowCount;
@@ -70,18 +67,14 @@ export class Reel {
         }
         this.visibleSymbols = [];
         this.pPosition = modulo(this.pPosition + this.velocity, this.getSymbolCount());
-        const offset = Math.ceil(modulo(this.pPosition, this.getSymbolCount())) - 1;
+        const offset = modulo(Math.floor(this.pPosition), this.getSymbolCount());
         for (let i = 0; i < this.rowCount + 1; i++) {
             const symbolIndex = modulo(offset + i, this.getSymbolCount());
             const symbol = this.getSymbolAt(symbolIndex);
             symbol.visible = true;
             symbol.x = this.pX;
             const epsilon = this.pPosition - Math.floor(this.pPosition);
-            if (epsilon === 0) {
-                symbol.y = this.pY + (i - 1) * this.rowHeight;
-            } else {
-                symbol.y = this.pY + (i - epsilon) * this.rowHeight;
-            }
+            symbol.y = this.pY + (i - epsilon) * this.rowHeight;
             this.visibleSymbols.push(symbol);
         }
     }
@@ -105,28 +98,27 @@ export class Reel {
         return timeline;
     }
 
-    public spinEnd(position: number, maxVelocity: number) {
-        if (this.currentTween) {
-            this.currentTween.kill();
-        }
-        const timeline = new gsap.TimelineLite()
-        this.currentTween = timeline;
-        const currentIntegerPosition = Math.floor(this.position);
-        const rowCount = this.rowCount;
-        const symbolCount = this.getSymbolCount();
-        const untilPosition = currentIntegerPosition - rowCount;
-        const finalPosition = modulo(untilPosition, symbolCount);
-
-        for (let i = 0; i < rowCount; i++) {
-            this.substitutions[modulo(currentIntegerPosition - rowCount + i, symbolCount)] = modulo(position + i, symbolCount);
-        }
-
-        let currentPosition = this.position;
-        const tween = gsap.TweenLite.to({}, 1, {})
-            .eventCallback('onComplete', () => tween.restart())
-            .eventCallback('onUpdate', () => {
+    public spinEnd(position: number) {
+        return new Promise((resolve) => {
+            if (this.currentTween) {
+                this.currentTween.kill();
+            }
+            const timeline = new gsap.TimelineLite();
+            this.currentTween = timeline;
+            const currentIntegerPosition = Math.floor(this.position);
+            const rowCount = this.rowCount;
+            const symbolCount = this.getSymbolCount();
+            const untilPosition = currentIntegerPosition - rowCount;
+            const finalPosition = modulo(untilPosition, symbolCount);
+    
+            for (let i = 0; i < rowCount; i++) {
+                this.substitutions[modulo(currentIntegerPosition - rowCount + i, symbolCount)] = modulo(position + i, symbolCount);
+            }
+    
+            let currentPosition = this.position;
+            const update = () => {
                 if (currentPosition <= untilPosition) {
-                    tween.kill();
+                    PIXI.ticker.shared.remove(update);
                     timeline
                         .set(this, {
                             position: finalPosition,
@@ -144,13 +136,13 @@ export class Reel {
                             substitutions: {}, 
                             position: position
                         })
-                        .call(() => this.events.emit(ReelEvent.SpinEndComplete));
+                        .call(() => resolve());
                 } else {
-                    currentPosition -= maxVelocity;
+                    currentPosition += this.velocity;
                 }
-            });
-        timeline.add(tween);
-        return timeline;
+            };
+            PIXI.ticker.shared.add(update);
+        });
     }
 
     public land() {

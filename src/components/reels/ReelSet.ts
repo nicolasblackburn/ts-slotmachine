@@ -3,8 +3,6 @@ import { htorgb } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
 import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';
-import { ReelEvent } from './ReelEvent';
-import { ReelSetEvent } from './ReelSetEvent';
 
 export class ReelSet extends PIXI.Container {
     public reels: Reel[] = [];
@@ -84,19 +82,23 @@ export class ReelSet extends PIXI.Container {
     }
 
     public spinEnd(positions: number[]) {
-        if (this.currentTween) {
-            this.currentTween.kill();
-        }
-        const timeline = new gsap.TimelineLite();
-        this.currentTween = timeline;
-        this.reels.forEach((reel, reelIndex) => {
-            timeline.call(() => {
-                this.lastStoppedReelIndex = reelIndex;
-                reel.spinEnd(positions[reelIndex], this.maxVelocity);
-            }, null, null, reelIndex * 0.3);
-            if (reelIndex === this.reels.length - 1) {
-                reel.events.once(ReelEvent.SpinEndComplete, () => this.emit(ReelSetEvent.SpinEndComplete));
+        return new Promise((resolve) => {
+            if (this.currentTween) {
+                this.currentTween.kill();
             }
+            const timeline = new gsap.TimelineLite();
+            this.currentTween = timeline;
+            this.reels.forEach((reel, reelIndex) => {
+                timeline
+                    .call(() => { 
+                        this.lastStoppedReelIndex = reelIndex; 
+                        if (reelIndex < this.reels.length - 1) {
+                            reel.spinEnd(positions[reelIndex]);
+                        } else {
+                            reel.spinEnd(positions[reelIndex]).then(() => resolve());
+                        }
+                    }, null, null, reelIndex * 0.3);
+            });
         });
     }
     
@@ -107,7 +109,7 @@ export class ReelSet extends PIXI.Container {
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
         this.reels.slice(this.lastStoppedReelIndex + 1).forEach((reel, reelIndex) => {
-            timeline.add(reel.spinEnd(positions[reelIndex], this.maxVelocity), 0);
+            timeline.call(() => reel.spinEnd(positions[reelIndex]), null, null, 0);
         });
         this.lastStoppedReelIndex = this.reels.length - 1;
 
