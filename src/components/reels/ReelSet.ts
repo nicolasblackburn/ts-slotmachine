@@ -94,6 +94,8 @@ export class ReelSet extends PIXI.Container {
             }, null, null, reelIndex * 0.3);
         });
 
+        //timeline.eventCallback('onComplete', () => {console.log('hello!')})
+
         return timeline;
     }
     

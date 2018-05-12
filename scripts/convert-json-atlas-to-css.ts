@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as path from 'path';
 
 // The json file to read the data from.
 const source = process.argv[2];

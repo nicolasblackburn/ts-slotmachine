@@ -118,10 +118,17 @@ export class Reel {
             this.substitutions[modulo(currentIntegerPosition - rowCount + i, symbolCount)] = modulo(position + i, symbolCount);
         }
 
+        const tween = gsap.TweenLite.to({}, 1, {})
+            .eventCallback('onComplete', () => {
+                tween.time(0);
+            });
+        timeline.add(tween);
+
         let currentPosition = this.position;
         const update = () => {
             if (currentPosition <= untilPosition) {
                 PIXI.ticker.shared.remove(update);
+                tween.kill();
                 timeline
                     .set(this, {
                         position: finalPosition,
