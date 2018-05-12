@@ -4,7 +4,6 @@ import { TitleScene } from './scenes/TitleScene';
 import { MainScene, MainSceneEvent } from './scenes/MainScene';
 import { MachineDefinition } from './modules/machine/MachineDefinition';
 import { SlotDefinition } from './modules/machine/SlotDefinition';
-import { SpinButtonState, UiEvent } from './modules/ui/Ui';
 import { PlayResponse } from './modules/client/PlayResponse';
 import { ApplicationEvent } from './ApplicationEvent';
 
@@ -54,8 +53,8 @@ export class Application extends AbstractApplication {
         this.events.on(ApplicationEvent.TotalWinStart, (response) => {
             mainScene.totalWinStart(response);
         });
-        this.events.on(ApplicationEvent.WinStart, (win) => {
-            mainScene.winStart(win);
+        this.events.on(ApplicationEvent.WinStart, () => {
+            mainScene.winStart();
         });
 
         this.scenes.add('preload', new PreloadScene())

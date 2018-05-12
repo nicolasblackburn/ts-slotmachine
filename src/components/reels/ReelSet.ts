@@ -1,5 +1,5 @@
 import { Reel } from './Reel';
-import { htorgb, modulo } from '../../functions';
+import { htorgb } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
 import { ReelSetLabel } from './ReelSetLabel';
 import { ReelSymbol } from './ReelSymbol';

@@ -1,4 +1,3 @@
-import { DisplayObject } from 'pixi.js';
 import { modulo } from '../../functions'
 import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';

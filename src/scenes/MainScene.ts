@@ -1,14 +1,10 @@
 import { Scene } from '../modules/scenes/Scene';
 import { ReelSet } from '../components/reels/ReelSet';
-import { MachineDefinition } from '../modules/machine/MachineDefinition';
-import { Application } from '../Application';
 import { SlotDefinition } from '../modules/machine/SlotDefinition';
 import { PlayResponse } from '../modules/client/PlayResponse';
-import { SlotResult } from '../modules/client/SlotResult';
-import { modulo } from '../functions';
 import { NumberSprite } from '../components/NumberSprite';
 import * as gsap from 'gsap';
-import { Win } from '../modules/client/Win';
+
 
 export enum MainSceneEvent {
     SpinStartComplete = 'MainSceneEvent.SpinStartComplete',
@@ -110,7 +106,7 @@ export class MainScene extends Scene {
         }
     }
 
-    public winStart(win: Win) {
+    public winStart() {
         this.emit(MainSceneEvent.WinComplete);
     }
 

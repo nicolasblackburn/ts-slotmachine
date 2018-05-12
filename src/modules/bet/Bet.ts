@@ -13,7 +13,7 @@ export class Bet {
         return this.betPerLine * this.lineCount;
     }
 
-    public getLineBet(lineId: number) {
+    public getLineBet() {
         return this.betPerLine;
     }
 

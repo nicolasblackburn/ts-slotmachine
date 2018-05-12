@@ -1,6 +1,3 @@
-import { Paytable } from "./modules/machine/Paytable";
-
-
 export function modulo(x: number, n: number) {
     if (x < 0) {
         return x % n + n;

@@ -1,16 +1,5 @@
-import { PlayResponse } from "../client/PlayResponse";
-import { Win } from "../client/Win";
-
-export enum UiEvent {
-    SpinButtonClick = 'UiEvent.SpinButtonClick'
-}
-
-export enum SpinButtonState {
-    Spin,
-    Slam,
-    SkipResults,
-    Disabled
-}
+import { SpinButtonState } from "./SpinButtonState";
+import { UiEvent } from "./UiEvent";
 
 export class Ui {
     public events: PIXI.utils.EventEmitter;

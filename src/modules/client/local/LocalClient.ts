@@ -1,14 +1,10 @@
 import { Client } from "../Client";
-import { ForcedPlay } from "../ForcedPlay";
 import { Bet } from "../../bet/Bet";
 import { InitResponse } from "../InitResponse";
 import { PlayResponse } from "../PlayResponse";
 import { MachineDefinition } from "../../machine/MachineDefinition";
 import { Player } from "../../player/Player";
-import { PlayResult } from "../PlayResult";
-import { SlotResult } from "../SlotResult";
 import { SlotDefinition } from "../../machine/SlotDefinition";
-import { Paytable } from "../../machine/Paytable";
 import { SlotFeature } from "./features/SlotFeature";
 
 export class LocalClient implements Client {
@@ -25,13 +21,13 @@ export class LocalClient implements Client {
     }
 
     public init(): Promise<InitResponse> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             resolve(new InitResponse);
         });
     }
 
-    public play(bet: Bet, forcedPlay: ForcedPlay) {
-        return new Promise<PlayResponse>((resolve, reject) => {
+    public play(bet: Bet) {
+        return new Promise<PlayResponse>((resolve) => {
             setTimeout(() => {
                 const response = new PlayResponse(bet, this.player, 0);
                 this.slotFeature.execute(response);

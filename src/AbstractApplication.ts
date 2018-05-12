@@ -1,5 +1,5 @@
 import { SceneManager } from './modules/scenes/SceneManager';
-import { Ui, UiEvent, SpinButtonState } from './modules/ui/Ui';
+import { Ui } from './modules/ui/Ui';
 import { Client } from './modules/client/Client';
 import { LocalClient } from './modules/client/local/LocalClient';
 import { Bet } from './modules/bet/Bet';
@@ -8,6 +8,8 @@ import { MachineDefinition } from './modules/machine/MachineDefinition';
 import { ApplicationEvent } from './ApplicationEvent';
 import { Win } from './modules/client/Win';
 import { SlotResult } from './modules/client/SlotResult';
+import { UiEvent } from './modules/ui/UiEvent';
+import { SpinButtonState } from './modules/ui/SpinButtonState';
 
 export class AbstractApplication extends PIXI.Application {
     public events: PIXI.utils.EventEmitter;
@@ -37,7 +39,7 @@ export class AbstractApplication extends PIXI.Application {
         document.body.appendChild(this.view);
         document.body.appendChild(this.ui.uiContainer);
 
-        this.ticker.add(deltaTime => this.scenes.update());
+        this.ticker.add(() => this.scenes.update());
 
         window.addEventListener('resize', () => this.resize());
 
@@ -73,7 +75,6 @@ export class AbstractApplication extends PIXI.Application {
     public spinStart() {
         this.events.emit(ApplicationEvent.SpinStart);
 
-        let response;
         let requestCompleted = false;
         let spinDelayComplete = false;
 
@@ -86,8 +87,7 @@ export class AbstractApplication extends PIXI.Application {
             }
         }
 
-        const onSuccess = (responseReceived) => {
-            response = responseReceived;
+        const onSuccess = () => {
             requestCompleted = true;
             trySpinEnd();
         }
