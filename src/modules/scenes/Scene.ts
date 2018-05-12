@@ -37,7 +37,7 @@ export class Scene extends PIXI.Container {
             this.emit(SceneEvent.LoadProgress, progress);
         });
         
-        PIXI.loader.load((resources: any) => {
+        PIXI.loader.load(() => {
             this.loaded = true;
             this.emit(SceneEvent.LoadEnd);
         });

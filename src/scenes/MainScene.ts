@@ -5,6 +5,18 @@ import { PlayResponse } from '../modules/client/PlayResponse';
 import { NumberSprite } from '../components/NumberSprite';
 import * as gsap from 'gsap';
 
+const BASIC_SYMBOLS = {
+    'lv1': 'sym_10', 
+    'lv2': 'sym_j', 
+    'lv3': 'sym_q', 
+    'lv4': 'sym_k', 
+    'lv5': 'sym_a', 
+    'hv1': 'sym_apple',
+    'hv2': 'sym_banana',
+    'hv3': 'sym_grape', 
+    'hv4': 'sym_lemon',
+    'wi': 'sym_cherry'
+};
 
 export enum MainSceneEvent {
     SpinStartComplete = 'MainSceneEvent.SpinStartComplete',
@@ -30,7 +42,7 @@ export class MainScene extends Scene {
         this.numberSprite.visible = false;
         this.numberSprite.value = '0.00';
 
-        this.reelSet = new ReelSet(this.slotDefinition);
+        this.reelSet = new ReelSet(this.slotDefinition, BASIC_SYMBOLS);
         (window as any).reelSet = this.reelSet;
 
         this.addChild(this.reelSet);

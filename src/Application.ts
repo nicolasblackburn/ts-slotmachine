@@ -8,6 +8,10 @@ import { PlayResponse } from './modules/client/PlayResponse';
 import { ApplicationEvent } from './ApplicationEvent';
 
 export class Application extends AbstractApplication {
+    protected preloadScene: PreloadScene;
+    protected titleScene: TitleScene;
+    protected mainScene: MainScene;
+
     constructor(machineDefinition: MachineDefinition) {
         super(machineDefinition);
 
@@ -15,64 +19,59 @@ export class Application extends AbstractApplication {
 
         this.bet.lineCount = baseDefinition.paylines.length;
 
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => {
-            console.log(response);
-        });
+        this.preloadScene = new PreloadScene();
+        this.preloadScene.addResource('preload', 'assets/img/preload.json');
 
-        const mainScene = new MainScene(baseDefinition);
-        mainScene.on(MainSceneEvent.SpinStartComplete, () => {
-            this.spinStartComplete();
-        });
-        mainScene.on(MainSceneEvent.SpinDelayComplete, () => {
-            this.spinDelayComplete();
-        });
-        mainScene.on(MainSceneEvent.SlamComplete, () => {
-            this.spinEndComplete();
-        });
-        mainScene.on(MainSceneEvent.SpinEndComplete, () => {
-            this.spinEndComplete();
-        });
-        mainScene.on(MainSceneEvent.TotalWinComplete, () => {
-            this.totalWinEnd();
-        });
-        mainScene.on(MainSceneEvent.WinComplete, () => {
-            this.winEnd();
-        });
-        this.events.on(ApplicationEvent.RoundStart, () => {
-            mainScene.roundStart();
-        });
-        this.events.on(ApplicationEvent.SpinStart, () => {
-            mainScene.spinStart();
-        });
-        this.events.on(ApplicationEvent.Slam, (positions) => {
-            mainScene.slam(positions);
-        });
-        this.events.on(ApplicationEvent.SpinEnd, (positions) => {
-            mainScene.spinEnd(positions);
-        });
-        this.events.on(ApplicationEvent.TotalWinStart, (response) => {
-            mainScene.totalWinStart(response);
-        });
-        this.events.on(ApplicationEvent.WinStart, () => {
-            mainScene.winStart();
-        });
+        this.titleScene = new TitleScene();
 
-        this.scenes.add('preload', new PreloadScene())
-        this.scenes.add('title', new TitleScene())
-        this.scenes.add('main', mainScene);
+        this.mainScene = new MainScene(baseDefinition)
+            .addResource('sprites', 'assets/img/sprites.json')
+            .on(MainSceneEvent.SpinStartComplete, () => {
+                this.spinStartComplete();
+            })
+            .on(MainSceneEvent.SpinDelayComplete, () => {
+                this.spinDelayComplete();
+            })
+            .on(MainSceneEvent.SlamComplete, () => {
+                this.spinEndComplete();
+            })
+            .on(MainSceneEvent.SpinEndComplete, () => {
+                this.spinEndComplete();
+            })
+            .on(MainSceneEvent.TotalWinComplete, () => {
+                this.totalWinEnd();
+            })
+            .on(MainSceneEvent.WinComplete, () => {
+                this.winEnd();
+            });
 
-    
-        /*
-        this.scenes
-            .get('preload')
-            .addResource('preload', 'assets/img/preload.json');
-        */
+        this.events
+            .on(ApplicationEvent.PlayRequestSuccess, (response) => {
+                console.log(response);
+            })
+            .on(ApplicationEvent.RoundStart, () => {
+                this.mainScene.roundStart();
+            })
+            .on(ApplicationEvent.SpinStart, () => {
+                this.mainScene.spinStart();
+            })
+            .on(ApplicationEvent.Slam, (positions) => {
+                this.mainScene.slam(positions);
+            })
+            .on(ApplicationEvent.SpinEnd, (positions) => {
+                this.mainScene.spinEnd(positions);
+            })
+            .on(ApplicationEvent.TotalWinStart, (response) => {
+                this.mainScene.totalWinStart(response);
+            })
+            .on(ApplicationEvent.WinStart, () => {
+                this.mainScene.winStart();
+            });
 
         this.scenes
-            .get('main')
-            .addResource('sprites', 'assets/img/sprites.json');
-    
-        this.scenes
+            .add('preload', this.preloadScene)
+            .add('title', this.titleScene)
+            .add('main', this.mainScene)
             .setCurrent('preload')
             .on(PreloadSceneEvent.Complete, () => {
                 this.scenes.setCurrent('title');

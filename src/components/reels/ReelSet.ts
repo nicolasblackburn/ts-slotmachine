@@ -1,22 +1,8 @@
 import { Reel } from './Reel';
 import { htorgb } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
-import { ReelSetLabel } from './ReelSetLabel';
 import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';
-
-const BASIC_SYMBOLS = {
-    'lv1': 'sym_10', 
-    'lv2': 'sym_j', 
-    'lv3': 'sym_q', 
-    'lv4': 'sym_k', 
-    'lv5': 'sym_a', 
-    'hv1': 'sym_apple',
-    'hv2': 'sym_banana',
-    'hv3': 'sym_grape', 
-    'hv4': 'sym_lemon',
-    'wi': 'sym_cherry'
-};
 
 export class ReelSet extends PIXI.Container {
     public reels: Reel[] = [];
@@ -24,23 +10,25 @@ export class ReelSet extends PIXI.Container {
     protected currentTween: gsap.Animation;
     protected symbols: PIXI.Container;
     protected slotDefinition: SlotDefinition;
+    protected symbolDefinitions: {[symbol: string]: string};
 
-    constructor(slotDefinition: SlotDefinition) {
+    constructor(slotDefinition: SlotDefinition, symbolDefinitions: {[symbol: string]: string}) {
         super();
         this.slotDefinition = slotDefinition;
+        this.symbolDefinitions = symbolDefinitions;
 
         this.symbols = new PIXI.Container();
         this.addChild(this.symbols);
 
-        const texture = PIXI.Texture.fromFrame(BASIC_SYMBOLS['lv1']);
+        const texture = PIXI.Texture.fromFrame(Object.values(this.symbolDefinitions)[0]);
         const symbolHeight = texture.height;
         const symbolWidth = texture.width;
-        const basicSymbolCount = Object.keys(BASIC_SYMBOLS).length;
+        const basicSymbolCount = Object.keys(this.symbolDefinitions).length;
         for (const [reelIndex, reelData] of Object.entries(this.slotDefinition.reels)) {
             const reel = new Reel(this.slotDefinition.rowCount);
             for (const [symbolIndex, symbolName] of Object.entries(reelData)) {
                 const textureIndex = parseInt(symbolIndex) % basicSymbolCount;
-                const texture = PIXI.Texture.fromFrame(BASIC_SYMBOLS[symbolName]);
+                const texture = PIXI.Texture.fromFrame(this.symbolDefinitions[symbolName]);
 
                 const symbol = new ReelSymbol(texture);
                 symbol.visible = false;
@@ -86,8 +74,6 @@ export class ReelSet extends PIXI.Container {
             timeline.add(reel.spinStart(this.maxVelocity), 0);
         }
 
-        timeline
-            .addLabel(ReelSetLabel.SpinStartComplete, '+=0');
         return timeline;
     }
 

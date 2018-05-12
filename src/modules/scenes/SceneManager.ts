@@ -17,7 +17,7 @@ export class SceneManager {
         scene.interactive = false;
         this.scenes.set(sceneName, scene);
         this.stage.addChild(scene);
-        return scene;
+        return this;
     }
 
     public get(key: string) {
