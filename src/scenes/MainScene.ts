@@ -62,8 +62,14 @@ export class MainScene extends Scene {
 
         this.reelSet.height = height * 0.8;
         this.reelSet.scale.x = this.reelSet.scale.y;
+
+        if (this.reelSet.width > width * 0.95) {
+            this.reelSet.width = width * 0.95;
+            this.reelSet.scale.y = this.reelSet.scale.x;
+        }
+
         this.reelSet.x = (width - this.reelSet.width) * 0.5;
-        this.reelSet.y = height * 0.1;
+        this.reelSet.y = (height - this.reelSet.height) * 0.5;
         
         this.numberSprite.x = (width - this.numberSprite.width) / 2;
         this.numberSprite.y = (height + this.numberSprite.height) / 2;

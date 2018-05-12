@@ -15,7 +15,7 @@ const BASIC_SYMBOLS = {
     'hv2': 'sym_banana',
     'hv3': 'sym_grape', 
     'hv4': 'sym_lemon',
-    'hv5': 'sym_cherry'
+    'wi': 'sym_cherry'
 };
 
 export class ReelSet extends PIXI.Container {

@@ -71,17 +71,15 @@ export class MainSceneApplicationEventAction extends ApplicationEventAction {
                 .call(() => {
                     this.numberSprite.visible = true;
                     this.numberSprite.value = (0).toFixed(2);
-                    this.numberSprite.x = (width - this.numberSprite.width) / 2;
-                    this.numberSprite.y = (height + this.numberSprite.height) / 2;
+                    this.numberSprite.x = width / 2;
+                    this.numberSprite.y = height / 2;
                     this.numberSprite.scale.set(0);
                 })
                 .to(this.numberSprite.scale, 0.2, {x: 1, y: 1})
                 .to(tween, 0.5, {value: response.totalWin, onUpdate: () => {
                     this.numberSprite.value = tween.value.toFixed(2);
-                    this.numberSprite.x = (width - this.numberSprite.width) / 2;
-                    this.numberSprite.y = (height + this.numberSprite.height) / 2;
                 }}, 0)
-                .to({}, 0.5, {})
+                .to({}, 1, {})
                 .to(this.numberSprite.scale, 0.2, {x: 0, y: 0})
                 .call(() => {
                     this.application.totalWinEnd();

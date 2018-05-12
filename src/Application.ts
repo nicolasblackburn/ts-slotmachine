@@ -17,10 +17,12 @@ export class Application extends AbstractApplication {
         this.scenes.add('title', new TitleScene(this))
         this.scenes.add('main', new MainScene(this, baseDefinition));
     
+        /*
         this.scenes
             .get('preload')
             .addResource('preload', 'assets/img/preload.json');
-    
+        */
+
         this.scenes
             .get('main')
             .addResource('sprites', 'assets/img/sprites.json');

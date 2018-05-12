@@ -82,6 +82,7 @@ export class NumberSprite extends PIXI.Container {
         const glyphs = this.pValue.split('');
         let lastX = 0;
         let i = 0;
+        let width = 0;
         for (; i < glyphs.length; i++) {
             if (i === this.glyphs.length) {
                 const glyph = new PIXI.Sprite(PIXI.Texture.fromFrame('glyph_0'));
@@ -95,11 +96,14 @@ export class NumberSprite extends PIXI.Container {
             glyph.x = lastX + (data.x ? glyph.width * data.x : 0);
             glyph.y = 0 + (data.y ? glyph.height * data.y : 0);
             lastX += glyph.width + 10;
+            width += glyph.width + 10;
         }
         const lastCount = this.count;
         this.count = i;
         for (; i < lastCount; i++) {
             this.glyphs[i].visible = false;
         }
+        this.pivot.x = width / 2;
+        this.pivot.y = -this.height / 2;
     } 
 }
