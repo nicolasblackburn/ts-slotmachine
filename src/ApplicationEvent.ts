@@ -31,7 +31,7 @@ export enum ApplicationEvent {
     SkipResults = 'ApplicationEvent.SkipResults',
     PlayRequestSuccess = 'ApplicationEvent.PlayRequestSuccess',
     PlayRequestError = 'ApplicationEvent.PlayRequestError', 
-    SpinEndReady = 'ApplicationEvent.SpinEndReady',
+    SpinDelayComplete = 'ApplicationEvent.SpinEndReady',
     WinsStart = 'ApplicationEvent.WinsStart',
     WinsEnd = 'ApplicationEvent.WinsEnd',
     TotalWinStart = 'ApplicationEvent.TotalWinStart',

@@ -1,27 +1,40 @@
 import {Scene} from './Scene';
-import { StateManager } from '../states/StateManager';
-import { ApplicationInterface } from '../../ApplicationInterface';
 import { SceneEvent } from './SceneEvent';
 
-export class SceneManager extends StateManager<Scene> {
+export class SceneManager {
+    public events: PIXI.utils.EventEmitter;
+    protected scenes: Map<string, Scene> = new Map();
+    protected pCurrent: string;
     protected stage: PIXI.Container;
 
     constructor(stage: PIXI.Container) {
-        super();
+        this.events = new PIXI.utils.EventEmitter();
         this.stage = stage;
     }
 
     public add(sceneName: string, scene: Scene) {
         scene.visible = false;
         scene.interactive = false;
-        this.states.set(sceneName, scene);
+        this.scenes.set(sceneName, scene);
         this.stage.addChild(scene);
         return scene;
     }
 
+    public get(key: string) {
+        return this.scenes.get(key);
+    }
+
+    public currentKey() {
+        return this.pCurrent;
+    }
+
+    public current() {
+        return this.scenes.get(this.pCurrent);
+    }
+
     public setCurrent(sceneName: string, ...args: any[]) {
-        const scene = this.states.get(sceneName);
-        if (!this.states.has(sceneName)) {
+        const scene = this.scenes.get(sceneName);
+        if (!this.scenes.has(sceneName)) {
             throw new Error("Scene `" + sceneName + "` does'nt exists");
         } 
         if (this.currentKey() !== sceneName) {
@@ -61,6 +74,7 @@ export class SceneManager extends StateManager<Scene> {
 
         let previous = this.currentKey();
         if (this.current()) {
+            this.current().active = false;
             this.current().visible = false;
             this.current().interactive = false;
             this.current().emit(SceneEvent.Exit, sceneName, ...args);
@@ -69,6 +83,7 @@ export class SceneManager extends StateManager<Scene> {
         } 
 
         this.pCurrent = sceneName;
+        this.current().active = true;
         this.current().emit(SceneEvent.Enter, previous, ...args);
         this.current().enter(previous, ...args);
         this.events.emit(SceneEvent.Enter, previous, sceneName, ...args);

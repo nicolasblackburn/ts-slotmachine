@@ -1,18 +1,15 @@
 import { SceneManager } from './modules/scenes/SceneManager';
-import { Ui } from './modules/ui/Ui';
+import { Ui, UiEvent, SpinButtonState } from './modules/ui/Ui';
 import { Client } from './modules/client/Client';
 import { LocalClient } from './modules/client/local/LocalClient';
 import { Bet } from './modules/bet/Bet';
 import { PlayResponse } from './modules/client/PlayResponse';
-import { State } from './modules/states/State';
 import { MachineDefinition } from './modules/machine/MachineDefinition';
-import { ApplicationInterface } from './ApplicationInterface';
 import { ApplicationEvent } from './ApplicationEvent';
 import { Win } from './modules/client/Win';
 import { SlotResult } from './modules/client/SlotResult';
-import { ApplicationEventListener } from './ApplicationEventListener';
 
-export class AbstractApplication extends PIXI.Application implements ApplicationInterface {
+export class AbstractApplication extends PIXI.Application {
     public events: PIXI.utils.EventEmitter;
     public scenes: SceneManager;
     protected bet: Bet;
@@ -20,6 +17,7 @@ export class AbstractApplication extends PIXI.Application implements Application
     protected machineDefinition: MachineDefinition;
     protected playResponse: PlayResponse;
     protected ui: Ui;
+    protected isSpinStartComplete: boolean = false;
 
     constructor(machineDefinition: MachineDefinition) {
         super({
@@ -33,7 +31,7 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.renderer.backgroundColor = 0x080010;
         this.client = new LocalClient(machineDefinition);
         this.bet = new Bet(5, 1);
-        this.ui = new Ui(this);
+        this.ui = new Ui();
         this.scenes = new SceneManager(this.stage);
 
         document.body.appendChild(this.view);
@@ -41,9 +39,11 @@ export class AbstractApplication extends PIXI.Application implements Application
 
         this.ticker.add(deltaTime => this.scenes.update());
 
-        this.addApplicationEventListener(this.ui);
-
         window.addEventListener('resize', () => this.resize());
+
+        this.ui.events.on(UiEvent.SpinButtonClick, () => {
+            this.spinButtonClick();
+        });
         
         this.resize();
     }
@@ -55,37 +55,18 @@ export class AbstractApplication extends PIXI.Application implements Application
         this.scenes.resize();
     }
 
-    public addApplicationEventListener(listener: ApplicationEventListener) {
-        this.events.on(ApplicationEvent.RoundStart, () => listener.roundStart());
-        this.events.on(ApplicationEvent.RoundEnd, () => listener.roundEnd());
-        this.events.on(ApplicationEvent.SpinStart, () => listener.spinStart());
-        this.events.on(ApplicationEvent.SpinStartComplete, () => listener.spinStartComplete());
-        this.events.on(ApplicationEvent.SpinEndReady, () => listener.spinEndReady());
-        this.events.on(ApplicationEvent.SpinEnd, (positions) => listener.spinEnd(positions));
-        this.events.on(ApplicationEvent.SpinEndComplete, () => listener.spinEndComplete());
-        this.events.on(ApplicationEvent.Slam, (positions) => listener.slam(positions));
-        this.events.on(ApplicationEvent.ResultsStart, (response) => listener.resultsStart(response));
-        this.events.on(ApplicationEvent.ResultsEnd, () => listener.resultsEnd());
-        this.events.on(ApplicationEvent.SkipResults, () => listener.skipResults());
-        this.events.on(ApplicationEvent.PlayRequestSuccess, (response) => listener.playRequestSuccess(response));
-        this.events.on(ApplicationEvent.PlayRequestError, (error) => listener.playRequestError(error));
-        this.events.on(ApplicationEvent.WinsStart, (response) => listener.winsStart(response));
-        this.events.on(ApplicationEvent.WinsEnd, () => listener.winsEnd());
-        this.events.on(ApplicationEvent.TotalWinStart, (response) => listener.totalWinStart(response));
-        this.events.on(ApplicationEvent.TotalWinEnd, () => listener.totalWinEnd());
-        this.events.on(ApplicationEvent.WinStart, (win) => listener.winStart(win));
-        this.events.on(ApplicationEvent.WinEnd, () => listener.winEnd());
-        this.events.on(ApplicationEvent.FeatureStart, (feature, response) => listener.featureStart(feature, response));
-        this.events.on(ApplicationEvent.FeatureEnd, () => listener.featureEnd());
-    }
-
     public roundStart() {
         this.playResponse = null;
+        this.isSpinStartComplete = false;
+        this.ui.spinButtonState = SpinButtonState.Disabled;
+        this.ui.update();
         this.events.emit(ApplicationEvent.RoundStart);
         this.spinStart();
     }
 
     public roundEnd() {
+        this.ui.spinButtonState = SpinButtonState.Spin;
+        this.ui.update();
         this.events.emit(ApplicationEvent.RoundEnd);
     }
 
@@ -94,13 +75,13 @@ export class AbstractApplication extends PIXI.Application implements Application
 
         let response;
         let requestCompleted = false;
-        let spinEndReady = false;
+        let spinDelayComplete = false;
 
         const trySpinEnd = () => {
-            if (requestCompleted && spinEndReady) {
+            if (requestCompleted && spinDelayComplete) {
                 this.events.removeListener(ApplicationEvent.PlayRequestSuccess, onSuccess);
                 this.events.removeListener(ApplicationEvent.PlayRequestError, onError);
-                this.events.removeListener(ApplicationEvent.ResultsStart, onSpinEndReady);
+                this.events.removeListener(ApplicationEvent.ResultsStart, onSpinDelayComplete);
                 this.spinEnd();
             }
         }
@@ -116,14 +97,14 @@ export class AbstractApplication extends PIXI.Application implements Application
             trySpinEnd();
         }
 
-        const onSpinEndReady = () => {
-            spinEndReady = true;
+        const onSpinDelayComplete = () => {
+            spinDelayComplete = true;
             trySpinEnd();
         }
 
         this.events.once(ApplicationEvent.PlayRequestSuccess, onSuccess);
         this.events.once(ApplicationEvent.PlayRequestError, onError);
-        this.events.once(ApplicationEvent.SpinEndReady, onSpinEndReady);
+        this.events.once(ApplicationEvent.SpinDelayComplete, onSpinDelayComplete);
 
         this.client.play(this.bet).then(
             response => this.playRequestSuccess(response),
@@ -131,12 +112,8 @@ export class AbstractApplication extends PIXI.Application implements Application
         );
     }
 
-    public spinStartComplete() {
-        this.events.emit(ApplicationEvent.SpinStartComplete);
-    }
-
-    public spinEndReady() {
-        this.events.emit(ApplicationEvent.SpinEndReady);
+    public spinDelayComplete() {
+        this.events.emit(ApplicationEvent.SpinDelayComplete);
     }
 
     public spinEnd() {
@@ -158,6 +135,10 @@ export class AbstractApplication extends PIXI.Application implements Application
 
     public resultsStart() {
         const response = this.playResponse;
+        if (response && !response.features.length && response.totalWin) {
+            this.ui.spinButtonState = SpinButtonState.SkipResults;
+            this.ui.update();
+        }
         this.events.emit(ApplicationEvent.ResultsStart, response);
         if (!response) {
             this.resultsEnd();
@@ -183,6 +164,7 @@ export class AbstractApplication extends PIXI.Application implements Application
 
     public playRequestSuccess(response: PlayResponse) {
         this.playResponse = response;
+        this.updateSlamStateIfReady();
         this.events.emit(ApplicationEvent.PlayRequestSuccess, response);
     }
 
@@ -266,5 +248,38 @@ export class AbstractApplication extends PIXI.Application implements Application
 
     public featureEnd() {
         this.events.emit(ApplicationEvent.FeatureEnd);
+    }
+
+    protected spinStartComplete() {
+        this.isSpinStartComplete = true;
+        this.updateSlamStateIfReady();
+    }
+
+    protected updateSlamStateIfReady() {
+        if (this.playResponse && this.isSpinStartComplete) {   
+            this.ui.spinButtonState = SpinButtonState.Slam;
+            this.ui.update();
+        }
+    }
+
+    protected spinButtonClick() {
+        switch (this.ui.spinButtonState) {
+            case SpinButtonState.Spin: 
+                this.roundStart();
+                break;
+            case SpinButtonState.Slam: 
+                this.slam();
+                this.ui.spinButtonState = SpinButtonState.Disabled;
+                this.ui.update();
+                break;
+            case SpinButtonState.SkipResults: 
+                this.skipResults();
+                this.ui.spinButtonState = SpinButtonState.Disabled;
+                this.ui.update();
+                break;
+            case SpinButtonState.Disabled: 
+                console.log('Spin disabled');
+                break;
+        }
     }
 }

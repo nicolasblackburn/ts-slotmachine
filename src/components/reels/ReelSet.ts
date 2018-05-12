@@ -87,8 +87,7 @@ export class ReelSet extends PIXI.Container {
         }
 
         timeline
-            .addLabel(ReelSetLabel.SpinStartComplete, '+=0')
-            .to({}, .86, {});
+            .addLabel(ReelSetLabel.SpinStartComplete, '+=0');
         return timeline;
     }
 

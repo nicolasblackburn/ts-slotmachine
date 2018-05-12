@@ -1,16 +1,13 @@
-import { StateInterface } from "../states/State";
-import { ApplicationInterface } from "../../ApplicationInterface";
 import { SceneEvent } from "./SceneEvent";
 
-export class Scene extends PIXI.Container implements StateInterface {
-    protected application: ApplicationInterface;
+export class Scene extends PIXI.Container {
+    public active: boolean = false;
     protected resources: {name: string, url: string}[] = [];
     protected pInitialized: boolean = false;
     protected loaded: boolean = false;
 
-    constructor(application: ApplicationInterface) {
+    constructor() {
         super();
-        this.application = application;
     }
 
     get initialized() {

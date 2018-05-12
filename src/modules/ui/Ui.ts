@@ -1,29 +1,25 @@
 import { PlayResponse } from "../client/PlayResponse";
-import { ApplicationInterface } from "../../ApplicationInterface";
-import { ApplicationEventListener } from "../../ApplicationEventListener";
 import { Win } from "../client/Win";
 
 export enum UiEvent {
     SpinButtonClick = 'UiEvent.SpinButtonClick'
 }
 
-enum SpinButtonState {
+export enum SpinButtonState {
     Spin,
     Slam,
     SkipResults,
     Disabled
 }
 
-export class Ui implements ApplicationEventListener {
+export class Ui {
+    public events: PIXI.utils.EventEmitter;
     public spinButton: HTMLDivElement;
     public uiContainer: HTMLDivElement;
-    protected application: ApplicationInterface;
-    protected spinButtonState: SpinButtonState = SpinButtonState.Spin;
-    protected isSpinStartComplete: boolean = false;
-    protected isPlayResquestComplete: boolean = false;
+    public spinButtonState: SpinButtonState = SpinButtonState.Spin;
 
-    constructor(application: ApplicationInterface) {
-        this.application = application;
+    constructor() {
+        this.events = new PIXI.utils.EventEmitter();
 
         this.uiContainer = document.createElement('div');
         this.uiContainer.setAttribute('id', 'ui-container');
@@ -45,96 +41,7 @@ export class Ui implements ApplicationEventListener {
     }
 
     public spinButtonClick() {
-        switch (this.spinButtonState) {
-            case SpinButtonState.Spin: 
-                this.application.roundStart();
-                break;
-            case SpinButtonState.Slam: 
-                this.application.slam();
-                this.spinButtonState = SpinButtonState.Disabled;
-                this.update();
-                break;
-            case SpinButtonState.SkipResults: 
-                this.application.skipResults();
-                this.spinButtonState = SpinButtonState.Disabled;
-                this.update();
-                break;
-            case SpinButtonState.Disabled: 
-                console.log('Spin disabled');
-                break;
-        }
-    }
-
-    public roundStart() {
-        this.isPlayResquestComplete = false;
-        this.isSpinStartComplete = false;
-        this.spinButtonState = SpinButtonState.Disabled;
-        this.update();
-    }
-
-    public roundEnd() {
-        this.spinButtonState = SpinButtonState.Spin;
-        this.update();
-    }
-
-    public spinStart() {}
-
-    public spinStartComplete() {
-        this.isSpinStartComplete = true;
-        this.updateSlamStateIfReady();
-    }
-
-    public spinEndReady() {}
-
-    public spinEnd(positions: number[]) {}
-
-    public spinEndComplete() {}
-
-    public slam(positions: number[]) {}
-
-    public resultsStart(response: PlayResponse) {
-        if (response && !response.features.length && response.totalWin) {
-            this.spinButtonState = SpinButtonState.SkipResults;
-            this.update();
-        }
-    }
-
-    public resultsEnd() {
-    }
-
-    public skipResults() {
-    }
-
-    public playRequestSuccess(response: PlayResponse) {
-        this.isPlayResquestComplete = true;
-        this.updateSlamStateIfReady();
-    }
-
-    public playRequestError(error: Error) {
-    }
-
-    public winsStart(response: PlayResponse) {
-    }
-
-    public winsEnd() {
-    }
-
-    public totalWinStart(response: PlayResponse) {
-    }
-
-    public totalWinEnd() {
-    }
-
-    public winStart(win: Win) {
-    }
-
-    public winEnd() {
-    }
-
-    public featureStart(feature: string, response: PlayResponse) {
-    }
-
-    public featureEnd() {
+        this.events.emit(UiEvent.SpinButtonClick);
     }
 
     public update() {
@@ -154,14 +61,7 @@ export class Ui implements ApplicationEventListener {
         }
     }
 
-    protected updateSlamStateIfReady() {
-        if (this.isPlayResquestComplete && this.isSpinStartComplete) {   
-            this.spinButtonState = SpinButtonState.Slam;
-            this.update();
-        }
-    }
-
-    protected syncClassWith(element: HTMLElement, className: string, condition: boolean) {
+    protected setClassIf(element: HTMLElement, className: string, condition: boolean) {
         if (condition) {
             this.addClass(element, className);
         } else {
