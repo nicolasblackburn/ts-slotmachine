@@ -4,6 +4,7 @@ import { SlotDefinition } from '../modules/machine/SlotDefinition';
 import { PlayResponse } from '../modules/client/PlayResponse';
 import { NumberSprite } from '../components/NumberSprite';
 import * as gsap from 'gsap';
+import { ReelSetEvent } from '../components/reels/ReelSetEvent';
 
 const BASIC_SYMBOLS = {
     'lv1': 'sym_10', 
@@ -88,8 +89,8 @@ export class MainScene extends Scene {
         if (!this.active) {
             return;
         }
-        this.reelSet.spinEnd(positions)
-            .call(() => this.emit(MainSceneEvent.SpinEndComplete));
+        this.reelSet.spinEnd(positions);
+        this.reelSet.once(ReelSetEvent.SpinEndComplete, () => this.emit(MainSceneEvent.SpinEndComplete));
     }
 
     public totalWinStart(response: PlayResponse) {

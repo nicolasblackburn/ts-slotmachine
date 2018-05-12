@@ -3,6 +3,8 @@ import { htorgb } from '../../functions';
 import { SlotDefinition } from '../../modules/machine/SlotDefinition';
 import { ReelSymbol } from './ReelSymbol';
 import * as gsap from 'gsap';
+import { ReelEvent } from './ReelEvent';
+import { ReelSetEvent } from './ReelSetEvent';
 
 export class ReelSet extends PIXI.Container {
     public reels: Reel[] = [];
@@ -89,14 +91,13 @@ export class ReelSet extends PIXI.Container {
         this.currentTween = timeline;
         this.reels.forEach((reel, reelIndex) => {
             timeline.call(() => {
-                reel.spinEnd(positions[reelIndex], this.maxVelocity);
                 this.lastStoppedReelIndex = reelIndex;
+                reel.spinEnd(positions[reelIndex], this.maxVelocity);
             }, null, null, reelIndex * 0.3);
+            if (reelIndex === this.reels.length - 1) {
+                reel.events.once(ReelEvent.SpinEndComplete, () => this.emit(ReelSetEvent.SpinEndComplete));
+            }
         });
-
-        //timeline.eventCallback('onComplete', () => {console.log('hello!')})
-
-        return timeline;
     }
     
     public slam(positions: number[]) {
