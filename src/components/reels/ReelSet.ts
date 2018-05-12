@@ -11,6 +11,7 @@ export class ReelSet extends PIXI.Container {
     protected symbols: PIXI.Container;
     protected slotDefinition: SlotDefinition;
     protected symbolDefinitions: {[symbol: string]: string};
+    protected lastStoppedReelIndex: number;
 
     constructor(slotDefinition: SlotDefinition, symbolDefinitions: {[symbol: string]: string}) {
         super();
@@ -68,6 +69,9 @@ export class ReelSet extends PIXI.Container {
         if (this.currentTween) {
             this.currentTween.kill();
         }
+
+        this.lastStoppedReelIndex = -1;
+
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
         for (const reel of this.reels) {
@@ -84,7 +88,10 @@ export class ReelSet extends PIXI.Container {
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
         this.reels.forEach((reel, reelIndex) => {
-            timeline.add(reel.spinEnd(positions[reelIndex], this.maxVelocity));
+            timeline.call(() => {
+                reel.spinEnd(positions[reelIndex], this.maxVelocity);
+                this.lastStoppedReelIndex = reelIndex;
+            }, null, null, reelIndex * 0.3);
         });
 
         return timeline;
@@ -96,9 +103,10 @@ export class ReelSet extends PIXI.Container {
         }
         const timeline = new gsap.TimelineLite();
         this.currentTween = timeline;
-        this.reels.forEach((reel, reelIndex) => {
+        this.reels.slice(this.lastStoppedReelIndex + 1).forEach((reel, reelIndex) => {
             timeline.add(reel.spinEnd(positions[reelIndex], this.maxVelocity), 0);
         });
+        this.lastStoppedReelIndex = this.reels.length - 1;
 
         return timeline;
     }

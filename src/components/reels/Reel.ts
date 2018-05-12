@@ -108,33 +108,42 @@ export class Reel {
         }
         const timeline = new gsap.TimelineLite()
         this.currentTween = timeline;
-        const currentPosition = Math.floor(this.position);
+        const currentIntegerPosition = Math.floor(this.position);
         const rowCount = this.rowCount;
         const symbolCount = this.getSymbolCount();
-        const untilPosition = modulo(currentPosition - rowCount, symbolCount);
-        for (let i = 0; i < rowCount; i++) {
-            this.substitutions[modulo(currentPosition - rowCount + i, symbolCount)] = modulo(position + i, symbolCount);
-        }
-        const t = (currentPosition - rowCount - this.position) / -maxVelocity / PIXI.ticker.shared.FPS;
-        timeline
-            .to({}, t - 0.2, {}, 0)
-            .set(this, {
-                position: untilPosition,
-                velocity: 0
-            })
-            .to(this, 0.07, {
-                ease: gsap.Quad.easeOut,
-                position: untilPosition - 0.4
-            })
-            .to(this, 0.07, {
-                ease: gsap.Quad.easeIn,
-                position: modulo(untilPosition - 0.4, symbolCount) + 0.4
-            })
-            .set(this, {
-                substitutions: {}, 
-                position: position
-            });
+        const untilPosition = currentIntegerPosition - rowCount;
+        const finalPosition = modulo(untilPosition, symbolCount);
 
+        for (let i = 0; i < rowCount; i++) {
+            this.substitutions[modulo(currentIntegerPosition - rowCount + i, symbolCount)] = modulo(position + i, symbolCount);
+        }
+
+        let currentPosition = this.position;
+        const update = () => {
+            if (currentPosition <= untilPosition) {
+                PIXI.ticker.shared.remove(update);
+                timeline
+                    .set(this, {
+                        position: finalPosition,
+                        velocity: 0
+                    })
+                    .to(this, 0.07, {
+                        ease: gsap.Quad.easeOut,
+                        position: finalPosition - 0.4
+                    })
+                    .to(this, 0.07, {
+                        ease: gsap.Quad.easeIn,
+                        position: modulo(finalPosition - 0.4, symbolCount) + 0.4
+                    })
+                    .set(this, {
+                        substitutions: {}, 
+                        position: position
+                    });
+            } else {
+                currentPosition -= maxVelocity;
+            }
+        };
+        PIXI.ticker.shared.add(update);
         return timeline;
     }
 

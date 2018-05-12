@@ -20,7 +20,7 @@ export class Application extends AbstractApplication {
         this.bet.lineCount = baseDefinition.paylines.length;
 
         this.preloadScene = new PreloadScene();
-        this.preloadScene.addResource('preload', 'assets/img/preload.json');
+        //this.preloadScene.addResource('preload', 'assets/img/preload.json');
 
         this.titleScene = new TitleScene();
 
