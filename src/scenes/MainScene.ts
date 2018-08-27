@@ -23,8 +23,10 @@ export enum MainSceneEvent {
     SpinDelayComplete = 'MainSceneEvent.SpinDelayComplete',
     SlamComplete = 'MainSceneEvent.SlamComplete',
     SpinEndComplete = 'MainSceneEvent.SpinEndComplete',
-    TotalWinComplete = 'MainSceneEvent.TotalWinComplete',
-    WinComplete = 'MainSceneEvent.WinComplete'
+    ShowTotalWinComplete = 'MainSceneEvent.ShowTotalWinComplete',
+    ShowWinsComplete = 'MainSceneEvent.ShowWinsComplete',
+    CancelShowTotalWinComplete = 'MainSceneEvent.CancelShowTotalWinComplete',
+    CancelShowWinsComplete = 'MainSceneEvent.CancelShowWinsComplete'
 }
 
 export class MainScene extends Scene {
@@ -67,31 +69,25 @@ export class MainScene extends Scene {
     }
     
     public spinStart() {
-        if (this.active) {
+        return new Promise((resolve) => {
             this.reelSet.spinStart()
                 .call(() => this.emit(MainSceneEvent.SpinStartComplete))
                 .to({}, .86, {})
-                .call(() => this.emit(MainSceneEvent.SpinDelayComplete));
-        }
+                .call(() => resolve());
+        });
     }
 
     public slam(positions: number[]) {
-        if (!this.active) {
-            return;
-        }
         this.reelSet
             .slam(positions)
             .call(() => this.emit(MainSceneEvent.SlamComplete));
     }
 
     public spinEnd(positions: number[]) {
-        if (!this.active) {
-            return;
-        }
         this.reelSet.spinEnd(positions).then(() => this.emit(MainSceneEvent.SpinEndComplete));
     }
 
-    public totalWinStart(response: PlayResponse) {
+    public showTotalWin(response: PlayResponse) {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -113,12 +109,8 @@ export class MainScene extends Scene {
                 }}, 0)
                 .to({}, 1, {})
                 .to(this.numberSprite.scale, 0.2, {x: 0, y: 0})
-                .call(() => this.emit(MainSceneEvent.TotalWinComplete));
+                .call(() => this.emit(MainSceneEvent.ShowTotalWinComplete));
         }
-    }
-
-    public winStart() {
-        this.emit(MainSceneEvent.WinComplete);
     }
 
     protected resizeReelSet() {

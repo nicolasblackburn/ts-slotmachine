@@ -25,48 +25,7 @@ export class Application extends AbstractApplication {
         this.titleScene = new TitleScene();
 
         this.mainScene = new MainScene(baseDefinition)
-            .addResource('sprites', 'assets/img/sprites.json')
-            .on(MainSceneEvent.SpinStartComplete, () => {
-                this.spinStartComplete();
-            })
-            .on(MainSceneEvent.SpinDelayComplete, () => {
-                this.spinDelayComplete();
-            })
-            .on(MainSceneEvent.SlamComplete, () => {
-                this.spinEndComplete();
-            })
-            .on(MainSceneEvent.SpinEndComplete, () => {
-                this.spinEndComplete();
-            })
-            .on(MainSceneEvent.TotalWinComplete, () => {
-                this.totalWinEnd();
-            })
-            .on(MainSceneEvent.WinComplete, () => {
-                this.winEnd();
-            });
-
-        this.events
-            .on(ApplicationEvent.PlayRequestSuccess, (response) => {
-                console.log(response);
-            })
-            .on(ApplicationEvent.RoundStart, () => {
-                this.mainScene.roundStart();
-            })
-            .on(ApplicationEvent.SpinStart, () => {
-                this.mainScene.spinStart();
-            })
-            .on(ApplicationEvent.Slam, (positions) => {
-                this.mainScene.slam(positions);
-            })
-            .on(ApplicationEvent.SpinEnd, (positions) => {
-                this.mainScene.spinEnd(positions);
-            })
-            .on(ApplicationEvent.TotalWinStart, (response) => {
-                this.mainScene.totalWinStart(response);
-            })
-            .on(ApplicationEvent.WinStart, () => {
-                this.mainScene.winStart();
-            });
+            .addResource('sprites', 'assets/img/sprites.json');
 
         this.scenes
             .add('preload', this.preloadScene)
@@ -81,9 +40,5 @@ export class Application extends AbstractApplication {
                     this.ui.setVisible(true);
                 });
             });
-    }
-
-    public playRequestSuccess(response: PlayResponse) {
-        super.playRequestSuccess(response);
     }
 }
