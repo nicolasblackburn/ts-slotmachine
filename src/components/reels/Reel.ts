@@ -87,11 +87,11 @@ export class Reel {
         this.currentTween = timeline;
         timeline
             .to(this, 0.12, {
-                ease: gsap.Quad.easeInOut,
+                ease: gsap.Power1.easeInOut,
                 velocity: 0.2
             })
             .to(this, 0.2, {
-                ease: gsap.Quad.easeIn,
+                ease: gsap.Power1.easeIn,
                 velocity: -maxVelocity
             });
 
@@ -125,11 +125,11 @@ export class Reel {
                             velocity: 0
                         })
                         .to(this, 0.07, {
-                            ease: gsap.Quad.easeOut,
+                            ease: gsap.Power1.easeOut,
                             position: finalPosition - 0.4
                         })
                         .to(this, 0.07, {
-                            ease: gsap.Quad.easeIn,
+                            ease: gsap.Power1.easeIn,
                             position: modulo(finalPosition - 0.4, symbolCount) + 0.4
                         })
                         .set(this, {
