@@ -1,5 +1,6 @@
 import {AbstractApplication} from './AbstractApplication';
-import { PreloadScene, PreloadSceneEvent } from './scenes/PreloadScene';
+import { BootScene } from './scenes/BootScene';
+import { LoadingScene, LoadingSceneEvent } from './scenes/LoadingScene';
 import { TitleScene } from './scenes/TitleScene';
 import { MainScene, MainSceneEvent } from './scenes/MainScene';
 import { MachineDefinition } from './modules/machine/MachineDefinition';
@@ -8,7 +9,8 @@ import { PlayResponse } from './modules/client/PlayResponse';
 import { ApplicationEvent } from './ApplicationEvent';
 
 export class Application extends AbstractApplication {
-    protected preloadScene: PreloadScene;
+    protected bootScene: BootScene;
+    protected loadingScene: LoadingScene;
     protected titleScene: TitleScene;
     protected mainScene: MainScene;
 
@@ -19,7 +21,7 @@ export class Application extends AbstractApplication {
 
         this.bet.lineCount = baseDefinition.paylines.length;
 
-        this.preloadScene = new PreloadScene();
+        this.loadingScene = new LoadingScene();
         //this.preloadScene.addResource('preload', 'assets/img/preload.json');
 
         this.titleScene = new TitleScene();
@@ -69,11 +71,11 @@ export class Application extends AbstractApplication {
             });
 
         this.scenes
-            .add('preload', this.preloadScene)
+            .add('loading', this.loadingScene)
             .add('title', this.titleScene)
             .add('main', this.mainScene)
-            .setCurrent('preload')
-            .on(PreloadSceneEvent.Complete, () => {
+            .setCurrent('loading')
+            .on(LoadingSceneEvent.Complete, () => {
                 this.scenes.setCurrent('title');
     
                 this.renderer.plugins.interaction.once('pointerdown', () => {

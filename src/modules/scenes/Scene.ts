@@ -14,9 +14,14 @@ export class Scene extends PIXI.Container {
         return this.pInitialized;
     }
     
+    /**
+     * Adds a resource to the
+     * @param name
+     * @param url 
+     */
     public addResource(name: string, url: string) {
         if (this.loaded) {
-            throw new Error('Cannot register resources once the scene resources are already loaded.');
+            throw new Error('Cannot add resource once the scene is loaded.');
         }
         this.resources.push({name: name, url: url});
         return this;
@@ -24,7 +29,7 @@ export class Scene extends PIXI.Container {
 
     public load() {
         if (this.loaded) {
-            throw new Error('Cannot load an already loaded scene.');
+            throw new Error('Cannot load once the scene is loaded.');
         }
 
         this.emit(SceneEvent.LoadStart);

@@ -4,6 +4,8 @@ import { SlotDefinition } from '../modules/machine/SlotDefinition';
 import { PlayResponse } from '../modules/client/PlayResponse';
 import { NumberSprite } from '../components/NumberSprite';
 import * as gsap from 'gsap';
+import * as event from '../modules/event';
+import { EventEmitter } from 'events';
 
 const BASIC_SYMBOLS = {
     'lv1': 'sym_10', 
@@ -47,6 +49,34 @@ export class MainScene extends Scene {
 
         this.addChild(this.reelSet);
         this.addChild(this.numberSprite);
+
+        Object.assign(window, {
+            event: event.createModule(() => {
+                const emitter = new EventEmitter();
+                let wrapper = {
+                    emit: (events, ...args) => {
+                        const val = emitter.emit(events, ...args);
+                        return val;
+                    },
+                
+                    off: (event, fn, context, once) => {
+                        emitter.removeListener(event, fn);
+                        return wrapper;
+                    },
+                
+                    on: (event, fn, context) => {
+                        emitter.on(event, fn);
+                        return wrapper;
+                    },
+                
+                    once: (event, fn, context) => {
+                        emitter.once(event, fn);
+                        return wrapper;
+                    }
+                };
+                return wrapper;
+            })
+        });
     }
 
     public resize() {

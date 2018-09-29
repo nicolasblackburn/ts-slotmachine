@@ -12,3 +12,19 @@
 9, Implement localization
 10, Implement bet menu
 ```
+
+## Modules
+
+### Loader
+
+### UI
+
+### Scene Manager
+
+### Auto Play
+
+### Storage
+
+### Localization
+
+### Math Client

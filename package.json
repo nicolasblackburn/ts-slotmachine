@@ -29,7 +29,9 @@
   "dependencies": {
     "@types/gsap": "^1.19.2",
     "@types/pixi.js": "^4.7.2",
+    "@types/ramda": "^0.25.38",
     "gsap": "^2.0.2",
-    "pixi.js": "^4.7.3"
+    "pixi.js": "^4.7.3",
+    "ramda": "^0.25.0"
   }
 }

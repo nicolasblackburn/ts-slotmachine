@@ -2,11 +2,11 @@ import {Scene} from '../modules/scenes/Scene';
 import {ProgressBar} from '../components/ProgressBar';
 import {TweenLite} from 'gsap';
 
-export enum PreloadSceneEvent {
-    Complete = 'PreloadSceneEvent.Complete'
+export enum LoadingSceneEvent {
+    Complete = 'LoadingSceneEvent.Complete'
 }
 
-export class PreloadScene extends Scene {
+export class LoadingScene extends Scene {
     protected progressBar: ProgressBar;
 
     public init() {
@@ -18,7 +18,7 @@ export class PreloadScene extends Scene {
         new TweenLite(this.progressBar, 1, {
             progress: 1,
             onComplete: () => {
-                this.emit(PreloadSceneEvent.Complete);
+                this.emit(LoadingSceneEvent.Complete);
             }
         });
     }

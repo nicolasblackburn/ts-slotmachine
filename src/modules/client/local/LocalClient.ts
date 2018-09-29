@@ -6,15 +6,17 @@ import { MachineDefinition } from "../../machine/MachineDefinition";
 import { Player } from "../../player/Player";
 import { SlotDefinition } from "../../machine/SlotDefinition";
 import { SlotFeature } from "./features/SlotFeature";
+import { EventEmitter } from "events";
 
 export class LocalClient implements Client {
-    public events: PIXI.utils.EventEmitter;
+    public events: EventEmitter;
     protected machineDefinition: MachineDefinition;
     protected player: Player;
     protected slotFeature: SlotFeature;
 
     constructor(machineDefinition: MachineDefinition) {
-        this.events = new PIXI.utils.EventEmitter();
+        this.events = new EventEmitter();
+        this.events.setMaxListeners(100);
         this.machineDefinition = machineDefinition;
         this.player = new Player(100000000, 'en_ca', 'CAD');
         this.slotFeature = new SlotFeature(<SlotDefinition>this.machineDefinition.base);
