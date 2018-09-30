@@ -1,11 +1,24 @@
-import { Client } from "./modules/client/Client";
-import { Bet } from "./modules/bet/Bet";
-import { PlayResponse } from "./modules/client/PlayResponse";
-import { Win } from "./modules/client/Win";
+interface Win {
+    amount: number;
+}
 
-export interface GameControllerListener {
+interface Bet {
+    credits: number;
+    betsCount: number;
+}
+
+interface PlayResponse {
+    totalWin: number;
+    results: {
+        wins: Win[]
+    }[];
+    features: string[];
+}
+
+export interface GameControllerObserver {
     roundStart: () => Promise<void>;
     spinStart: () => Promise<void>;
+    slam: () => Promise<void>;
     spinEnd: (response: PlayResponse) => Promise<void>;
     showTotalWin: (amount: number) => Promise<void>;
     showWinsStart: () => Promise<void>;
@@ -17,7 +30,7 @@ export interface GameControllerListener {
     roundEnd: () => Promise<void>;
 }
 
-export class BaseGameControllerListener implements GameControllerListener {
+export class DefaultGameControllerObserver implements GameControllerObserver {
     public roundStart() {
         return Promise.resolve();
     }
@@ -25,6 +38,9 @@ export class BaseGameControllerListener implements GameControllerListener {
         return Promise.resolve();
     }
     public spinEnd(response: PlayResponse) {
+        return Promise.resolve();
+    }
+    public slam() {
         return Promise.resolve();
     }
     public showTotalWin(amount: number) {
@@ -53,55 +69,107 @@ export class BaseGameControllerListener implements GameControllerListener {
     }
 }
 
+interface GameControllerServices {
+    play(bet: Bet): Promise<PlayResponse>;
+    createBet(credits: number, betsCount: number): Bet;
+}
+
 export class GameController {
-    protected listener: GameControllerListener;
+    protected observer: GameControllerObserver;
     protected bet: Bet;
-    protected client: Client;
     protected playResponse: PlayResponse;
+    protected services: GameControllerServices; 
 
-    constructor(client: Client) {
-        this.bet = new Bet(5, 20);
-        this.client = client;
-        this.setListener(new BaseGameControllerListener());
+    constructor(services: GameControllerServices) {
+        this.services = services;
+        this.bet = this.services.createBet(5, 20);
+        this.setObserver(new DefaultGameControllerObserver());
     }
 
-    public setListener(listener: GameControllerListener) {
-        this.listener = listener;
+    public setObserver(observer: GameControllerObserver) {
+        this.observer = observer;
     }
 
-    public start() {
+    public roundStart() {
         this.playResponse = null;
-        Promise.all([
-            this.listener.spinStart(),
-            this.client.play(this.bet)
-        ]).then(([_, response]) => {
+        this.observer.roundStart().then(() => {
+            return Promise.all([
+                this.spinStart(),
+                this.play()
+            ]);
+        }).then(([_, response]) => {
             this.playResponse = response;
-            return this.listener.spinEnd(this.playResponse);
+            return this.spinEnd();
         }).then(() => {
             if (this.playResponse.totalWin) {
-                return this.listener.showTotalWin(this.playResponse.totalWin).then(() => {
-                    let promise = Promise.resolve();
-                    const wins = this.playResponse.results.reduce((wins, result) => wins.concat(result.wins), []);
-                    for (const win of wins) {
-                        promise = promise.then(() => {
-                            return this.listener.showWin(win);
-                        });
-                    }
-                    return promise;
+                return this.showTotalWin().then(() => {
+                    return this.showWins();
                 });
             } else {
                 return Promise.resolve();
             }
         }).then(() => {
-            let promise = Promise.resolve();
-            for (const feature of this.playResponse.features) {
-                promise = promise.then(() => {
-                    return this.listener.playFeature(feature);
-                });
-            }
-            return promise;
+            return this.playFeatures();
         }).then(() => {
-            this.listener.roundEnd();
+            return this.roundEnd();
         });
+    }
+
+    protected spinStart() {
+        return this.observer.spinStart();
+    }
+
+    protected play() {
+        return this.services.play(this.bet);
+    }
+
+    protected spinEnd() {
+        return this.observer.spinEnd(this.playResponse);
+    }
+
+    protected showTotalWin() {
+        return this.observer.showTotalWin(this.playResponse.totalWin);
+    }
+
+    protected getPlayResponseWins() {
+        return this.playResponse.results.reduce((wins, result) => wins.concat(result.wins), []);
+    }
+
+    protected showWins() {
+        return this.observer.showWinsStart().then(() => {
+            return this.getPlayResponseWins().reduce(
+                (promise, win) => promise.then(() => {
+                    return this.showWin(win);
+                }), 
+                Promise.resolve()
+            )
+        }).then(() => {
+            return this.observer.showWinsEnd();
+        });
+    }
+
+    protected showWin(win: Win) {
+        return this.observer.showWin(win);
+    }
+
+    protected playFeatures() {
+        return this.observer.playFeaturesStart().then(() => {
+            return this.playResponse.features.reduce(
+                (promise, feature) => promise.then(() => {
+                    return this.playFeature(feature);
+                }), 
+                Promise.resolve()
+            );
+        }).then(() => {
+            return this.observer.playFeaturesEnd();
+        });
+    }
+
+    protected playFeature(feature: string) {
+        return this.observer.playFeature(feature);
+    }
+
+    protected roundEnd() {
+        return this.observer.roundEnd();
     }
 }

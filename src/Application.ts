@@ -19,7 +19,7 @@ export class Application extends AbstractApplication {
 
         const baseDefinition = <SlotDefinition>this.machineDefinition.base;
 
-        this.bet.lineCount = baseDefinition.paylines.length;
+        this.bet.betsCount = baseDefinition.paylines.length;
 
         this.loadingScene = new LoadingScene();
         //this.preloadScene.addResource('preload', 'assets/img/preload.json');

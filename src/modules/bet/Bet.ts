@@ -1,33 +1,33 @@
 import { BetData } from "./BetData";
 
 export class Bet {
-    public betPerLine: number;
-    public lineCount: number;
+    public credits: number;
+    public betsCount: number;
 
     constructor(betPerLine: number, lineCount) {
-        this.betPerLine = betPerLine;
-        this.lineCount = lineCount;
+        this.credits = betPerLine;
+        this.betsCount = lineCount;
     }
 
     public getTotalBet() {
-        return this.betPerLine * this.lineCount;
+        return this.credits * this.betsCount;
     }
 
-    public getLineBet() {
-        return this.betPerLine;
+    public getCredits() {
+        return this.credits;
     }
 
     public serialize() {
         return {
-            betPerLine: this.betPerLine,
-            lineCount: this.lineCount,
+            credits: this.credits,
+            betsCount: this.betsCount,
             totalBet: this.getTotalBet()
         };
     }
 
     public unserialize(data: BetData) {
-        this.betPerLine = data.betPerLine;
-        this.lineCount = data.lineCount;
+        this.credits = data.credits;
+        this.betsCount = data.betsCount;
     }
 }
 

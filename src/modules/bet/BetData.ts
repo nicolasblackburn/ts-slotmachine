@@ -1,5 +1,5 @@
 export interface BetData {
-    betPerLine: number;
-    lineCount: number;
+    credits: number;
+    betsCount: number;
     totalBet: number;
 }
