@@ -1,14 +1,13 @@
 import { SpinButtonState } from "./SpinButtonState";
 import { UiEvent } from "./UiEvent";
 
-export class Ui {
-    public events: PIXI.utils.EventEmitter;
+export class Ui extends PIXI.Container {
     public spinButton: HTMLDivElement;
     public uiContainer: HTMLDivElement;
     public spinButtonState: SpinButtonState = SpinButtonState.Spin;
 
     constructor() {
-        this.events = new PIXI.utils.EventEmitter();
+        super();
 
         this.uiContainer = document.createElement('div');
         this.uiContainer.setAttribute('id', 'ui-container');
@@ -30,7 +29,7 @@ export class Ui {
     }
 
     public spinButtonClick() {
-        this.events.emit(UiEvent.SpinButtonClick);
+        this.emit(UiEvent.SpinButtonClick);
     }
 
     public update() {

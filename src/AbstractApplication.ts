@@ -10,6 +10,9 @@ import { Win } from './modules/client/Win';
 import { SlotResult } from './modules/client/SlotResult';
 import { UiEvent } from './modules/ui/UiEvent';
 import { SpinButtonState } from './modules/ui/SpinButtonState';
+import { GameController, GameControllerState, DefaultGameControllerObserver } from './GameController';
+
+import * as gsap from 'gsap';
 
 export class AbstractApplication extends PIXI.Application {
     public events: PIXI.utils.EventEmitter;
@@ -19,6 +22,7 @@ export class AbstractApplication extends PIXI.Application {
     protected machineDefinition: MachineDefinition;
     protected playResponse: PlayResponse;
     protected ui: Ui;
+    protected controller: GameController;
     protected isSpinStartComplete: boolean = false;
 
     constructor(machineDefinition: MachineDefinition) {
@@ -34,6 +38,104 @@ export class AbstractApplication extends PIXI.Application {
         this.client = new LocalClient(machineDefinition);
         this.bet = new Bet(5, 1);
         this.ui = new Ui();
+
+        const state = {
+            didSlam: false
+        };
+
+        const events = new PIXI.utils.EventEmitter();
+
+        this.controller = new GameController({
+            play: (bet: Bet) => this.client.play(bet),
+            createBet: (credits: number, betsCount: number) => new Bet(credits, betsCount),
+            observer: Object.assign(new DefaultGameControllerObserver(), {
+                spinStart: () => {
+                    console.log('Spin Start');
+                    
+                    state.didSlam = false;
+
+                    return new Promise(resolve => {
+                        new gsap.TimelineLite().add(() => resolve(), 1);
+                    });
+                },
+                slam: () => {
+                    console.log('Slam!');
+                    state.didSlam = true;
+                    events.emit('slam');
+                },
+                spinEnd: (response) => {
+                    return new Promise(resolve => {
+                        if (state.didSlam) {
+                            resolve();
+                        } else {
+                            let timeline;
+    
+                            const handler = () => {
+                                timeline.kill();
+                                resolve();
+                            };
+                            
+                            timeline = new gsap.TimelineLite()
+                            .add(() => console.log('Stop reel 1'))
+                            .add(() => console.log('Stop reel 2'), '+=0.5')
+                            .add(() => console.log('Stop reel 3'), '+=0.5')
+                            .add(() => console.log('Stop reel 4'), '+=0.5')
+                            .add(() => console.log('Stop reel 5'), '+=0.5')
+                            .add(() => {
+                                events.off('slam', handler);
+                                resolve();
+                            }, '+=0.5');
+    
+                            events.once('slam', handler);
+                        }
+                    });
+                },
+                showTotalWin: (amount) => {
+                    return new Promise(resolve => {
+                        console.log(`Total Win: ${(amount / 100).toFixed(2)}`);
+
+                        let timeline;
+    
+                        const handler = () => {
+                            timeline.kill();
+                            resolve();
+                        };
+
+                        timeline = new gsap.TimelineLite()
+                            .add(() => {
+                                events.off('showTotalWinCancel', handler);
+                                resolve();
+                            }, 1);
+
+                        events.once('showTotalWinCancel', handler);
+                    });
+                },
+                showTotalWinCancel: () => {
+                    console.log('Skip show total win!');
+                    events.emit('showTotalWinCancel');
+                },
+                showWin: (win) => {
+                    console.log(`Win: ${(win.amount / 100).toFixed(2)}`);
+                    return new Promise(resolve => {
+                        new gsap.TimelineLite().add(() => resolve(), 0.5);
+                    });
+                },
+                showWinsCancel: () => {
+                    console.log('Skip show total win!');
+                    events.emit('showWinsCancel');
+                },
+                playFeature: (feature) => {
+                    console.log(`Play feature: ${feature}`);
+                    return new Promise(resolve => {
+                        new gsap.TimelineLite().add(() => resolve(), 2);
+                    });
+                },
+                roundEnd: () => {
+                    console.log(`Round End`);
+                    return Promise.resolve();
+                }
+            })
+        });
         this.scenes = new SceneManager(this.stage);
 
         document.body.appendChild(this.view);
@@ -43,7 +145,7 @@ export class AbstractApplication extends PIXI.Application {
 
         window.addEventListener('resize', () => this.resize());
 
-        this.ui.events.on(UiEvent.SpinButtonClick, () => {
+        this.ui.on(UiEvent.SpinButtonClick, () => {
             this.spinButtonClick();
         });
         
@@ -263,22 +365,18 @@ export class AbstractApplication extends PIXI.Application {
     }
 
     protected spinButtonClick() {
-        switch (this.ui.spinButtonState) {
-            case SpinButtonState.Spin: 
-                this.roundStart();
+        this.controller.spinButtonClick();
+        switch (this.controller.getState()) {
+            case GameControllerState.Idle: 
                 break;
-            case SpinButtonState.Slam: 
-                this.slam();
+            case GameControllerState.WaitingPlayResponse: 
+            case GameControllerState.SpinEnd: 
                 this.ui.spinButtonState = SpinButtonState.Disabled;
                 this.ui.update();
                 break;
-            case SpinButtonState.SkipResults: 
-                this.skipResults();
-                this.ui.spinButtonState = SpinButtonState.Disabled;
-                this.ui.update();
+            case GameControllerState.ShowTotalWin: 
                 break;
-            case SpinButtonState.Disabled: 
-                console.log('Spin disabled');
+            case GameControllerState.ShowWins: 
                 break;
         }
     }
