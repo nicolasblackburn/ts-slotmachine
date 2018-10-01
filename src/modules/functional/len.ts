@@ -1,4 +1,4 @@
 export const len = xs =>
-    xs.asOwnProperty("len") ?
+    xs.hasOwnProperty("len") ?
         xs.len() :
         xs.length;

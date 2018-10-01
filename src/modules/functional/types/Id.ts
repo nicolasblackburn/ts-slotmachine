@@ -1,5 +1,5 @@
 export class Id<T> {
-    protected value: T; 
+    public value: T; 
 
     constructor(x: T) {
         this.value = x;

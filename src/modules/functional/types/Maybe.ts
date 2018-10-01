@@ -1,5 +1,6 @@
+
 export class Maybe<T> {
-    protected value: T; 
+    public value: T; 
 
     constructor(x: T) {
         this.value = x;

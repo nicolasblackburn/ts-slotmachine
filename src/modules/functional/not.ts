@@ -1,4 +1,4 @@
 export const not = x =>
-    x.asOwnProperty("not") ?
+    x.hasOwnProperty("not") ?
         x.not() :
         !x;

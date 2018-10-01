@@ -28,6 +28,7 @@ export class Application extends AbstractApplication {
 
         this.mainScene = new MainScene(baseDefinition)
             .addResource('sprites', 'assets/img/sprites.json')
+            /*
             .on(MainSceneEvent.SpinStartComplete, () => {
                 this.spinStartComplete();
             })
@@ -45,12 +46,13 @@ export class Application extends AbstractApplication {
             })
             .on(MainSceneEvent.WinComplete, () => {
                 this.winEnd();
-            });
+            })*/;
 
         this.events
             .on(ApplicationEvent.PlayRequestSuccess, (response) => {
                 console.log(response);
             })
+            /*
             .on(ApplicationEvent.RoundStart, () => {
                 this.mainScene.roundStart();
             })
@@ -68,7 +70,8 @@ export class Application extends AbstractApplication {
             })
             .on(ApplicationEvent.WinStart, () => {
                 this.mainScene.winStart();
-            });
+            })
+            */;
 
         this.scenes
             .add('loading', this.loadingScene)
@@ -83,9 +86,5 @@ export class Application extends AbstractApplication {
                     this.ui.setVisible(true);
                 });
             });
-    }
-
-    public playRequestSuccess(response: PlayResponse) {
-        super.playRequestSuccess(response);
     }
 }

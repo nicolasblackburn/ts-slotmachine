@@ -1,4 +1,4 @@
 export const empty = xs =>
-    xs.asOwnProperty("empty") ?
+    xs.hasOwnProperty("empty") ?
         xs.empty() :
         !xs;

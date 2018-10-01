@@ -5,8 +5,7 @@ import { LocalClient } from '../src/modules/client/local/LocalClient';
 import { PlayResponse } from '../src/modules/client/PlayResponse';
 import { Win } from '../src/modules/client/Win';
 import { Bet } from '../src/modules/bet/Bet';
-import { slice } from '../src/modules/functional/slice';
-import { Id } from '../src/modules/functional/Id';
+import * as fun from '../src/modules/functional';
 
 function testClusters () {
     const values = [
@@ -52,20 +51,29 @@ function testGameController() {
             return Promise.resolve();
         }
     }
-    
+
     const controller = new GameController({
+        observer: new Observer(),
         play: (bet: Bet) => client.play(bet),
         createBet: (credits: number, betsCount: number) => new Bet(credits, betsCount)
     });
-    controller.setObserver(new Observer());
+
     controller.roundStart();
 }
 
 function functional() {
-    Id.of({
-        
-    })
-    console.log(slice(1, 1 + 3, [1, 2, 3, 4, 5]));
+    const {composeList, head, id, map, maybe, Maybe, prop, toString: _toString} = fun;
+
+    const safeHead = xs => Maybe.of(head(xs));
+    const streetName = composeList([map(prop('street')), safeHead, prop('addresses')]);
+    const toString = maybe('Nothing', _toString); 
+
+    console.log(
+        toString(streetName({ addresses: [] })));
+
+    console.log(
+        toString(streetName({ addresses: [{ street: 'Shady Ln.', number: 4201 }] })));
+
 }
 
 functional();
