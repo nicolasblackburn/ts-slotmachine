@@ -23,6 +23,7 @@ export * from './reverse';
 export * from './slice';
 export * from './sort';
 export * from './tail';
+export * from './then';
 export * from './toString';
 export * from './types';
 
